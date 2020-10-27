@@ -13,7 +13,7 @@ from Utils.bgd_lib.bgd_optimizer import BGD
 from collections import OrderedDict
 from MAML.utils import update_parameters, tensors_to_device, compute_accuracy
 
-__all__ = ['ModelAgnosticMetaLearning', 'MAML', 'FOMAML', 'ModularMAML', 'DynamicModularMAML']
+__all__ = ['ModelAgnosticMetaLearning', 'MAML', 'FOMAML', 'ModularMAML']
 
 
 class ModelAgnosticMetaLearning(object):

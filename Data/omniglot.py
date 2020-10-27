@@ -101,7 +101,9 @@ class Omniglot_(data.Dataset):
 
         for url in self.urls:
             print('== Downloading ' + url)
-            data = urllib.request.urlopen(url)
+            import ssl
+            gcontext = ssl.SSLContext()
+            data = urllib.request.urlopen(url, context=gcontext)
             filename = url.rpartition('/')[2]
             file_path = os.path.join(self.root, self.raw_folder, filename)
             with open(file_path, 'wb') as f:
