@@ -154,7 +154,7 @@ class ModelAgnosticMetaLearning(object):
 
     # used both in pretraining and CL time
     # a few gradient descent steps starting from \phi (slow weights, accumulated knowledge)
-    def adapt(self, inputs, targets):
+    def adapt(self, inputs, targets, ways=None, shots=None):
         params = None
 
         results = {'inner_losses': np.zeros(
@@ -330,7 +330,7 @@ class ModelAgnosticMetaLearning(object):
         # mc sampling for bgd optimizer
         self.batch_size = inputs.shape[1]
         num_of_mc_iters = 1
-        #set_trace()
+        set_trace()
         if hasattr(self.optimizer_cl, "get_mc_iters"):
             num_of_mc_iters = self.optimizer_cl.get_mc_iters()
         inputs, targets  = inputs[0], targets[0]
@@ -619,7 +619,7 @@ class ModularMAML(ModelAgnosticMetaLearning):
         else:
             return params_masked, masks_logits
 
-    def adapt(self, inputs, targets):
+    def adapt(self, inputs, targets, ways=None, shots=None):
 
         results = {'inner_losses': np.zeros(
             (self.num_adaptation_steps,), dtype=np.float32)}
