@@ -22,9 +22,10 @@ def select_from_tensor(tensor, index):
 
     missing_dims = tensor.dim() - index.dim()
     index = index.view(index.size() + missing_dims * (1,))
-    index = index.expand((-1,) * (index.dim() - missing_dims) + tensor.size()[(last_dim+1):])
+    index = index.expand((-1,) * (index.dim() - missing_dims) + tensor.size()[(last_dim + 1):])
 
     return torch.gather(tensor, last_dim, index)
+
 
 def order_and_split(data_x, data_y):
     """ given a dataset, returns (num_classes, samples_per_class, *data_x[0].size())
@@ -32,27 +33,27 @@ def order_and_split(data_x, data_y):
 
     # sort according to the label
     out_train = [
-        (x,y) for (x,y) in sorted(zip(data_x, data_y), key=lambda v : v[1]) ]
+        (x, y) for (x, y) in sorted(zip(data_x, data_y), key=lambda v: v[1])]
 
     # stack in increasing label order
     data_x, data_y = [
-            torch.stack([elem[i] for elem in out_train]) for i in [0,1] ]
+        torch.stack([elem[i] for elem in out_train]) for i in [0, 1]]
 
     # find first indices of every class
     n_classes = data_y.unique().size(0)
-    idx       = [((data_y + i) % n_classes).argmax() for i in range(n_classes)]
-    idx       = [0] + [x + 1 for x in sorted(idx)]
+    idx = [((data_y + i) % n_classes).argmax() for i in range(n_classes)]
+    idx = [0] + [x + 1 for x in sorted(idx)]
 
     # split into different classes
-    to_chunk = [a - b for (a,b) in zip(idx[1:], idx[:-1])]
-    data_x   = data_x.split(to_chunk)
-    data_y   = data_y.split(to_chunk)
+    to_chunk = [a - b for (a, b) in zip(idx[1:], idx[:-1])]
+    data_x = data_x.split(to_chunk)
+    data_y = data_y.split(to_chunk)
 
     # give equal amt of points for every class
-    #TODO(if this is restrictive for some dataset, we can change)
-    min_amt  = min([x.size(0) for x in data_x])
-    data_x   = torch.stack([x[:min_amt] for x in data_x]) # [N, K, 28, 28]
-    data_y   = torch.stack([y[:min_amt] for y in data_y]) # [N, K]
+    # TODO(if this is restrictive for some dataset, we can change)
+    min_amt = min([x.size(0) for x in data_x])
+    data_x = torch.stack([x[:min_amt] for x in data_x])  # [N, K, 28, 28]
+    data_y = torch.stack([y[:min_amt] for y in data_y])  # [N, K]
 
     # sanity check
     for i, item in enumerate(data_y):
@@ -68,8 +69,8 @@ def order_and_split(data_x, data_y):
 class MetaDataset(torch.utils.data.Dataset):
     """ Dataset similar to BatchMetaDataset in TorchMeta """
 
-    def __init__(self, train_data, test_data,  n_shots_tr, n_shots_te, n_way,
-                    args=None, **kwargs):
+    def __init__(self, train_data, test_data, n_shots_tr, n_shots_te, n_way,
+                 args=None, **kwargs):
 
         '''
         Parameters
@@ -91,28 +92,28 @@ class MetaDataset(torch.utils.data.Dataset):
         # TODO: should torchvision transforms be passed in here ?
 
         # separate the classes into tasks
-        n_classes   = len(train_data)
+        n_classes = len(train_data)
 
-        self._len        = None
-        self.n_way       = n_way
-        self.kwargs      = kwargs
-        self.n_classes   = n_classes
-        self.n_shots_tr  = n_shots_tr
-        self.n_shots_te  = n_shots_te
+        self._len = None
+        self.n_way = n_way
+        self.kwargs = kwargs
+        self.n_classes = n_classes
+        self.n_shots_tr = n_shots_tr
+        self.n_shots_te = n_shots_te
 
         if args is None:
-            self.input_size  = [28,28]
-            self.device      = 'cpu'
+            self.input_size = [28, 28]
+            self.device = 'cpu'
             self.is_classification_task = True
         else:
-            self.input_size  = args.input_size
-            self.device      = args.device
+            self.input_size = args.input_size
+            self.device = args.device
             self.is_classification_task = args.is_classification_task
 
         self.all_classes = np.arange(n_classes)
 
-        self.train_data  = train_data
-        self.test_data   = test_data
+        self.train_data = train_data
+        self.test_data = test_data
 
         if args.dataset == 'tiered-imagenet':
             self.cpu_dset = True
@@ -127,7 +128,6 @@ class MetaDataset(torch.utils.data.Dataset):
             self._len = n_samples // (self.n_way * (self.n_shots_tr + self.n_shots_te))
 
         return self._len
-
 
     def __getitem__(self, index):
         if self.is_classification_task:
@@ -158,25 +158,25 @@ class MetaDataset(torch.utils.data.Dataset):
 
         classes_in_task = np.random.choice(self.all_classes, self.n_way, replace=False)
         train_samples_in_class = self.train_data.shape[1]
-        test_samples_in_class  = self.test_data.shape[1]
+        test_samples_in_class = self.test_data.shape[1]
 
         train_data = self.train_data[classes_in_task]
-        test_data  = self.test_data[classes_in_task]
+        test_data = self.test_data[classes_in_task]
 
         # sample indices for meta train
         train_idx = torch.Tensor(self.n_way, self.n_shots_tr)
-        if not(self.cpu_dset):
+        if not (self.cpu_dset):
             train_idx = train_idx.to(self.device)
         train_idx = train_idx.uniform_(0, train_samples_in_class).long()
 
         # samples indices for meta test
         test_idx = torch.Tensor(self.n_way, self.n_shots_te)
-        if not(self.cpu_dset):
+        if not (self.cpu_dset):
             test_idx = test_idx.to(self.device)
         test_idx = test_idx.uniform_(0, test_samples_in_class).long()
 
         train_x = select_from_tensor(train_data, train_idx)
-        test_x  = select_from_tensor(test_data,  test_idx)
+        test_x = select_from_tensor(test_data, test_idx)
 
         train_x = train_x.view(-1, *self.input_size)
         test_x = test_x.view(-1, *self.input_size)
@@ -185,8 +185,8 @@ class MetaDataset(torch.utils.data.Dataset):
         train_y = torch.arange(self.n_way).view(-1, 1).expand(-1, self.n_shots_tr)
         train_y = train_y.flatten()
 
-        test_y  = torch.arange(self.n_way).view(-1, 1).expand(-1, self.n_shots_te)
-        test_y  = test_y.flatten()
+        test_y = torch.arange(self.n_way).view(-1, 1).expand(-1, self.n_shots_te)
+        test_y = test_y.flatten()
 
         if self.cpu_dset:
             train_x = train_x.float().to(self.device)
@@ -194,21 +194,22 @@ class MetaDataset(torch.utils.data.Dataset):
             test_x = test_x.float().to(self.device)
             test_y = test_y.to(self.device)
 
-        #return train_x, train_y, test_x, test_y
+        # return train_x, train_y, test_x, test_y
 
         # same signature are TorchMeta
         out = {}
-        out['train'], out['test'] = [train_x,train_y], [test_x, test_y]
+        out['train'], out['test'] = [train_x, train_y], [test_x, test_y]
         out['ways'], out['shots_tr'], out['shots_te'] = self.n_way, self.n_shots_tr, self.n_shots_te
 
         return out
+
 
 class StreamDataset(torch.utils.data.Dataset):
     """ stream of non stationary dataset as described by Mass """
 
     def __init__(self, train_data, test_data, ood_data, n_shots=1,
-            n_way=5, prob_statio=.8, prob_train=0.1, prob_test=0.8,
-            prob_ood=0.1, args=None, **kwargs):
+                 n_way=5, prob_statio=.8, prob_train=0.1, prob_test=0.8,
+                 prob_ood=0.1, args=None, **kwargs):
 
         '''
         Parameters
@@ -229,15 +230,15 @@ class StreamDataset(torch.utils.data.Dataset):
         else:
             self.cpu_dset = False
 
-        self.n_shots    = n_shots
-        self.n_way      = n_way
+        self.n_shots = n_shots
+        self.n_way = n_way
 
-        self.modes    = ['train', 'test', 'ood']
+        self.modes = ['train', 'test', 'ood']
         self.modes_id = [0, 1, 2]
-        self.probs    = np.array([prob_train, prob_test, prob_ood])
+        self.probs = np.array([prob_train, prob_test, prob_ood])
         # For Omniglot task:
         # train_data: omniglot, test_data: MNIST, ood_data: FashionMNIST
-        self.data     = [train_data, test_data, ood_data]
+        self.data = [train_data, test_data, ood_data]
         self.p_statio = prob_statio
 
         self.task_sequence: List[str] = []
@@ -246,12 +247,12 @@ class StreamDataset(torch.utils.data.Dataset):
         self.steps_done_on_task = 0
 
         if args is None:
-            self.input_size  = [28,28]
-            self.device      = 'cpu'
+            self.input_size = [28, 28]
+            self.device = 'cpu'
             self.is_classification_task = True
         else:
-            self.input_size  = args.input_size
-            self.device      = args.device
+            self.input_size = args.input_size
+            self.device = args.device
             self.is_classification_task = args.is_classification_task
             self.task_sequence = args.task_sequence
             self.n_steps_per_task = args.n_steps_per_task
@@ -263,11 +264,9 @@ class StreamDataset(torch.utils.data.Dataset):
         self._classes_in_task = None
         self._samples_in_class = None
 
-
     def __len__(self):
         # this is a never ending stream
         return sys.maxsize
-
 
     def __getitem__(self, index):
         if self.is_classification_task:
@@ -290,7 +289,7 @@ class StreamDataset(torch.utils.data.Dataset):
             self._mode = self.mode_name_map[mode_name]
         else:
             if (np.random.uniform() > self.p_statio):
-                mode  = np.random.choice(self.modes_id, p=self.probs)
+                mode = np.random.choice(self.modes_id, p=self.probs)
                 self._mode = mode
                 task_switch = mode != self._mode
 
@@ -329,7 +328,7 @@ class StreamDataset(torch.utils.data.Dataset):
             # task_switch = mode != self._mode
             # TODO: this makes a switch even if staying in same mode!
             task_switch = 1
-            self._mode  = np.random.choice([0,1,2], p=self.probs)
+            self._mode = np.random.choice([0, 1, 2], p=self.probs)
 
             mode_data = self.data[self._mode]
             n_classes = len(mode_data)
@@ -337,7 +336,7 @@ class StreamDataset(torch.utils.data.Dataset):
 
             # sample `n_way` classes
             self._classes_in_task = np.random.choice(np.arange(n_classes), self.n_way,
-                    replace=False)
+                                                     replace=False)
 
         else:
 
@@ -347,9 +346,9 @@ class StreamDataset(torch.utils.data.Dataset):
         data = mode_data[self._classes_in_task]
 
         # sample indices for meta train
-        idx = torch.Tensor(self.n_way, self.n_shots)#.to(self.device)
+        idx = torch.Tensor(self.n_way, self.n_shots)  # .to(self.device)
         idx = idx.uniform_(0, self._samples_in_class).long()
-        if not(self.cpu_dset):
+        if not (self.cpu_dset):
             idx = idx.to(self.device)
         data = select_from_tensor(data, idx)
 
@@ -365,15 +364,16 @@ class StreamDataset(torch.utils.data.Dataset):
             labels = labels.to(self.device)
 
         return data, labels, task_switch, self.modes[self._mode], \
-                torch.tensor(self.n_way).to(self.device),\
-                torch.tensor(self.n_shots).to(self.device)
+               torch.tensor(self.n_way).to(self.device), \
+               torch.tensor(self.n_shots).to(self.device)
+
 
 class VariableClassStreamDataset(torch.utils.data.Dataset):
     """ stream of non stationary dataset as described by Mass """
 
     def __init__(self, train_data, test_data, ood_data, n_shots=1,
-            n_way=5, prob_statio=.8, prob_train=0.1, prob_test=0.8,
-            prob_ood=0.1, args=None, **kwargs):
+                 n_way=5, prob_statio=.8, prob_train=0.1, prob_test=0.8,
+                 prob_ood=0.1, args=None, **kwargs):
 
         '''
         Parameters
@@ -394,16 +394,16 @@ class VariableClassStreamDataset(torch.utils.data.Dataset):
         else:
             self.cpu_dset = False
 
-        self.n_shots    = n_shots
-        self.n_way      = n_way
+        self.n_shots = n_shots
+        self.n_way = n_way
         self.n_way_current = n_way
 
-        self.modes    = ['train', 'test', 'ood']
+        self.modes = ['train', 'test', 'ood']
         self.modes_id = [0, 1, 2]
-        self.probs    = np.array([prob_train, prob_test, prob_ood])
+        self.probs = np.array([prob_train, prob_test, prob_ood])
         # For Omniglot task:
         # train_data: omniglot, test_data: MNIST, ood_data: FashionMNIST
-        self.data     = [train_data, test_data, ood_data]
+        self.data = [train_data, test_data, ood_data]
         self.p_statio = prob_statio
 
         self.task_sequence: List[str] = []
@@ -412,12 +412,12 @@ class VariableClassStreamDataset(torch.utils.data.Dataset):
         self.steps_done_on_task = 0
 
         if args is None:
-            self.input_size  = [28,28]
-            self.device      = 'cpu'
+            self.input_size = [28, 28]
+            self.device = 'cpu'
             self.is_classification_task = True
         else:
-            self.input_size  = args.input_size
-            self.device      = args.device
+            self.input_size = args.input_size
+            self.device = args.device
             self.is_classification_task = args.is_classification_task
             self.task_sequence = args.task_sequence
             self.n_steps_per_task = args.n_steps_per_task
@@ -429,11 +429,9 @@ class VariableClassStreamDataset(torch.utils.data.Dataset):
         self._classes_in_task = None
         self._samples_in_class = None
 
-
     def __len__(self):
         # this is a never ending stream
         return sys.maxsize
-
 
     def __getitem__(self, index):
         if self.is_classification_task:
@@ -476,7 +474,7 @@ class VariableClassStreamDataset(torch.utils.data.Dataset):
 
             # sample `n_way` classes
             self._classes_in_task = np.random.choice(np.arange(n_classes), self.n_way_current,
-                    replace=False)
+                                                     replace=False)
 
         else:
 
@@ -486,9 +484,9 @@ class VariableClassStreamDataset(torch.utils.data.Dataset):
         data = mode_data[self._classes_in_task]
 
         # sample indices for meta train
-        idx = torch.Tensor(self.n_way_current, self.n_shots)#.to(self.device)
+        idx = torch.Tensor(self.n_way_current, self.n_shots)  # .to(self.device)
         idx = idx.uniform_(0, self._samples_in_class).long()
-        if not(self.cpu_dset):
+        if not (self.cpu_dset):
             idx = idx.to(self.device)
         data = select_from_tensor(data, idx)
 
@@ -504,12 +502,11 @@ class VariableClassStreamDataset(torch.utils.data.Dataset):
             labels = labels.to(self.device)
 
         return data, labels, task_switch, self.modes[self._mode], \
-                torch.tensor(self.n_way_current).to(self.device),\
-                torch.tensor(self.n_shots).to(self.device)
+               torch.tensor(self.n_way_current).to(self.device), \
+               torch.tensor(self.n_shots).to(self.device)
 
 
 def init_dataloaders(args):
-
     if args.dataset == 'omniglot':
         from Data.omniglot import Omniglot
         from torchvision.datasets import MNIST, FashionMNIST
@@ -519,37 +516,33 @@ def init_dataloaders(args):
         args.n_train_cls = 900
         args.n_val_cls = 100
         args.n_train_samples = 10
+        args.input_size = [1, 28, 28]
 
-
-        args.input_size = [1,28,28]
-         
-        Omniglot_dataset = Omniglot(args.folder).data # [N=1623, K=20, 1, 28, 28]
+        Omniglot_dataset = Omniglot(args.folder).data  # [N=1623, K=20, 1, 28, 28]
         Omniglot_dataset = torch.from_numpy(Omniglot_dataset).type(torch.float).to(args.device)
         meta_train_dataset = Omniglot_dataset[:args.n_train_cls]
-        meta_train_train = meta_train_dataset[:,:args.n_train_samples,:,:]
-        meta_train_test = meta_train_dataset[:,args.n_train_samples:,:,:]
+        meta_train_train = meta_train_dataset[:, :args.n_train_samples, :, :]
+        meta_train_test = meta_train_dataset[:, args.n_train_samples:, :, :]
 
-        meta_val_dataset = Omniglot_dataset[args.n_train_cls : (args.n_train_cls+args.n_val_cls)]
-        #TODO(figure out the bug when there is only a single class fed to the valid dataloader)
-        meta_val_train = meta_val_dataset[:,:args.n_train_samples,:,:]
-        meta_val_test = meta_val_dataset[:,args.n_train_samples:,:,:]
+        meta_val_dataset = Omniglot_dataset[args.n_train_cls: (args.n_train_cls + args.n_val_cls)]
+        # TODO(figure out the bug when there is only a single class fed to the valid dataloader)
+        meta_val_train = meta_val_dataset[:, :args.n_train_samples, :, :]
+        meta_val_test = meta_val_dataset[:, args.n_train_samples:, :, :]
 
         cl_dataset = Omniglot_dataset
         # data(x) : [60000, 28, 28], targets(y): [60000], N(#classes) = 10
-        cl_ood_dataset1 = MNIST(args.folder, train=True,  download=True)
-        cl_ood_dataset2 = FashionMNIST(args.folder, train=True,  download=True)
+        cl_ood_dataset1 = MNIST(args.folder, train=True, download=True)
+        cl_ood_dataset2 = FashionMNIST(args.folder, train=True, download=True)
         # cl_ood_dataset1 [N=10, K=5421, 28, 28] 
-        cl_ood_dataset1, _ = order_and_split(cl_ood_dataset1.data, cl_ood_dataset1.targets) 
+        cl_ood_dataset1, _ = order_and_split(cl_ood_dataset1.data, cl_ood_dataset1.targets)
         # cl_ood_dataset2 [N=10, K=6000, 28, 28] 
         cl_ood_dataset2, _ = order_and_split(cl_ood_dataset2.data, cl_ood_dataset2.targets)
         # cl_ood_dataset1 [N=10, K=5421, 1, 28, 28] 
-        cl_ood_dataset1 = cl_ood_dataset1[:,:,None,:,:]
+        cl_ood_dataset1 = cl_ood_dataset1[:, :, None, :, :]
         # cl_ood_dataset2 [N=10, K=6000, 1, 28, 28] 
-        cl_ood_dataset2 = cl_ood_dataset2[:,:,None,:,:]
+        cl_ood_dataset2 = cl_ood_dataset2[:, :, None, :, :]
         cl_ood_dataset1 = cl_ood_dataset1.type(torch.float).to(args.device)
         cl_ood_dataset2 = cl_ood_dataset2.type(torch.float).to(args.device)
-
-
     elif args.dataset == "tiered-imagenet":
         from Data.tiered_imagenet import NonEpisodicTieredImagenet
 
@@ -560,32 +553,30 @@ def init_dataloaders(args):
         args.n_val_cls = 100
         args.n_train_samples = 500
 
-        args.input_size = [3,64,64]
+        args.input_size = [3, 64, 64]
         tiered_dataset = NonEpisodicTieredImagenet(args.folder, split="train")
 
         meta_train_dataset = tiered_dataset.data[:args.n_train_cls]
-        meta_train_train = meta_train_dataset[:,:args.n_train_samples, ...]
-        meta_train_test = meta_train_dataset[:,args.n_train_samples:,...]
+        meta_train_train = meta_train_dataset[:, :args.n_train_samples, ...]
+        meta_train_test = meta_train_dataset[:, args.n_train_samples:, ...]
 
-        meta_val_dataset = tiered_dataset.data[args.n_train_cls : (args.n_train_cls+args.n_val_cls)]
-        meta_val_train = meta_val_dataset[:,:args.n_train_samples,:,:]
-        meta_val_test = meta_val_dataset[:,args.n_train_samples:,:,:]
+        meta_val_dataset = tiered_dataset.data[args.n_train_cls: (args.n_train_cls + args.n_val_cls)]
+        meta_val_train = meta_val_dataset[:, :args.n_train_samples, :, :]
+        meta_val_test = meta_val_dataset[:, args.n_train_samples:, :, :]
 
         cl_dataset = tiered_dataset.data
         set_trace()
 
-        cl_ood_dataset1 = tiered_dataset.data[(args.n_train_cls+args.n_val_cls):]
+        cl_ood_dataset1 = tiered_dataset.data[(args.n_train_cls + args.n_val_cls):]
         ## last results computed with this split
-        #cl_ood_dataset1 = tiered_dataset.data[200:300]
+        # cl_ood_dataset1 = tiered_dataset.data[200:300]
         cl_ood_dataset2 = NonEpisodicTieredImagenet(args.folder, split="val").data
-        #cl_dataset = cl_dataset.type(torch.float)#.to(args.device)
-        cl_ood_dataset1 = cl_ood_dataset1.type(torch.float)#.to(args.device)
-        cl_ood_dataset2 = cl_ood_dataset2.type(torch.float)#.to(args.device)
-
-
+        # cl_dataset = cl_dataset.type(torch.float)#.to(args.device)
+        cl_ood_dataset1 = cl_ood_dataset1.type(torch.float)  # .to(args.device)
+        cl_ood_dataset2 = cl_ood_dataset2.type(torch.float)  # .to(args.device)
     elif args.dataset == "harmonics":
         '''under construction'''
-        from  data.harmonics import Harmonics
+        from data.harmonics import Harmonics
         args.is_classification_task = False
         args.input_size = [1]
 
@@ -597,48 +588,52 @@ def init_dataloaders(args):
         dataset = make_dataset()
         meta_train_dataset = dataset[:500]
         meta_train_train = meta_train_dataset[:, :40]
-        meta_train_test  = meta_train_dataset[:, 40:]
+        meta_train_test = meta_train_dataset[:, 40:]
 
         meta_val_dataset = dataset[500:]
         meta_val_train = meta_val_dataset[:, :40]
-        meta_val_test  = meta_val_dataset[:, 40:]
+        meta_val_test = meta_val_dataset[:, 40:]
 
-        if args.mode=='train':
+        if args.mode == 'train':
             cl_dataset = dataset
             cl_ood_dataset1 = make_dataset(train=False)
             cl_ood_dataset2 = make_dataset(train=False)
             cl_ood_dataset3 = make_dataset(train=False)
 
-
         args.prob_train, args.prob_test, args.prob_ood = 0.6, 0., 0.4
-
     else:
         raise NotImplementedError('Unknown dataset `{0}`.'.format(args.dataset))
 
-    meta_train_dataloader = MetaDataset(meta_train_train, meta_train_test, args=args,
-            n_shots_tr=args.num_shots, n_shots_te=args.num_shots_test, n_way=args.num_ways)
-    meta_val_dataloader = MetaDataset(meta_val_train, meta_val_test, args=args,
-            n_shots_tr=args.num_shots, n_shots_te=args.num_shots_test, n_way=args.num_ways)
+    def make_meta_loader(train_data, test_data):
+        loader = MetaDataset(
+            train_data, test_data,
+            args=args,
+            n_shots_tr=args.num_shots,
+            n_shots_te=args.num_shots_test,
+            n_way=args.num_ways)
+        loader = torch.utils.data.DataLoader(
+            loader, batch_size=args.batch_size)
+        return loader
 
-    meta_train_dataloader = torch.utils.data.DataLoader(meta_train_dataloader,
-            batch_size=args.batch_size)
-    meta_val_dataloader = torch.utils.data.DataLoader(meta_val_dataloader,
-            batch_size=args.batch_size)
+    meta_train_dataloader = make_meta_loader(meta_train_train, meta_train_test)
+    meta_val_dataloader = make_meta_loader(meta_val_train, meta_val_test)
 
-    cl_dataloader = StreamDataset(cl_dataset, cl_ood_dataset1, cl_ood_dataset2,
-            n_shots=args.num_shots, n_way=args.num_ways, prob_statio=args.prob_statio,
-            prob_train=args.prob_train, prob_test=args.prob_test, prob_ood=args.prob_ood, args=args)
-
+    cl_dataloader = StreamDataset(
+        cl_dataset, cl_ood_dataset1, cl_ood_dataset2,
+        n_shots=args.num_shots, n_way=args.num_ways, prob_statio=args.prob_statio,
+        prob_train=args.prob_train, prob_test=args.prob_test, prob_ood=args.prob_ood,
+        args=args)
+    # Wrap existing cl_dataloader to support variable number of ways.
     if args.use_different_nways:
-        cl_dataloader = VariableClassStreamDataset(cl_dataset, cl_ood_dataset1, cl_ood_dataset2,
-                n_shots=args.num_shots, n_way=args.num_ways, prob_statio=args.prob_statio,
-                prob_train=args.prob_train, prob_test=args.prob_test, prob_ood=args.prob_ood, args=args)
+        cl_dataloader = VariableClassStreamDataset(
+            cl_dataset, cl_ood_dataset1, cl_ood_dataset2,
+            n_shots=args.num_shots, n_way=args.num_ways,
+            prob_statio=args.prob_statio,
+            prob_train=args.prob_train, prob_test=args.prob_test,
+            prob_ood=args.prob_ood, args=args)
     cl_dataloader = torch.utils.data.DataLoader(cl_dataloader, batch_size=1)
 
-    del meta_train_dataset, meta_train_train, meta_train_test, meta_val_dataset,\
-            meta_val_train, meta_val_test, cl_dataset, cl_ood_dataset1, cl_ood_dataset2
+    del meta_train_dataset, meta_train_train, meta_train_test, meta_val_dataset, \
+        meta_val_train, meta_val_test, cl_dataset, cl_ood_dataset1, cl_ood_dataset2
 
     return meta_train_dataloader, meta_val_dataloader, cl_dataloader
-
-
-
