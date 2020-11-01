@@ -351,7 +351,6 @@ class ModelAgnosticMetaLearning(object):
                 "mse_after": 0.,
             })
 
-#        import pdb; pdb.set_trace()
         # There's no \theta_{t-1}
         if self.current_model is None: 
             self.current_model, _ = self.adapt(inputs, targets, ways[0], shots[0])
@@ -448,25 +447,23 @@ class ProtoMAML(ModelAgnosticMetaLearning):
         targets: [ways*shots]
         """
         
-        if self.num_ways is None or (ways is not None and ways != self.num_ways):
+        if ways is None:
+            raise ValueError('Proto-MAML adapt arg ways & shots cannot be None!')
+
+        if self.num_ways is None or ways != self.num_ways:
             self.model.update_classifier(ways)
         self.num_ways = ways
 
-        prototypes = []    
-        labels = []
-        for i in range(ways):
-            prototypes.append(inputs[i*shots])
-            labels.append(targets[i*shots])
-        prototypes = torch.stack(prototypes) # [ways, 1, 28, 28]
-        labels = torch.stack(labels) # [ways]
-        prototypes = self.model.forward_conv(prototypes) # [ways, 64]
+        prototypes = self.model.forward_conv(inputs) # [ways*shots, 64]
+        prototypes = torch.reshape(prototypes, (ways, shots, prototypes.shape[-1])) #[ways, shots, 64]
+        prototypes = torch.mean(prototypes, axis=1) # [ways, 64] 
+        
+
         # Proto-MAML: init last FC layer with prototype weights
         self.model.classifier.weight=torch.nn.Parameter(2.0*prototypes) # w_k = 2c_k
         self.model.classifier.bias=torch.nn.Parameter(
                 -torch.sum(prototypes*prototypes, axis=1)) # b_k = -|c_k|^2
         
-#        import pdb; pdb.set_trace()
-
         params = None
 
         results = {'inner_losses': np.zeros(
