@@ -51,8 +51,8 @@ def order_and_split(data_x, data_y):
     # give equal amt of points for every class
     #TODO(if this is restrictive for some dataset, we can change)
     min_amt  = min([x.size(0) for x in data_x])
-    data_x   = torch.stack([x[:min_amt] for x in data_x])
-    data_y   = torch.stack([y[:min_amt] for y in data_y])
+    data_x   = torch.stack([x[:min_amt] for x in data_x]) # [N, K, 28, 28]
+    data_y   = torch.stack([y[:min_amt] for y in data_y]) # [N, K]
 
     # sanity check
     for i, item in enumerate(data_y):
@@ -199,6 +199,7 @@ class MetaDataset(torch.utils.data.Dataset):
         # same signature are TorchMeta
         out = {}
         out['train'], out['test'] = [train_x,train_y], [test_x, test_y]
+        out['ways'], out['shots_tr'], out['shots_te'] = self.n_way, self.n_shots_tr, self.n_shots_te
 
         return out
 
@@ -234,6 +235,8 @@ class StreamDataset(torch.utils.data.Dataset):
         self.modes    = ['train', 'test', 'ood']
         self.modes_id = [0, 1, 2]
         self.probs    = np.array([prob_train, prob_test, prob_ood])
+        # For Omniglot task:
+        # train_data: omniglot, test_data: MNIST, ood_data: FashionMNIST
         self.data     = [train_data, test_data, ood_data]
         self.p_statio = prob_statio
 
@@ -379,7 +382,8 @@ def init_dataloaders(args):
 
 
         args.input_size = [1,28,28]
-        Omniglot_dataset = Omniglot(args.folder).data
+         
+        Omniglot_dataset = Omniglot(args.folder).data # [N=1623, K=20, 1, 28, 28]
         Omniglot_dataset = torch.from_numpy(Omniglot_dataset).type(torch.float).to(args.device)
         meta_train_dataset = Omniglot_dataset[:args.n_train_cls]
         meta_train_train = meta_train_dataset[:,:args.n_train_samples,:,:]
@@ -391,11 +395,16 @@ def init_dataloaders(args):
         meta_val_test = meta_val_dataset[:,args.n_train_samples:,:,:]
 
         cl_dataset = Omniglot_dataset
+        # data(x) : [60000, 28, 28], targets(y): [60000], N(#classes) = 10
         cl_ood_dataset1 = MNIST(args.folder, train=True,  download=True)
         cl_ood_dataset2 = FashionMNIST(args.folder, train=True,  download=True)
-        cl_ood_dataset1, _ = order_and_split(cl_ood_dataset1.data, cl_ood_dataset1.targets)
+        # cl_ood_dataset1 [N=10, K=5421, 28, 28] 
+        cl_ood_dataset1, _ = order_and_split(cl_ood_dataset1.data, cl_ood_dataset1.targets) 
+        # cl_ood_dataset2 [N=10, K=6000, 28, 28] 
         cl_ood_dataset2, _ = order_and_split(cl_ood_dataset2.data, cl_ood_dataset2.targets)
+        # cl_ood_dataset1 [N=10, K=5421, 1, 28, 28] 
         cl_ood_dataset1 = cl_ood_dataset1[:,:,None,:,:]
+        # cl_ood_dataset2 [N=10, K=6000, 1, 28, 28] 
         cl_ood_dataset2 = cl_ood_dataset2[:,:,None,:,:]
         cl_ood_dataset1 = cl_ood_dataset1.type(torch.float).to(args.device)
         cl_ood_dataset2 = cl_ood_dataset2.type(torch.float).to(args.device)

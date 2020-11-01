@@ -13,7 +13,7 @@ from Utils.bgd_lib.bgd_optimizer import BGD
 from collections import OrderedDict
 from MAML.utils import update_parameters, tensors_to_device, compute_accuracy
 
-__all__ = ['ModelAgnosticMetaLearning', 'MAML', 'FOMAML', 'ModularMAML']
+__all__ = ['ModelAgnosticMetaLearning', 'MAML', 'ProtoMAML', 'FOMAML', 'ModularMAML']
 
 
 class ModelAgnosticMetaLearning(object):
@@ -73,7 +73,7 @@ class ModelAgnosticMetaLearning(object):
     """
     def __init__(self, model, optimizer, loss_function, args):
         self.device = args.device
-        self.model = model.to(device=self.device)
+        self.model = model.to(device=self.device)  
         self.optimizer = optimizer
         self.optimizer_cl = None
         self.step_size = args.step_size
@@ -131,7 +131,7 @@ class ModelAgnosticMetaLearning(object):
         # inner loop:
         for task_id, (train_inputs, train_targets, test_inputs, test_targets) \
                 in enumerate(zip(*batch['train'], *batch['test'])):
-            params, adaptation_results = self.adapt(train_inputs, train_targets)
+            params, adaptation_results = self.adapt(train_inputs, train_targets, batch['ways'][0], batch['shots_tr'][0])
 
             results['inner_losses'][:, task_id] = adaptation_results['inner_losses']
             if is_classification_task:
@@ -152,6 +152,8 @@ class ModelAgnosticMetaLearning(object):
 
         return mean_outer_loss, results
 
+    # used both in pretraining and CL time
+    # a few gradient descent steps starting from \phi (slow weights, accumulated knowledge)
     def adapt(self, inputs, targets):
         params = None
 
@@ -302,14 +304,16 @@ class ModelAgnosticMetaLearning(object):
                 mse += loss
         return acc, mse, outer_loss
 
+    # update the slow weights \phi at CL time
     def outer_update(self, outer_loss):
         if isinstance(self.optimizer_cl, BGD):
             self.optimizer_cl.step()
         else:
             self.optimizer.zero_grad()
-            outer_loss.backward()
+            outer_loss.backward()  
             self.optimizer.step()
 
+    # This is without prolonged adaptation phase(PAP)
     def observe(self, batch):
         if self.cl_strategy == 'never_retrain':
             self.model.eval()
@@ -317,6 +321,7 @@ class ModelAgnosticMetaLearning(object):
             self.model.train()
 
         #inputs, targets, _ , _ = batch
+        # inputs [1, batch_size, 1, 28, 28], targets [1, batch_size]
         inputs, targets, task_switch , mode = batch
 
         # for now we are doing one task at a time
@@ -345,7 +350,8 @@ class ModelAgnosticMetaLearning(object):
                 "mse_before": 0.,
                 "mse_after": 0.,
             })
-        if self.current_model is None:
+        # There's no \theta_{t-1}
+        if self.current_model is None: 
             self.current_model, _ = self.adapt(inputs, targets)
             self.last_mode = mode[0]
             return results
@@ -362,8 +368,9 @@ class ModelAgnosticMetaLearning(object):
                 results['outer_loss'] = torch.mean(torch.tensor(outer_loss)).item()
             else:
                 ## using SGD
+                # line 17, outer_loss is loss of previous fast weights \theta_{t-1}
                 logits = self.model(inputs, params=self.current_model)
-                outer_loss = self.loss_function(logits, targets)
+                outer_loss = self.loss_function(logits, targets) 
                 results['outer_loss'] = outer_loss.item()
                 if self.is_classification_task:
                     results['accuracy_after'] = compute_accuracy(logits, targets)
@@ -372,14 +379,16 @@ class ModelAgnosticMetaLearning(object):
 
         ## prediction is done and you can now use the labels
 
-        self.current_model, _ = self.adapt(inputs, targets)
+        # line 18, update fast_weight, generated from slow weights \phi, but \phi not changed
+        self.current_model, _ = self.adapt(inputs, targets) 
 
         #----------------- CL strategies ------------------#
 
         tbd = 0
-        if self.cl_tbd_thres != -1:
+        if self.cl_tbd_thres != -1: # gamma
 
             with torch.no_grad():
+                # line 19, current_outer_loss is second term, loss of line 18
                 logits = self.model(inputs, params=self.current_model)
                 current_outer_loss = self.loss_function(logits, targets).item()
             current_acc = compute_accuracy(logits, targets)
@@ -390,7 +399,7 @@ class ModelAgnosticMetaLearning(object):
                     tbd = 1
             elif self.cl_strategy=='loss':
                 if current_outer_loss + self.cl_tbd_thres <= results['outer_loss']:
-                    tbd = 1
+                    tbd = 1  # task shifted
 
         ood = 1
         if self.cl_strategy in ['loss', 'acc']:
@@ -403,8 +412,9 @@ class ModelAgnosticMetaLearning(object):
                 if results['outer_loss'] <= self.cl_strategy_thres:
                     ood = 0
 
+        # no task shifting and it's an ood task, update the slow weights \phi
         if self.cl_strategy != 'never_retrain' and not tbd and ood:
-            self.outer_update(outer_loss)
+            self.outer_update(outer_loss) #  line 22
 
 
         #--------------------------------------------------#
@@ -422,6 +432,63 @@ class ModelAgnosticMetaLearning(object):
 
         return results
 
+
+class ProtoMAML(ModelAgnosticMetaLearning):
+    def __init__(self, model, optimizer, loss_function, args):
+        super(ProtoMAML, self).__init__(model, optimizer, loss_function, args)
+        self.args = args
+        self.num_ways = None
+
+    def adapt(self, inputs, targets, ways=None, shots=None):
+        """
+        not shuffled, same class group together
+        inputs: [ways*shots, 1, 28, 28]
+        targets: [ways*shots]
+        """
+        
+        if self.num_ways is None or ways != self.num_ways:
+            self.model.update_classifier(ways)
+        self.num_ways = ways
+
+        prototype_shots = 1
+        idx = []
+        for i in range(prototype_shots):
+            idx.append(np.arange(ways) + i)
+        idxs = np.zeros(prototype_shots * ways) 
+        for i in range(prototype_shots):
+            idxs[i::ways] = idx[i] 
+        
+        import pdb; pdb.set_trace()
+#        prototypes = self.model.forward_conv(1 sample from each class) #TODO
+#        self.model.classifier.update_weights(prototypes) #TODO
+
+        params = None
+
+        results = {'inner_losses': np.zeros(
+            (self.num_adaptation_steps,), dtype=np.float32)}
+
+        for step in range(self.num_adaptation_steps):
+            logits = self.model(inputs, params=params)
+            inner_loss = self.loss_function(logits, targets)
+            results['inner_losses'][step] = inner_loss.item()
+
+            if (step == 0):
+                if self.is_classification_task:
+                    accuracy_before = compute_accuracy(logits, targets)
+                    results["accuracy_before"] = accuracy_before
+                else:
+                    mse_before = inner_loss
+                    results["mse_before"] = mse_before
+
+            self.model.zero_grad()
+
+            params = update_parameters(self.model, inner_loss,
+                step_size=self.step_size, params=params,
+                first_order=(not self.model.training) or self.first_order,
+                freeze_visual_features=self.freeze_visual_features,
+                no_meta_learning=self.no_meta_learning)
+
+        return params, results
 
 class FOMAML(ModelAgnosticMetaLearning):
     def __init__(self, model, optimizer=None, step_size=0.1,

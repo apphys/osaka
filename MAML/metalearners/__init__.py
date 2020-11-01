@@ -1,3 +1,3 @@
-from MAML.metalearners.maml import ModelAgnosticMetaLearning, MAML, FOMAML, ModularMAML
+from MAML.metalearners.maml import ModelAgnosticMetaLearning, MAML, FOMAML, ModularMAML, ProtoMAML
 
-__all__ = ['ModelAgnosticMetaLearning', 'MAML', 'ModularMAML']
+__all__ = ['ModelAgnosticMetaLearning', 'MAML', 'ModularMAML', 'ProtoMAML']

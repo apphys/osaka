@@ -57,12 +57,12 @@ def parse_args():
     group.add_argument('--pretrain-model', type=str, default=None,   help='Path to the pretrained model (if any)')
     group.add_argument('--num_ways',       type=int, default=5,      help='Number of classes per task (N in "N-way").')
     group.add_argument('--num_shots',      type=int, default=5,      help='Number of training example per class (k in "k-shot").')
-    group.add_argument('--num_shots-test', type=int, default=15,     help='Number of test example per class. If negative, same as the number of training examples `--num_shots`')
+    group.add_argument('--num_shots_test', type=int, default=15,     help='Number of test example per class. If negative, same as the number of training examples `--num_shots`')
     group.add_argument('--seed',           type=int, default=100,    help='Seed')
 
     # Model
     group = parser.add_argument_group("Model Settings")
-    group.add_argument('--model_name', type=str, default='ours', choices=['ours', 'online_sgd', 'fine_tuning', 'MetaCOG', 'MetaBGD', 'MAML', 'ANIL', 'BGD'])
+    group.add_argument('--model_name', type=str, default='ours', choices=['ours', 'online_sgd', 'fine_tuning', 'MetaCOG', 'MetaBGD', 'MAML', 'ANIL', 'BGD', 'protomaml'])
     group.add_argument('-hs', '--hidden_size', type=int, default=64, help='Number of channels in each convolution layer of the VGG network or hidden size of an MLP. If None, kept to default')
     group.add_argument('-de', '--deeper', type=int, default=0, help='number of layers after the convs and before the classifier')
     group.add_argument('-nclml', '--no_cl_meta_learning',  type=int,   default=0,    help='turn off meta-learning at cl time')
@@ -73,7 +73,7 @@ def parse_args():
 
     # ModularMAML
     group = parser.add_argument_group("ModularMAML", "Settings related to the Modular MAML model.")
-    group.add_argument('-m', '--method', type=str, default='MAML', choices=['MAML','ModularMAML'])
+    group.add_argument('-m', '--method', type=str, default='MAML', choices=['MAML','ModularMAML', 'ProtoMAML'])
     group.add_argument('-mo', '--modularity', type=str, default='param_wise', choices=['param_wise'], help='dont mind this for now')
     group.add_argument('-ma','--mask_activation', type=str, default='None', choices=['None','sigmoid','ReLU', 'hardshrink'], help='activation before applying the masks')
     group.add_argument('-lr', '--l1_reg', type=float, default=0.0, help='regularization strenght to encourage sparsity')

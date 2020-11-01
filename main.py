@@ -16,7 +16,7 @@ from torchvision.transforms import ToTensor, Resize, Compose
 from dataloaders import init_dataloaders
 
 from MAML.model import ModelConvSynbols, ModelConvOmniglot, ModelConvMiniImagenet, ModelMLPSinusoid
-from MAML.metalearners import ModelAgnosticMetaLearning, ModularMAML 
+from MAML.metalearners import ModelAgnosticMetaLearning, ModularMAML, ProtoMAML
 from MAML.utils import ToTensor1D, set_seed, is_connected
 
 from Utils.bgd_lib.bgd_optimizer import create_BGD_optimizer
@@ -24,7 +24,7 @@ from Utils.bgd_lib.bgd_optimizer import create_BGD_optimizer
 
 def main(args):
 
-    #------------------------ BOILERPLATE  --------------------------#
+    #------------------------ BOILERPLATE --------------------------#
 
     def boilerplate(args):
 
@@ -92,6 +92,8 @@ def main(args):
         if metalearner is None:
             if args.method == 'MAML':
                 metalearner = ModelAgnosticMetaLearning(model, meta_optimizer, loss_function, args)
+            elif args.method == 'ProtoMAML':
+                metalearner = ProtoMAML(model, meta_optimizer, loss_function, args)
             elif args.method == 'ModularMAML':
                 metalearner = ModularMAML(model, meta_optimizer, loss_function, args, wandb=wandb)
 
@@ -116,7 +118,10 @@ def main(args):
                 epochs_overfitting = 0
 
                 epoch_desc = 'Epoch {{0: <{0}d}}'.format(1 + int(math.log10(args.num_epochs)))
+
+                print(f'\npretraining for {args.num_epochs} epochs...\n')
                 for epoch in range(args.num_epochs):
+                    
 
                     metalearner.train(meta_train_dataloader, max_batches=args.num_batches,
                                       verbose=args.verbose, desc='Training', leave=False)
@@ -182,7 +187,7 @@ def main(args):
         avg_mses_mode = dict(zip(modes, [[], [], []]))
 
 
-
+        print(f'\n Continual learning for {args.n_runs} iterations...')
         for run in range(args.n_runs):
 
             #set_seed(args, rgs.seed) if run==0 else set_seed(args, random.randint(0,100000))
@@ -230,7 +235,7 @@ def main(args):
                             'timestep2': i
                         })
 
-                if args.verbose or i==args.timesteps-1:
+                if (args.verbose and i % 1000 == 0) or i==args.timesteps-1:
                     if is_classification_task:
                         acc = np.mean(accuracies[run,:i])
                     else:
