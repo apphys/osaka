@@ -368,6 +368,143 @@ class StreamDataset(torch.utils.data.Dataset):
                 torch.tensor(self.n_way).to(self.device),\
                 torch.tensor(self.n_shots).to(self.device)
 
+class VariableClassStreamDataset(torch.utils.data.Dataset):
+    """ stream of non stationary dataset as described by Mass """
+
+    def __init__(self, train_data, test_data, ood_data, n_shots=1,
+            n_way=5, prob_statio=.8, prob_train=0.1, prob_test=0.8,
+            prob_ood=0.1, args=None, **kwargs):
+
+        '''
+        Parameters
+        ----------
+
+        train_data : Array of (x,) pairs, one for each class. Contains the SAME
+            classes used during (meta) training, but different samples.
+        test_data  : Array of (x,) pairs, one for each class. These are DIFFERENT
+            classes from the ones used during (meta) training.
+        n_way      : number of classes per task at cl-test time
+        n_shots    : number of samples per classes at cl-test time
+
+        '''
+
+        assert prob_train + prob_test + prob_ood == 1.
+        if args.dataset == 'tiered-imagenet':
+            self.cpu_dset = True
+        else:
+            self.cpu_dset = False
+
+        self.n_shots    = n_shots
+        self.n_way      = n_way
+        self.n_way_current = n_way
+
+        self.modes    = ['train', 'test', 'ood']
+        self.modes_id = [0, 1, 2]
+        self.probs    = np.array([prob_train, prob_test, prob_ood])
+        # For Omniglot task:
+        # train_data: omniglot, test_data: MNIST, ood_data: FashionMNIST
+        self.data     = [train_data, test_data, ood_data]
+        self.p_statio = prob_statio
+
+        self.task_sequence: List[str] = []
+        self.n_steps_per_task = 1
+        self.index_in_task_sequence = 0
+        self.steps_done_on_task = 0
+
+        if args is None:
+            self.input_size  = [28,28]
+            self.device      = 'cpu'
+            self.is_classification_task = True
+        else:
+            self.input_size  = args.input_size
+            self.device      = args.device
+            self.is_classification_task = args.is_classification_task
+            self.task_sequence = args.task_sequence
+            self.n_steps_per_task = args.n_steps_per_task
+
+        self.mode_name_map = dict(zip(self.modes, self.modes_id))
+
+        # mode in which to start ( 0 --> 'train' )
+        self._mode = 0
+        self._classes_in_task = None
+        self._samples_in_class = None
+
+
+    def __len__(self):
+        # this is a never ending stream
+        return sys.maxsize
+
+
+    def __getitem__(self, index):
+        if self.is_classification_task:
+            return self._getitem_classification(index)
+        else:
+            return self._getitem_regression(index)
+
+    def _getitem_classification(self, index):
+        # NOTE: This method COMPLETELY ignores the index. This will be a problem
+        # if you wish to recover a specific batch of data.
+
+        # NOTE: using multiple workers (`num_workers > 0`) or `batch_size  > 1`
+        # will have undefined behaviour. This is because unlike regular datasets
+        # here the sampling process is sequential.
+        task_switch = 0
+        if self.task_sequence:
+            self.steps_done_on_task += 1
+
+            if self.steps_done_on_task >= self.n_steps_per_task:
+                task_switch = 1
+                self.steps_done_on_task = 0
+                self.index_in_task_sequence += 1
+                self.index_in_task_sequence %= len(self.task_sequence)
+
+            mode_name = self.task_sequence[self.index_in_task_sequence]
+            self._mode = self.mode_name_map[mode_name]
+        elif (np.random.uniform() > self.p_statio) or (self._classes_in_task is None):
+            # mode  = np.random.choice(self.modes_id, p=self.probs)
+            # self._mode = mode
+            # task_switch = mode != self._mode
+            # TODO: this makes a switch even if staying in same mode!
+            task_switch = 1
+            self._mode  = np.random.choice([0,1,2], p=self.probs)
+            self.n_way_current = np.random.randint(self.n_way, 11)
+
+            mode_data = self.data[self._mode]
+            n_classes = len(mode_data)
+            self._samples_in_class = mode_data.size(1)
+
+            # sample `n_way` classes
+            self._classes_in_task = np.random.choice(np.arange(n_classes), self.n_way_current,
+                    replace=False)
+
+        else:
+
+            task_switch = 0
+
+        mode_data = self.data[self._mode]
+        data = mode_data[self._classes_in_task]
+
+        # sample indices for meta train
+        idx = torch.Tensor(self.n_way_current, self.n_shots)#.to(self.device)
+        idx = idx.uniform_(0, self._samples_in_class).long()
+        if not(self.cpu_dset):
+            idx = idx.to(self.device)
+        data = select_from_tensor(data, idx)
+
+        # build label tensors
+        labels = torch.arange(self.n_way_current).view(-1, 1).expand(-1, self.n_shots).to(self.device)
+
+        # squeeze
+        data = data.view(-1, *self.input_size)
+        labels = labels.flatten()
+
+        if self.cpu_dset:
+            data = data.float().to(self.device)
+            labels = labels.to(self.device)
+
+        return data, labels, task_switch, self.modes[self._mode], \
+                torch.tensor(self.n_way_current).to(self.device),\
+                torch.tensor(self.n_shots).to(self.device)
 
 
 def init_dataloaders(args):
@@ -490,6 +627,11 @@ def init_dataloaders(args):
     cl_dataloader = StreamDataset(cl_dataset, cl_ood_dataset1, cl_ood_dataset2,
             n_shots=args.num_shots, n_way=args.num_ways, prob_statio=args.prob_statio,
             prob_train=args.prob_train, prob_test=args.prob_test, prob_ood=args.prob_ood, args=args)
+
+    if args.use_different_nways:
+        cl_dataloader = VariableClassStreamDataset(cl_dataset, cl_ood_dataset1, cl_ood_dataset2,
+                n_shots=args.num_shots, n_way=args.num_ways, prob_statio=args.prob_statio,
+                prob_train=args.prob_train, prob_test=args.prob_test, prob_ood=args.prob_ood, args=args)
     cl_dataloader = torch.utils.data.DataLoader(cl_dataloader, batch_size=1)
 
     del meta_train_dataset, meta_train_train, meta_train_test, meta_val_dataset,\

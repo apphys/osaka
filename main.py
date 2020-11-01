@@ -235,7 +235,7 @@ def main(args):
                             'timestep2': i
                         })
 
-                if (args.verbose and i % 1000 == 0) or i==args.timesteps-1:
+                if (args.verbose and i % 100 == 0) or i==args.timesteps-1:
                     if is_classification_task:
                         acc = np.mean(accuracies[run,:i])
                     else:

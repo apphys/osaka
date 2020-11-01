@@ -103,6 +103,7 @@ def parse_args():
     group.add_argument('--prob_statio',                    type=float, default=0.98, help='probability to stay in the same task')
     group.add_argument("--task_sequence",    type=str, choices=["train", "test", "ood"], default=None, nargs="*", help="predefined task sequence for the dataloader to serve in a loop.")
     group.add_argument("--n_steps_per_task", type=int, default=1, help="Number of steps per task in the sequence.")
+    group.add_argument("--use_different_nways", type=bool, default=False, help="Use different number of ways(classes) for testing.")
 
     #BGD for CL
     group = parser.add_argument_group("BGD", "Settings related to the BGD optimizer")

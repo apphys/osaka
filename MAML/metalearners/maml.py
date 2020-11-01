@@ -357,26 +357,29 @@ class ModelAgnosticMetaLearning(object):
             self.last_mode = mode[0]
             return results
 
-        ## try the prev model on the incoming data:
-        with torch.set_grad_enabled(self.model.training):
-            if isinstance(self.optimizer_cl, BGD):
-                ## using BGD:
-                acc, mse, outer_loss  = self.get_outer_loss_bgd(inputs, targets, num_of_mc_iters)
-                if self.is_classification_task:
-                    results['accuracy_after'] = acc / num_of_mc_iters
+        if self.num_ways == ways[0]:
+            ## try the prev model on the incoming data:
+            with torch.set_grad_enabled(self.model.training):
+                if isinstance(self.optimizer_cl, BGD):
+                    ## using BGD:
+                    acc, mse, outer_loss  = self.get_outer_loss_bgd(inputs, targets, num_of_mc_iters)
+                    if self.is_classification_task:
+                        results['accuracy_after'] = acc / num_of_mc_iters
+                    else:
+                        results["mse_after"]  = mse / num_of_mc_iters
+                    results['outer_loss'] = torch.mean(torch.tensor(outer_loss)).item()
                 else:
-                    results["mse_after"]  = mse / num_of_mc_iters
-                results['outer_loss'] = torch.mean(torch.tensor(outer_loss)).item()
-            else:
-                ## using SGD
-                # line 17, outer_loss is loss of previous fast weights \theta_{t-1}
-                logits = self.model(inputs, params=self.current_model)
-                outer_loss = self.loss_function(logits, targets) 
-                results['outer_loss'] = outer_loss.item()
-                if self.is_classification_task:
-                    results['accuracy_after'] = compute_accuracy(logits, targets)
-                else:
-                    results["mse_after"] = F.mse_loss(logits, targets)
+                    ## using SGD
+                    # line 17, outer_loss is loss of previous fast weights \theta_{t-1}
+                    logits = self.model(inputs, params=self.current_model)
+                    outer_loss = self.loss_function(logits, targets) 
+                    results['outer_loss'] = outer_loss.item()
+                    if self.is_classification_task:
+                        results['accuracy_after'] = compute_accuracy(logits, targets)
+                    else:
+                        results["mse_after"] = F.mse_loss(logits, targets)
+        #else:
+        #    print('---- CL ways changed from ', self.num_ways, ' to ', ways[0])
 
         ## prediction is done and you can now use the labels
 
@@ -385,37 +388,39 @@ class ModelAgnosticMetaLearning(object):
 
         #----------------- CL strategies ------------------#
 
-        tbd = 0
-        if self.cl_tbd_thres != -1: # gamma
+        # if num_ways changed, then must be a task switch, skip the rest
+        if self.num_ways == ways[0]: 
+            tbd = 0
+            if self.cl_tbd_thres != -1: # gamma
 
-            with torch.no_grad():
-                # line 19, current_outer_loss is second term, loss of line 18
-                logits = self.model(inputs, params=self.current_model)
-                current_outer_loss = self.loss_function(logits, targets).item()
-            current_acc = compute_accuracy(logits, targets)
+                with torch.no_grad():
+                    # line 19, current_outer_loss is second term, loss of line 18
+                    logits = self.model(inputs, params=self.current_model)
+                    current_outer_loss = self.loss_function(logits, targets).item()
+                current_acc = compute_accuracy(logits, targets)
 
-            ## if task switched, than inner and outer loop have a missmatch!
-            if self.cl_strategy=='acc':
-                if current_acc >= results['accuracy_after'] + self.cl_tbd_thres:
-                    tbd = 1
-            elif self.cl_strategy=='loss':
-                if current_outer_loss + self.cl_tbd_thres <= results['outer_loss']:
-                    tbd = 1  # task shifted
+                ## if task switched, than inner and outer loop have a missmatch!
+                if self.cl_strategy=='acc':
+                    if current_acc >= results['accuracy_after'] + self.cl_tbd_thres:
+                        tbd = 1
+                elif self.cl_strategy=='loss':
+                    if current_outer_loss + self.cl_tbd_thres <= results['outer_loss']:
+                        tbd = 1  # task shifted
 
-        ood = 1
-        if self.cl_strategy in ['loss', 'acc']:
+            ood = 1
+            if self.cl_strategy in ['loss', 'acc']:
 
-            if self.cl_strategy=='acc':
-                if results['accuracy_after'] >= self.cl_strategy_thres:
-                    ood = 0
+                if self.cl_strategy=='acc':
+                    if results['accuracy_after'] >= self.cl_strategy_thres:
+                        ood = 0
 
-            elif self.cl_strategy=='loss':
-                if results['outer_loss'] <= self.cl_strategy_thres:
-                    ood = 0
+                elif self.cl_strategy=='loss':
+                    if results['outer_loss'] <= self.cl_strategy_thres:
+                        ood = 0
 
-        # no task shifting and it's an ood task, update the slow weights \phi
-        if self.cl_strategy != 'never_retrain' and not tbd and ood:
-            self.outer_update(outer_loss) #  line 22
+            # no task shifting and it's an ood task, update the slow weights \phi
+            if self.cl_strategy != 'never_retrain' and not tbd and ood:
+                self.outer_update(outer_loss) #  line 22
 
 
         #--------------------------------------------------#
@@ -451,7 +456,7 @@ class ProtoMAML(ModelAgnosticMetaLearning):
             raise ValueError('Proto-MAML adapt arg ways & shots cannot be None!')
 
         if self.num_ways is None or ways != self.num_ways:
-            self.model.update_classifier(ways)
+            self.model.update_classifier(ways.to('cpu').tolist())
         self.num_ways = ways
 
         prototypes = self.model.forward_conv(inputs) # [ways*shots, 64]

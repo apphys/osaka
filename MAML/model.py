@@ -74,8 +74,7 @@ class MetaConvModel(MetaModule):
         self.classifier = MetaLinear(feature_size, out_features, bias=True)
         
     def update_classifier(self, out_features):
-        if self.out_features != out_features:
-            self.classifier = MetaLinear(self.feature_size, out_features, bias=True)
+        self.classifier = MetaLinear(self.feature_size, out_features, bias=True)
 
     def forward_conv(self, inputs, params=None):
         visual_features = self.visual_features(inputs, params=get_subdict(params, 'visual_features'))
