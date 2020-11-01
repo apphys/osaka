@@ -321,8 +321,8 @@ class ModelAgnosticMetaLearning(object):
             self.model.train()
 
         #inputs, targets, _ , _ = batch
-        # inputs [1, batch_size, 1, 28, 28], targets [1, batch_size]
-        inputs, targets, task_switch , mode = batch
+        # inputs [1, ways*shots, 1, 28, 28], targets [1, ways*shots]
+        inputs, targets, task_switch , mode, ways, shots = batch
 
         # for now we are doing one task at a time
         assert inputs.shape[0] == 1
@@ -330,7 +330,7 @@ class ModelAgnosticMetaLearning(object):
         # mc sampling for bgd optimizer
         self.batch_size = inputs.shape[1]
         num_of_mc_iters = 1
-        set_trace()
+        #set_trace()
         if hasattr(self.optimizer_cl, "get_mc_iters"):
             num_of_mc_iters = self.optimizer_cl.get_mc_iters()
         inputs, targets  = inputs[0], targets[0]
@@ -350,9 +350,11 @@ class ModelAgnosticMetaLearning(object):
                 "mse_before": 0.,
                 "mse_after": 0.,
             })
+
+#        import pdb; pdb.set_trace()
         # There's no \theta_{t-1}
         if self.current_model is None: 
-            self.current_model, _ = self.adapt(inputs, targets)
+            self.current_model, _ = self.adapt(inputs, targets, ways[0], shots[0])
             self.last_mode = mode[0]
             return results
 
@@ -380,7 +382,7 @@ class ModelAgnosticMetaLearning(object):
         ## prediction is done and you can now use the labels
 
         # line 18, update fast_weight, generated from slow weights \phi, but \phi not changed
-        self.current_model, _ = self.adapt(inputs, targets) 
+        self.current_model, _ = self.adapt(inputs, targets, ways[0], shots[0]) 
 
         #----------------- CL strategies ------------------#
 
@@ -446,21 +448,24 @@ class ProtoMAML(ModelAgnosticMetaLearning):
         targets: [ways*shots]
         """
         
-        if self.num_ways is None or ways != self.num_ways:
+        if self.num_ways is None or (ways is not None and ways != self.num_ways):
             self.model.update_classifier(ways)
         self.num_ways = ways
 
-        prototype_shots = 1
-        idx = []
-        for i in range(prototype_shots):
-            idx.append(np.arange(ways) + i)
-        idxs = np.zeros(prototype_shots * ways) 
-        for i in range(prototype_shots):
-            idxs[i::ways] = idx[i] 
+        prototypes = []    
+        labels = []
+        for i in range(ways):
+            prototypes.append(inputs[i*shots])
+            labels.append(targets[i*shots])
+        prototypes = torch.stack(prototypes) # [ways, 1, 28, 28]
+        labels = torch.stack(labels) # [ways]
+        prototypes = self.model.forward_conv(prototypes) # [ways, 64]
+        # Proto-MAML: init last FC layer with prototype weights
+        self.model.classifier.weight=torch.nn.Parameter(2.0*prototypes) # w_k = 2c_k
+        self.model.classifier.bias=torch.nn.Parameter(
+                -torch.sum(prototypes*prototypes, axis=1)) # b_k = -|c_k|^2
         
-        import pdb; pdb.set_trace()
-#        prototypes = self.model.forward_conv(1 sample from each class) #TODO
-#        self.model.classifier.update_weights(prototypes) #TODO
+#        import pdb; pdb.set_trace()
 
         params = None
 

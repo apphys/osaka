@@ -364,7 +364,9 @@ class StreamDataset(torch.utils.data.Dataset):
             data = data.float().to(self.device)
             labels = labels.to(self.device)
 
-        return data, labels, task_switch, self.modes[self._mode]
+        return data, labels, task_switch, self.modes[self._mode], \
+                torch.tensor(self.n_way).to(self.device),\
+                torch.tensor(self.n_shots).to(self.device)
 
 
 

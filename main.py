@@ -201,7 +201,7 @@ def main(args):
 
             for i, batch in enumerate(cl_dataloader):
 
-                data, labels, task_switch, mode = batch
+                data, labels, task_switch, mode, _, _ = batch
                 results = cl_model.observe(batch)
 
                 ## Reporting:
