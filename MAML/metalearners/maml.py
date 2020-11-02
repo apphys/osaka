@@ -105,6 +105,7 @@ class ModelAgnosticMetaLearning(object):
                     group.setdefault('initial_lr', group['lr'])
                 self.scheduler.base_lrs([group['initial_lr']
                     for group in self.optimizer.param_groups])
+        self.num_ways = args.num_ways
 
     def get_outer_loss(self, batch):
         if 'test' not in batch:
