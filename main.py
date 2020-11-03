@@ -238,6 +238,9 @@ def main(args):
                 if (args.verbose and i % 100 == 0) or i==args.timesteps-1:
                     if is_classification_task:
                         acc = np.mean(accuracies[run,:i])
+                        acc_mode = []
+                        for mode in modes:
+                            acc_mode.append(np.mean(accuracies_mode[mode]))
                     else:
                         mse = np.mean(mses[run, :i])
                     tbd = np.mean(tbds[run,:i])
@@ -246,7 +249,7 @@ def main(args):
 
                     print(
                         (
-                            f"total Acc: {acc:.2f}"
+                            f"total Acc: {acc:.2f}, mode 0 Acc: {acc_mode[0]:.2f}, mode 1 Acc: {acc_mode[1]:.2f}, mode 2 Acc: {acc_mode[2]:.2f}"
                             if is_classification_task else
                             f"mean MSE: {mse:.5f}"
                             f" MSE: {mses[run, i]:.3f}"

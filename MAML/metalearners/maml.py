@@ -358,7 +358,8 @@ class ModelAgnosticMetaLearning(object):
             self.last_mode = mode[0]
             return results
 
-        if self.num_ways == ways[0]:
+        same_nways = 1 if self.num_ways == ways[0] else 0
+        if same_nways :
             ## try the prev model on the incoming data:
             with torch.set_grad_enabled(self.model.training):
                 if isinstance(self.optimizer_cl, BGD):
@@ -390,8 +391,8 @@ class ModelAgnosticMetaLearning(object):
         #----------------- CL strategies ------------------#
 
         # if num_ways changed, then must be a task switch, skip the rest
-        if self.num_ways == ways[0]: 
-            tbd = 0
+        tbd = 0
+        if same_nways:
             if self.cl_tbd_thres != -1: # gamma
 
                 with torch.no_grad():
