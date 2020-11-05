@@ -155,8 +155,7 @@ class ModelAgnosticMetaLearning(object):
 
     # used both in pretraining and CL time
     # a few gradient descent steps starting from \phi (slow weights, accumulated knowledge)
-    def adapt(self, inputs, targets, ways=None, shots=None):
-        params = None
+    def adapt(self, inputs, targets, ways=None, shots=None, params=None):
 
         results = {'inner_losses': np.zeros(
             (self.num_adaptation_steps,), dtype=np.float32)}
@@ -314,7 +313,7 @@ class ModelAgnosticMetaLearning(object):
             outer_loss.backward()  
             self.optimizer.step()
 
-    # This is without prolonged adaptation phase(PAP)
+    # This is without prolonged adaptation phase(PAP), Algo 4
     def observe(self, batch):
         if self.cl_strategy == 'never_retrain':
             self.model.eval()
@@ -380,10 +379,6 @@ class ModelAgnosticMetaLearning(object):
                         results['accuracy_after'] = compute_accuracy(logits, targets)
                     else:
                         results["mse_after"] = F.mse_loss(logits, targets)
-        #else:
-        #    print('---- CL ways changed from ', self.num_ways, ' to ', ways[0])
-
-        ## prediction is done and you can now use the labels
 
         # line 18, update fast_weight, generated from slow weights \phi, but \phi not changed
         self.current_model, _ = self.adapt(inputs, targets, ways[0], shots[0]) 
@@ -393,8 +388,7 @@ class ModelAgnosticMetaLearning(object):
         # if num_ways changed, then must be a task switch, skip the rest
         tbd = 0
         if same_nways:
-            if self.cl_tbd_thres != -1: # gamma
-
+            if self.cl_tbd_thres != -1: # gamma, !=-1, so need to check if task shifted
                 with torch.no_grad():
                     # line 19, current_outer_loss is second term, loss of line 18
                     logits = self.model(inputs, params=self.current_model)
@@ -409,20 +403,169 @@ class ModelAgnosticMetaLearning(object):
                     if current_outer_loss + self.cl_tbd_thres <= results['outer_loss']:
                         tbd = 1  # task shifted
 
+            # No Update Modulation (UM)
             ood = 1
             if self.cl_strategy in ['loss', 'acc']:
 
                 if self.cl_strategy=='acc':
-                    if results['accuracy_after'] >= self.cl_strategy_thres:
+                    if results['accuracy_after'] >= self.cl_strategy_thres: 
                         ood = 0
 
                 elif self.cl_strategy=='loss':
-                    if results['outer_loss'] <= self.cl_strategy_thres:
+                    if results['outer_loss'] <= self.cl_strategy_thres: # lambda
                         ood = 0
 
             # no task shifting and it's an ood task, update the slow weights \phi
             if self.cl_strategy != 'never_retrain' and not tbd and ood:
                 self.outer_update(outer_loss) #  line 22
+
+#            # With Update Modulation (UM)
+#            ood = 1.0
+#            if self.cl_strategy in ['loss', 'acc']:
+#                if self.cl_strategy=='acc':
+#                    ood = min(1.0, results['accuracy_after']/self.cl_strategy_thres)
+#
+#                elif self.cl_strategy=='loss':
+#                    ood = min(1.0, results['outer_loss']/self.cl_strategy_thres)
+#
+#            if self.cl_strategy != 'never_retrain' and not tbd:
+#                self.outer_update(outer_loss*ood) #  line 22
+                
+                
+
+
+        #--------------------------------------------------#
+
+        results['tbd'] = task_switch.item()==tbd
+
+        #print('{} {} loss={:.2f} curr_loss={:.2f} acc={:.2f} curr_acc={:.2f} tbd: {}'.format(
+        #                                   task_switch.item(),
+        #                                   mode[0],
+        #                                   results['outer_loss'],
+        #                                   current_outer_loss,
+        #                                   results['accuracy_after'],
+        #                                   current_acc,
+        #                                   results['tbd']))
+
+        return results
+
+    # Algo 3
+    def observe2(self, batch):
+        if self.cl_strategy == 'never_retrain':
+            self.model.eval()
+        else:
+            self.model.train()
+
+        #inputs, targets, _ , _ = batch
+        # inputs [1, ways*shots, 1, 28, 28], targets [1, ways*shots]
+        inputs, targets, task_switch , mode, ways, shots = batch
+
+        # for now we are doing one task at a time
+        assert inputs.shape[0] == 1
+        assert self.optimizer_cl != None, 'Set optimizer_cl'
+        # mc sampling for bgd optimizer
+        self.batch_size = inputs.shape[1]
+        num_of_mc_iters = 1
+        #set_trace()
+        if hasattr(self.optimizer_cl, "get_mc_iters"):
+            num_of_mc_iters = self.optimizer_cl.get_mc_iters()
+        inputs, targets  = inputs[0], targets[0]
+
+        results = {
+            'inner_losses': np.zeros((self.num_adaptation_steps,), dtype=np.float32),
+            'outer_loss': 0.,
+            'tbd':0.,
+        }
+        if self.is_classification_task:
+            results.update({
+                'accuracy_before': 0.,
+                'accuracy_after': 0.
+            })
+        else:
+            results.update({
+                "mse_before": 0.,
+                "mse_after": 0.,
+            })
+
+        # There's no \theta_{t-1}
+        if self.current_model is None: 
+            self.current_model, _ = self.adapt(inputs, targets, ways[0], shots[0])
+            self.last_mode = mode[0]
+            return results
+
+        same_nways = 1 if self.num_ways == ways[0] else 0
+        if same_nways :
+            ## try the prev model on the incoming data:
+            with torch.set_grad_enabled(self.model.training):
+                if isinstance(self.optimizer_cl, BGD):
+                    ## using BGD:
+                    acc, mse, outer_loss  = self.get_outer_loss_bgd(inputs, targets, num_of_mc_iters)
+                    if self.is_classification_task:
+                        results['accuracy_after'] = acc / num_of_mc_iters
+                    else:
+                        results["mse_after"]  = mse / num_of_mc_iters
+                    results['outer_loss'] = torch.mean(torch.tensor(outer_loss)).item()
+                else:
+                    ## using SGD
+                    # line 17, outer_loss is loss of previous fast weights \theta_{t-1}
+                    logits = self.model(inputs, params=self.current_model)
+                    outer_loss = self.loss_function(logits, targets) 
+                    results['outer_loss'] = outer_loss.item()
+                    if self.is_classification_task:
+                        results['accuracy_after'] = compute_accuracy(logits, targets)
+                    else:
+                        results["mse_after"] = F.mse_loss(logits, targets)
+
+        # virtual fast_weight, generated from slow weights \phi, but \phi not changed
+        self.current_virtual_model, _ = self.adapt(inputs, targets, ways[0], shots[0]) 
+        with torch.no_grad():
+            # line 19, current_outer_loss is second term, loss of line 18
+            logits = self.model(inputs, params=self.current_virtual_model)
+            current_outer_loss = self.loss_function(logits, targets).item()
+        current_acc = compute_accuracy(logits, targets)
+
+        #----------------- CL strategies ------------------#
+
+        tbd = 0 if same_nways else 1
+        if tbd == 0 and self.cl_tbd_thres != -1: # need to check task shift
+            if self.cl_strategy=='acc':
+                if current_acc >= results['accuracy_after'] + self.cl_tbd_thres:
+                    tbd = 1
+            elif self.cl_strategy=='loss':
+                if current_outer_loss + self.cl_tbd_thres <= results['outer_loss']:
+                    tbd = 1  # task shifted
+        if tbd == 0: # no task shift
+            # update fast weight \theta_t from previous fast weight
+            #TODO: this will cause OOM!!
+            self.current_model, _ = self.adapt(inputs, targets, ways[0], shots[0], params=self.current_model)
+        else:  # task shifted, tbd == 1
+            ood = 1
+            if self.cl_strategy in ['loss', 'acc']:
+
+                if self.cl_strategy=='acc':
+                    if same_nways:
+                        if results['accuracy_after'] >= self.cl_strategy_thres:
+                            ood = 0
+                    else:
+                        if current_acc <= self.cl_strategy_thres:
+                            ood = 0
+
+                elif self.cl_strategy=='loss':
+                    if same_nways:
+                        if results['outer_loss'] <= self.cl_strategy_thres:
+                            ood = 0
+                    else:
+                        if current_outer_loss <= self.cl_strategy_thres:
+                            ood = 0 
+
+            # update the slow weights \phi
+            if self.cl_strategy != 'never_retrain' and ood:
+                if same_nways:
+                    self.outer_update(outer_loss) #  line 22
+                else:
+                    self.outer_update(current_outer_loss) #  line 22
+            # update fast weight \theta_t from slow weight
+            self.current_model, _ = self.adapt(inputs, targets, ways[0], shots[0])
 
 
         #--------------------------------------------------#

@@ -68,7 +68,7 @@ def parse_args():
     group.add_argument('-nclml', '--no_cl_meta_learning',  type=int,   default=0,    help='turn off meta-learning at cl time')
     group.add_argument('--freeze_visual_features',         type=int,   default=0,    help='for MRCL, freeze all conv layers at cl time')
     group.add_argument('-cl_s',  '--cl_strategy',          type=str,   default=None, choices=['always_retrain', 'never_retrain', 'acc', 'loss'])
-    group.add_argument('-cl_st', '--cl_strategy_thres',    type=float, default=0,    help='threshold for training on the incoming data or not')
+    group.add_argument('-cl_st', '--cl_strategy_thres',    type=float, default=4.0,    help='threshold for training on the incoming data or not')
     group.add_argument('-cl_tt', '--cl_tbd_thres',         type=float, default=-1,   help='threshold for task boundary detection (-1 to turn on off)')
 
     # ModularMAML
