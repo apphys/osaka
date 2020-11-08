@@ -153,7 +153,10 @@ def continual_learning(args, wandb, cl_model_init, meta_optimizer_cl, cl_dataloa
 
         for i, batch in enumerate(cl_dataloader):
             data, labels, task_switch, mode, _, _ = batch
-            results = cl_model.observe(batch)
+            if args.algo3:
+                results = cl_model.observe2(batch)
+            else:
+                results = cl_model.observe(batch)
 
             # Reporting:
             if is_classification_task:

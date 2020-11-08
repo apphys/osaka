@@ -161,6 +161,12 @@ class ModelAgnosticMetaLearning(object):
         params = None
         results = {'inner_losses': np.zeros(
             (self.num_adaptation_steps,), dtype=np.float32)}
+
+        params_local = None
+        if params is not None:
+            #TODO: need this, otherwise backprop too many steps, OOM!!
+            params_local = OrderedDict({k:v.clone().detach().requires_grad_(True) for k,v in params.items()})
+
         for step in range(self.num_adaptation_steps):
             logits = self.model(inputs, params=params_local)
             inner_loss = self.loss_function(logits, targets)
@@ -174,8 +180,8 @@ class ModelAgnosticMetaLearning(object):
                     results["mse_before"] = mse_before
 
             self.model.zero_grad()
-            params = update_parameters(self.model, inner_loss,
-                step_size=self.step_size, params=params,
+            params_local = update_parameters(self.model, inner_loss,
+                step_size=self.step_size, params=params_local,
                 first_order=(not self.model.training) or self.first_order,
                 freeze_visual_features=self.freeze_visual_features,
                 no_meta_learning=self.no_meta_learning)
@@ -427,9 +433,6 @@ class ModelAgnosticMetaLearning(object):
                 # no task shifting and it's an ood task, update the slow weights \phi
                 if self.cl_strategy != 'never_retrain' and not tbd and ood:
                     self.outer_update(outer_loss) #  line 22
-                #else:
-                #    ol = results['outer_loss']
-                #    print(f'--- no UM, task shifted? {tbd}, ood? {ood} no slow weight update. {ol}, {current_outer_loss}')
             else:
                 # With Update Modulation (UM)
                 ood = 1.0
@@ -441,9 +444,7 @@ class ModelAgnosticMetaLearning(object):
                         ood = min(1.0, (results['outer_loss']/self.cl_strategy_thres)**self.um_power)
                 if self.cl_strategy != 'never_retrain' and not tbd:
                     self.outer_update(outer_loss*ood) #  line 22
-                #else:
-                #    print('--- UM, task shifted. no slow weight update')
-                
+
         #--------------------------------------------------#
 
         results['tbd'] = task_switch.item()==tbd
@@ -534,9 +535,9 @@ class ModelAgnosticMetaLearning(object):
         current_outer_loss = self.loss_function(logits, targets)
         current_outer_loss_value = current_outer_loss.item()
         current_acc = compute_accuracy(logits, targets)
-#        if not same_nways: #TODO: remove this, this is cheating
-#            results['outer_loss'] = current_outer_loss_value
-#            results['accuracy_after'] = current_acc
+        if not same_nways:
+            results['outer_loss'] = current_outer_loss_value
+            results['accuracy_after'] = current_acc
 
         #----------------- CL strategies ------------------#
 
@@ -558,19 +559,12 @@ class ModelAgnosticMetaLearning(object):
                 ood = 1
                 if self.cl_strategy in ['loss', 'acc']:
                     if self.cl_strategy=='acc':
-                        if same_nways:
-                            if results['accuracy_after'] >= self.cl_strategy_thres:
-                                ood = 0
-                        else:
-                            if current_acc >= self.cl_strategy_thres:
-                                ood = 0
+                        if results['accuracy_after'] >= self.cl_strategy_thres:
+                            ood = 0
+
                     elif self.cl_strategy=='loss':
-                        if same_nways:
-                            if results['outer_loss'] <= self.cl_strategy_thres:
-                                ood = 0
-                        else:
-                            if current_outer_loss_value >= self.cl_strategy_thres:
-                                ood = 0
+                        if results['outer_loss'] <= self.cl_strategy_thres:
+                            ood = 0
 
                 # update the slow weights \phi
                 if self.cl_strategy != 'never_retrain' and ood:
@@ -584,15 +578,10 @@ class ModelAgnosticMetaLearning(object):
                 ood = 1.0
                 if self.cl_strategy in ['loss', 'acc']:
                     if self.cl_strategy=='acc':
-                        if same_nways:
-                            ood = min(1.0, (results['accuracy_after']/self.cl_strategy_thres)**self.um_power)
-                        else:
-                            ood = min(1.0, (current_acc/self.cl_strategy_thres)**self.um_power)
+                        ood = min(1.0, (results['accuracy_after']/self.cl_strategy_thres)**self.um_power)
+
                     elif self.cl_strategy=='loss':
-                        if same_nways:
-                            ood = min(1.0, (results['outer_loss']/self.cl_strategy_thres)**self.um_power)
-                        else:
-                            ood = min(1.0, (current_outer_loss_value/self.cl_strategy_thres)**self.um_power)
+                        ood = min(1.0, (results['outer_loss']/self.cl_strategy_thres)**self.um_power)
 
                 if self.cl_strategy != 'never_retrain':
                     if same_nways:
@@ -652,7 +641,11 @@ class ProtoMAML(ModelAgnosticMetaLearning):
         self.model.classifier.weight=torch.nn.Parameter(2.0*prototypes) # w_k = 2c_k
         self.model.classifier.bias=torch.nn.Parameter(
                 -torch.sum(prototypes*prototypes, axis=1)) # b_k = -|c_k|^2
-        params = None
+        #else: # param not None, must be the same task, same nway
+        if params is not None:
+            #TODO: need this, otherwise backprop too many steps, OOM!!
+            params_local = OrderedDict({k:v.clone().detach().requires_grad_(True) for k,v in params.items()})
+
         results = {'inner_losses': np.zeros(
             (self.num_adaptation_steps,), dtype=np.float32)}
 
