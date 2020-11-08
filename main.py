@@ -202,7 +202,10 @@ def main(args):
             for i, batch in enumerate(cl_dataloader):
 
                 data, labels, task_switch, mode, _, _ = batch
-                results = cl_model.observe2(batch)
+                if args.algo3:
+                    results = cl_model.observe2(batch)
+                else:
+                    results = cl_model.observe(batch)
 
                 ## Reporting:
                 if is_classification_task:
