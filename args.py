@@ -44,7 +44,6 @@ def parse_args():
     parser = argparse.ArgumentParser('MAML', formatter_class=help_formatter)
 
     # General args
-
     group = parser.add_argument_group("General Settings")
     #group.add_argument('--mode', default='train', choices=['train', 'test'])
     datasets = ['sinusoid', 'omniglot', 'miniimagenet', 'tiered-imagenet', "harmonics", "synbols"]
@@ -107,7 +106,7 @@ def parse_args():
     group.add_argument("--n_steps_per_task", type=int, default=1, help="Number of steps per task in the sequence.")
     group.add_argument("--use_different_nways", type=bool, default=False, help="Use different number of ways(classes) for testing.")
 
-    #BGD for CL
+    # BGD for CL
     group = parser.add_argument_group("BGD", "Settings related to the BGD optimizer")
     group.add_argument('-bgd', '--bgd_optimizer', type=int, default=0, help='set to "True" if BGD optimizer should be used')
     group.add_argument('-tr_mc', '--train_mc_iters', default=5, type=int, help='Number of MonteCarlo samples during training with BGD optimizer')
@@ -120,7 +119,6 @@ def parse_args():
     group.add_argument('-d', '--debug', action='store_true', help='enable debug mode to go faster')
     group.add_argument('-v', '--verbose', action='store_true')
     group.add_argument('--note', type=str, default=None, help='to ease hparam search analysis')
-
 
     args = parser.parse_args()
 

@@ -26,7 +26,7 @@
 #  --use_different_nway True
 # MAML
 python main.py -v \
-  --wandb "cs330_finalproject" \
+  --wandb "cs330_finalproject_debugging" \
   --name "maml" \
   --prob_statio 0.9 \
   --cl_strategy loss \
