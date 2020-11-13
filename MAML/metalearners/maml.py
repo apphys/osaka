@@ -112,28 +112,33 @@ class ModelAgnosticMetaLearning(object):
         if 'test' not in batch:
             raise RuntimeError('The batch does not contain any test dataset.')
 
+        def zeros(*shape):
+            return np.zeros(shape, dtype=np.float32)
+
         _, test_targets = batch['test']
         num_tasks = test_targets.size(0)
         is_classification_task = (not test_targets.dtype.is_floating_point)
         results = {
             'num_tasks': num_tasks,
-            'inner_losses': np.zeros((self.num_adaptation_steps,
-                num_tasks), dtype=np.float32),
-            'outer_losses': np.zeros((num_tasks,), dtype=np.float32),
-            'mean_outer_loss': 0.
-        }
+            'inner_losses': zeros(self.num_adaptation_steps, num_tasks),
+            'outer_losses': zeros(num_tasks),
+            'mean_outer_loss': 0.}
         if is_classification_task:
-            results.update({
-                'accuracies_before': np.zeros((num_tasks,), dtype=np.float32),
-                'accuracies_after': np.zeros((num_tasks,), dtype=np.float32)
-            })
+            results.update(
+                accuracies_before=zeros(num_tasks),
+                accuracies_after=zeros(num_tasks))
 
         mean_outer_loss = torch.tensor(0., device=self.device)
 
         # inner loop:
         for task_id, (train_inputs, train_targets, test_inputs, test_targets) \
                 in enumerate(zip(*batch['train'], *batch['test'])):
-            params, adaptation_results = self.adapt(train_inputs, train_targets, batch['ways'][0], batch['shots_tr'][0])
+            params, adaptation_results = self.adapt(
+                train_inputs,
+                train_targets,
+                batch['ways'][0],  # TODO: why index zero?
+                batch['shots_tr'][0], # TODO: why index zero?
+            )
 
             results['inner_losses'][:, task_id] = adaptation_results['inner_losses']
             if is_classification_task:
@@ -163,7 +168,9 @@ class ModelAgnosticMetaLearning(object):
         params_local = None
         if params is not None:
             #TODO: need this, otherwise backprop too many steps, OOM!!
-            params_local = OrderedDict({k:v.clone().detach().requires_grad_(True) for k,v in params.items()})
+            params_local = OrderedDict({
+                k: v.clone().detach().requires_grad_(True)
+                for k, v in params.items()})
 
         for step in range(self.num_adaptation_steps):
             logits = self.model(inputs, params=params_local)
@@ -178,8 +185,11 @@ class ModelAgnosticMetaLearning(object):
                     results["mse_before"] = mse_before
 
             self.model.zero_grad()
-            params_local = update_parameters(self.model, inner_loss,
-                step_size=self.step_size, params=params_local,
+            params_local = update_parameters(
+                self.model,
+                inner_loss,
+                step_size=self.step_size,
+                params=params_local,
                 first_order=(not self.model.training) or self.first_order,
                 freeze_visual_features=self.freeze_visual_features,
                 no_meta_learning=self.no_meta_learning)
@@ -201,7 +211,7 @@ class ModelAgnosticMetaLearning(object):
                 pbar.set_postfix(**postfix)
 
     def train_iter(self, dataloader, max_batches=500):
-        ''' one meta-update '''
+        """one meta-update"""
         if self.optimizer is None:
             raise RuntimeError('Trying to call `train_iter`, while the '
                 'optimizer is `None`. In order to train `{0}`, you must '
@@ -220,8 +230,6 @@ class ModelAgnosticMetaLearning(object):
                 batch['test'][1]  = batch-size x num_shots-test*num_ways x output_dim
             '''
             for batch in dataloader:
-            #for i, batch in enumerate(dataloader):
-
                 if num_batches >= max_batches:
                     break
 
@@ -261,8 +269,7 @@ class ModelAgnosticMetaLearning(object):
         results = {
             'mean_outer_loss': mean_outer_loss,
             'accuracies_after': mean_accuracy,
-            'mean_inner_loss': mean_inner_loss,
-        }
+            'mean_inner_loss': mean_inner_loss}
 
         return results
 
@@ -358,8 +365,8 @@ class ModelAgnosticMetaLearning(object):
             return results
 
         same_nways = 1 if self.num_ways == ways[0] else 0
-        if same_nways :
-            ## try the prev model on the incoming data:
+        if same_nways:
+            # try the prev model on the incoming data:
             with torch.set_grad_enabled(self.model.training):
                 if isinstance(self.optimizer_cl, BGD):
                     ## using BGD:
@@ -370,7 +377,7 @@ class ModelAgnosticMetaLearning(object):
                         results["mse_after"]  = mse / num_of_mc_iters
                     results['outer_loss'] = torch.mean(torch.tensor(outer_loss)).item()
                 else:
-                    ## using SGD
+                    # using SGD (or Adam)
                     # line 17, outer_loss is loss of previous fast weights \theta_{t-1}
                     logits = self.model(inputs, params=self.current_model)
                     outer_loss = self.loss_function(logits, targets)
@@ -407,10 +414,10 @@ class ModelAgnosticMetaLearning(object):
         else: # same_nways
             if self.cl_tbd_thres != -1: # gamma, !=-1, so need to check if task shifted
                 ## if task switched, than inner and outer loop have a missmatch!
-                if self.cl_strategy=='acc':
+                if self.cl_strategy == 'acc':
                     if current_acc >= results['accuracy_after'] + self.cl_tbd_thres:
                         tbd = 1
-                elif self.cl_strategy=='loss':
+                elif self.cl_strategy == 'loss':
                     if current_outer_loss + self.cl_tbd_thres <= results['outer_loss']:
                         tbd = 1  # task shifted
 
@@ -419,11 +426,11 @@ class ModelAgnosticMetaLearning(object):
                 ood = 1
                 if self.cl_strategy in ['loss', 'acc']:
 
-                    if self.cl_strategy=='acc':
+                    if self.cl_strategy == 'acc':
                         if results['accuracy_after'] >= self.cl_strategy_thres:
                             ood = 0
 
-                    elif self.cl_strategy=='loss':
+                    elif self.cl_strategy == 'loss':
                         if results['outer_loss'] <= self.cl_strategy_thres: # lambda
                             ood = 0
 
@@ -437,28 +444,17 @@ class ModelAgnosticMetaLearning(object):
                 # With Update Modulation (UM)
                 ood = 1.0
                 if self.cl_strategy in ['loss', 'acc']:
-                    if self.cl_strategy=='acc':
+                    if self.cl_strategy == 'acc':
                         ood = min(1.0, (results['accuracy_after']/self.cl_strategy_thres)**self.um_power)
 
-                    elif self.cl_strategy=='loss':
+                    elif self.cl_strategy == 'loss':
                         ood = min(1.0, (results['outer_loss']/self.cl_strategy_thres)**self.um_power)
                 if self.cl_strategy != 'never_retrain' and not tbd:
                     self.outer_update(outer_loss*ood) #  line 22
                 #else:
                 #    print('--- UM, task shifted. no slow weight update')
         #--------------------------------------------------#
-
         results['tbd'] = task_switch.item()==tbd
-
-        #print('{} {} loss={:.2f} curr_loss={:.2f} acc={:.2f} curr_acc={:.2f} tbd: {}'.format(
-        #                                   task_switch.item(),
-        #                                   mode[0],
-        #                                   results['outer_loss'],
-        #                                   current_outer_loss,
-        #                                   results['accuracy_after'],
-        #                                   current_acc,
-        #                                   results['tbd']))
-
         return results
 
     # Algo 3
