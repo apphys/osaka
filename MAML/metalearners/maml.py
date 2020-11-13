@@ -156,9 +156,7 @@ class ModelAgnosticMetaLearning(object):
 
     # used both in pretraining and CL time
     # a few gradient descent steps starting from \phi (slow weights, accumulated knowledge)
-    # TODO(brandon): where is this used in pretraining? Not seeing it
-    def adapt(self, inputs, targets, ways=None, shots=None):
-        params = None
+    def adapt(self, inputs, targets, ways=None, shots=None, params=None):
         results = {'inner_losses': np.zeros(
             (self.num_adaptation_steps,), dtype=np.float32)}
 
@@ -336,7 +334,6 @@ class ModelAgnosticMetaLearning(object):
         # inputs [1, ways*shots, 1, 28, 28], targets [1, ways*shots]
         inputs, targets, task_switch, mode, ways, shots = batch
 
-        # for now we are doing one task at a time
         assert inputs.shape[0] == 1
         assert self.optimizer_cl is not None, 'Set optimizer_cl'
 
@@ -535,9 +532,9 @@ class ModelAgnosticMetaLearning(object):
         current_outer_loss = self.loss_function(logits, targets)
         current_outer_loss_value = current_outer_loss.item()
         current_acc = compute_accuracy(logits, targets)
-        if not same_nways:
-            results['outer_loss'] = current_outer_loss_value
-            results['accuracy_after'] = current_acc
+        # if not same_nways:  # TODO: remove this, this is cheating
+        #     results['outer_loss'] = current_outer_loss_value
+        #     results['accuracy_after'] = current_acc
 
         #----------------- CL strategies ------------------#
 
