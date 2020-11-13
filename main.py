@@ -188,7 +188,12 @@ def continual_learning(args, wandb, cl_model_init, meta_optimizer_cl, cl_dataloa
             if (args.verbose and i % 100 == 0) or i == args.timesteps - 1:
                 if is_classification_task:
                     acc = np.mean(accuracies[run, :i])
-                    print(f'total Acc: {acc:.2f}', end='\t')
+                    acc_mode = []
+                    for mode in modes:
+                        acc_mode.append(np.mean(accuracies_mode[mode]))
+                    print(f'total Acc: {acc:.2f},',
+                          ','.join([f'mode {i} Acc: {acc_mode[i]:.2f}' for i in range(3)]),
+                          end='\t')
                     wandb.log({'console acc': acc})
                 else:
                     mse = np.mean(mses[run, :i])
