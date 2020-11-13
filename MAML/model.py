@@ -72,7 +72,7 @@ class MetaConvModel(MetaModule):
 
 
         self.classifier = MetaLinear(feature_size, out_features, bias=True)
-        
+
     def update_classifier(self, out_features):
         self.classifier = MetaLinear(self.feature_size, out_features, bias=True)
 

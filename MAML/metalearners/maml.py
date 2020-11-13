@@ -73,7 +73,7 @@ class ModelAgnosticMetaLearning(object):
     """
     def __init__(self, model, optimizer, loss_function, args):
         self.device = args.device
-        self.model = model.to(device=self.device)  
+        self.model = model.to(device=self.device)
         self.optimizer = optimizer
         self.optimizer_cl = None
         self.step_size = args.step_size
@@ -314,7 +314,7 @@ class ModelAgnosticMetaLearning(object):
             self.optimizer_cl.step()
         else:
             self.optimizer.zero_grad()
-            outer_loss.backward()  
+            outer_loss.backward()
             self.optimizer.step()
 
     @property
@@ -352,7 +352,7 @@ class ModelAgnosticMetaLearning(object):
             f'{self.metric_name}_after': 0.}
 
         # There's no \theta_{t-1}
-        if self.current_model is None: 
+        if self.current_model is None:
             self.current_model, _ = self.adapt(inputs, targets, ways[0], shots[0])
             self.last_mode = mode[0]
             return results
@@ -373,7 +373,7 @@ class ModelAgnosticMetaLearning(object):
                     ## using SGD
                     # line 17, outer_loss is loss of previous fast weights \theta_{t-1}
                     logits = self.model(inputs, params=self.current_model)
-                    outer_loss = self.loss_function(logits, targets) 
+                    outer_loss = self.loss_function(logits, targets)
                     results['outer_loss'] = outer_loss.item()
                     if self.is_classification_task:
                         results['accuracy_after'] = compute_accuracy(logits, targets)
@@ -384,7 +384,7 @@ class ModelAgnosticMetaLearning(object):
 
         ## prediction is done and you can now use the labels
         # line 18, update fast_weight, generated from slow weights \phi, but \phi not changed
-        self.current_model, _ = self.adapt(inputs, targets, ways[0], shots[0]) 
+        self.current_model, _ = self.adapt(inputs, targets, ways[0], shots[0])
         with torch.no_grad():
             # line 19, current_outer_loss is second term, loss of line 18
             logits = self.model(inputs, params=self.current_model)
@@ -414,13 +414,13 @@ class ModelAgnosticMetaLearning(object):
                     if current_outer_loss + self.cl_tbd_thres <= results['outer_loss']:
                         tbd = 1  # task shifted
 
-            if self.um_power == 0.0: 
+            if self.um_power == 0.0:
                 # No Update Modulation (UM)
                 ood = 1
                 if self.cl_strategy in ['loss', 'acc']:
 
                     if self.cl_strategy=='acc':
-                        if results['accuracy_after'] >= self.cl_strategy_thres: 
+                        if results['accuracy_after'] >= self.cl_strategy_thres:
                             ood = 0
 
                     elif self.cl_strategy=='loss':
@@ -500,7 +500,7 @@ class ModelAgnosticMetaLearning(object):
             })
 
         # There's no \theta_{t-1}
-        if self.current_model is None: 
+        if self.current_model is None:
             self.current_model, _ = self.adapt(inputs, targets, ways[0], shots[0])
             self.last_mode = mode[0]
             return results
@@ -521,7 +521,7 @@ class ModelAgnosticMetaLearning(object):
                     ## using SGD
                     # line 17, outer_loss is loss of previous fast weights \theta_{t-1}
                     logits = self.model(inputs, params=self.current_model)
-                    outer_loss = self.loss_function(logits, targets) 
+                    outer_loss = self.loss_function(logits, targets)
                     results['outer_loss'] = outer_loss.item()
                     if self.is_classification_task:
                         results['accuracy_after'] = compute_accuracy(logits, targets)
@@ -529,7 +529,7 @@ class ModelAgnosticMetaLearning(object):
                         results["mse_after"] = F.mse_loss(logits, targets)
 
         # virtual fast_weight, generated from slow weights \phi, but \phi not changed
-        self.current_virtual_model, _ = self.adapt(inputs, targets, ways[0], shots[0]) 
+        self.current_virtual_model, _ = self.adapt(inputs, targets, ways[0], shots[0])
         #with torch.no_grad():
         # line 19, current_outer_loss is second term, loss of line 18
         logits = self.model(inputs, params=self.current_virtual_model)
@@ -555,7 +555,7 @@ class ModelAgnosticMetaLearning(object):
             self.current_model, _ = self.adapt(inputs, targets, ways[0], shots[0], params=self.current_model)
         else:  # task shifted, tbd == 1
 #            print('--- task shifted', current_outer_loss_value+self.cl_tbd_thres,' < ', results['outer_loss'])
-            if self.um_power == 0.0: 
+            if self.um_power == 0.0:
                 # Without Update Modulation (UM)
                 ood = 1
                 if self.cl_strategy in ['loss', 'acc']:
@@ -578,9 +578,9 @@ class ModelAgnosticMetaLearning(object):
                 if self.cl_strategy != 'never_retrain' and ood:
                     #print('!!! ood')
                     if same_nways:
-                        self.outer_update(outer_loss) 
+                        self.outer_update(outer_loss)
                     else:
-                        self.outer_update(current_outer_loss)  
+                        self.outer_update(current_outer_loss)
             else:
                 # With Update Modulation (UM)
                 ood = 1.0
@@ -597,19 +597,18 @@ class ModelAgnosticMetaLearning(object):
                             ood = min(1.0, (current_outer_loss_value/self.cl_strategy_thres)**self.um_power)
 
                 if self.cl_strategy != 'never_retrain':
+                    # TODO: apply to lr, not less
+                    # lr is self.meta_lr in args
                     if same_nways:
-                        self.outer_update(outer_loss*ood) 
+                        self.outer_update(outer_loss*ood)
                     else:
-                        self.outer_update(current_outer_loss*ood)
-             
+                        self.outer_update(current_outer_loss * ood)
+
             # update fast weight \theta_t from slow weight
             self.current_model, _ = self.adapt(inputs, targets, ways[0], shots[0])
-
-
         #--------------------------------------------------#
 
         results['tbd'] = task_switch.item()==tbd
-
         #print('{} {} loss={:.2f} curr_loss={:.2f} acc={:.2f} curr_acc={:.2f} tbd: {}'.format(
         #                                   task_switch.item(),
         #                                   mode[0],
@@ -636,7 +635,7 @@ class ProtoMAML(ModelAgnosticMetaLearning):
         inputs: [ways*shots, 1, 28, 28]
         targets: [ways*shots]
         """
-        
+
         if ways is None:
             raise ValueError('Proto-MAML adapt arg ways & shots cannot be None!')
 
@@ -648,7 +647,7 @@ class ProtoMAML(ModelAgnosticMetaLearning):
 
         prototypes = self.model.forward_conv(inputs) # [ways*shots, 64]
         prototypes = torch.reshape(prototypes, (ways, shots, prototypes.shape[-1])) #[ways, shots, 64]
-        prototypes = torch.mean(prototypes, axis=1) # [ways, 64] 
+        prototypes = torch.mean(prototypes, axis=1) # [ways, 64]
 
         # Proto-MAML: init last FC layer with prototype weights
         self.model.classifier.weight=torch.nn.Parameter(2.0*prototypes) # w_k = 2c_k

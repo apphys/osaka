@@ -69,7 +69,7 @@ def loss_fn_for_dataset(args):
 def init_models(args, wandb):
     """Returns meta{learner, optimizer, optimizer_cl}."""
     model = model_for_dataset(args)
-    loss_function = model_for_dataset(args)
+    loss_function = loss_fn_for_dataset(args)
     if args.bgd_optimizer:
         meta_optimizer = torch.optim.Adam(model.parameters(), lr=args.meta_lr)
         meta_optimizer_cl = create_BGD_optimizer(
@@ -93,6 +93,11 @@ def init_models(args, wandb):
 
 
 def pretraining(args, wandb, metalearner, meta_train_dataloader, meta_val_dataloader):
+    """
+    TODO: answer the following:
+    - where are we sampling from P(C_pre)? I'm assuming the answer is that P(C_pre) for omniglot
+      is the usual random task sampling some set of characters/labels.
+    """
     if args.pretrain_model is None:
         best_metalearner = metalearner
         if args.num_epochs == 0:
@@ -104,8 +109,11 @@ def pretraining(args, wandb, metalearner, meta_train_dataloader, meta_val_datalo
             print(f'\npretraining for {args.num_epochs} epochs...\n')
             for epoch in range(args.num_epochs):
                 metalearner.train(
-                    meta_train_dataloader, max_batches=args.num_batches,
-                    verbose=args.verbose, desc='Training', leave=False)
+                    meta_train_dataloader,
+                    max_batches=args.num_batches,
+                    verbose=args.verbose,
+                    desc='Training',
+                    leave=False)
                 results = metalearner.evaluate(
                     meta_val_dataloader,
                     max_batches=args.num_batches,
@@ -137,10 +145,16 @@ def pretraining(args, wandb, metalearner, meta_train_dataloader, meta_val_datalo
 
 
 def continual_learning(args, wandb, cl_model_init, meta_optimizer_cl, cl_dataloader):
+    """
+    TODO: answer the following
+        - easy way to indicate when task switches occurred in plots? Is this what tbd tells us?
+    """
+    # TODO: why aren't most of these set within cl_model.__init__?
     cl_model_init.optimizer_cl = meta_optimizer_cl
     cl_model_init.cl_strategy = args.cl_strategy
     cl_model_init.cl_strategy_thres = args.cl_strategy_thres
     cl_model_init.cl_tbd_thres = args.cl_tbd_thres
+    # TODO: where is this assigned/defined? Can't find in args.py or dataloaders.py.
     if args.no_cl_meta_learning:
         cl_model_init.no_meta_learning = True
 
@@ -203,14 +217,14 @@ def continual_learning(args, wandb, cl_model_init, meta_optimizer_cl, cl_dataloa
                     acc_mode = []
                     for mode in modes:
                         acc_mode.append(np.mean(accuracies_mode[mode]))
-                    print(f'total Acc: {acc:.2f},',
-                          ','.join([f'mode {i} Acc: {acc_mode[i]:.2f}' for i in range(3)]),
-                          end='\t')
+                    acc_mode_str = [f'{m}_acc={a:.2f}' for m, a in zip(modes, acc_mode)]
+                    print(f'total Acc: {acc:.2f},', f'mode accs: {acc_mode_str}', end='\t')
                     wandb.log({'console acc': acc})
                 else:
                     mse = np.mean(mses[run, :i])
                     print(f'mean MSE: {mse:.5f} MSE: {mses[run, i]:.3f}', end='\t')
 
+                # Note: tbd==task boundary detection
                 tbd = np.mean(tbds[run, :i])
                 print(f'Total tbd: {tbd:.2f}', f'it: {i}', sep='\t')
 
