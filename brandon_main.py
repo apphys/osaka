@@ -22,4 +22,6 @@ if __name__ == '__main__':
     args = parse_args()
     for k, v in NAME_TO_ARGS[NAME].items():
         setattr(args, k, v)
-    main.main(args)
+
+    print('is_classif:', args.is_classification_task)
+    # main.main(args)

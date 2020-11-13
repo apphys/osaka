@@ -533,13 +533,13 @@ def init_dataloaders(args):
         # data(x) : [60000, 28, 28], targets(y): [60000], N(#classes) = 10
         cl_ood_dataset1 = MNIST(args.folder, train=True, download=True)
         cl_ood_dataset2 = FashionMNIST(args.folder, train=True, download=True)
-        # cl_ood_dataset1 [N=10, K=5421, 28, 28] 
+        # cl_ood_dataset1 [N=10, K=5421, 28, 28]
         cl_ood_dataset1, _ = order_and_split(cl_ood_dataset1.data, cl_ood_dataset1.targets)
-        # cl_ood_dataset2 [N=10, K=6000, 28, 28] 
+        # cl_ood_dataset2 [N=10, K=6000, 28, 28]
         cl_ood_dataset2, _ = order_and_split(cl_ood_dataset2.data, cl_ood_dataset2.targets)
-        # cl_ood_dataset1 [N=10, K=5421, 1, 28, 28] 
+        # cl_ood_dataset1 [N=10, K=5421, 1, 28, 28]
         cl_ood_dataset1 = cl_ood_dataset1[:, :, None, :, :]
-        # cl_ood_dataset2 [N=10, K=6000, 1, 28, 28] 
+        # cl_ood_dataset2 [N=10, K=6000, 1, 28, 28]
         cl_ood_dataset2 = cl_ood_dataset2[:, :, None, :, :]
         cl_ood_dataset1 = cl_ood_dataset1.type(torch.float).to(args.device)
         cl_ood_dataset2 = cl_ood_dataset2.type(torch.float).to(args.device)

@@ -42,22 +42,34 @@ def boilerplate(args):
     return args, wandb
 
 
-def init_models(args, wandb):
+def model_for_dataset(args):
+    """Instantiates and returns model based on args.dataset."""
     if args.dataset == 'omniglot':
-        model = ModelConvOmniglot(args.num_ways, hidden_size=args.hidden_size, deeper=args.deeper)
-        loss_function = F.cross_entropy
+        return ModelConvOmniglot(args.num_ways, hidden_size=args.hidden_size, deeper=args.deeper)
     elif args.dataset == 'tiered-imagenet':
-        model = ModelConvMiniImagenet(args.num_ways, hidden_size=args.hidden_size, deeper=args.deeper)
-        loss_function = F.cross_entropy
+        return ModelConvMiniImagenet(args.num_ways, hidden_size=args.hidden_size, deeper=args.deeper)
     elif args.dataset == 'synbols':
-        model = ModelConvSynbols(args.num_ways, hidden_size=args.hidden_size, deeper=args.deeper)
-        loss_function = F.cross_entropy
+        return ModelConvSynbols(args.num_ways, hidden_size=args.hidden_size, deeper=args.deeper)
     elif args.dataset == "harmonics":
-        model = ModelMLPSinusoid(hidden_sizes=[40, 40])
-        loss_function = F.mse_loss
+        return ModelMLPSinusoid(hidden_sizes=[40, 40])
     else:
         raise RuntimeError(f'Unknown dataset: {args.dataset}')
 
+
+def loss_fn_for_dataset(args):
+    """Instantiates and returns loss function based on args.dataset."""
+    if args.dataset in ['omniglot', 'tiered-imagenet', 'synbols']:
+        return F.cross_entropy
+    elif args.dataset == "harmonics":
+        return F.mse_loss
+    else:
+        raise RuntimeError(f'Unknown dataset: {args.dataset}')
+
+
+def init_models(args, wandb):
+    """Returns meta{learner, optimizer, optimizer_cl}."""
+    model = model_for_dataset(args)
+    loss_function = model_for_dataset(args)
     if args.bgd_optimizer:
         meta_optimizer = torch.optim.Adam(model.parameters(), lr=args.meta_lr)
         meta_optimizer_cl = create_BGD_optimizer(
@@ -241,7 +253,11 @@ def continual_learning(args, wandb, cl_model_init, meta_optimizer_cl, cl_dataloa
 
 def main(args):
     args, wandb = boilerplate(args)
+
     print('Initializing dataloaders...')
+    # Notes:
+    # - the train/val meta dls yield batches of {'train', 'test', 'ways', 'shots_tr', 'shots_te'}
+    # - the cl meta dl yields list of 6 tensors (TODO?)
     meta_train_dataloader, meta_val_dataloader, cl_dataloader = init_dataloaders(args)
 
     print('Initializing models...')
