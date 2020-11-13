@@ -430,6 +430,9 @@ class ModelAgnosticMetaLearning(object):
                 # no task shifting and it's an ood task, update the slow weights \phi
                 if self.cl_strategy != 'never_retrain' and not tbd and ood:
                     self.outer_update(outer_loss) #  line 22
+                #else:
+                #    ol = results['outer_loss']
+                #    print(f'--- no UM, task shifted? {tbd}, ood? {ood} no slow weight update. {ol}, {current_outer_loss}')
             else:
                 # With Update Modulation (UM)
                 ood = 1.0
@@ -441,7 +444,8 @@ class ModelAgnosticMetaLearning(object):
                         ood = min(1.0, (results['outer_loss']/self.cl_strategy_thres)**self.um_power)
                 if self.cl_strategy != 'never_retrain' and not tbd:
                     self.outer_update(outer_loss*ood) #  line 22
-
+                #else:
+                #    print('--- UM, task shifted. no slow weight update')
         #--------------------------------------------------#
 
         results['tbd'] = task_switch.item()==tbd
@@ -532,9 +536,9 @@ class ModelAgnosticMetaLearning(object):
         current_outer_loss = self.loss_function(logits, targets)
         current_outer_loss_value = current_outer_loss.item()
         current_acc = compute_accuracy(logits, targets)
-        # if not same_nways:  # TODO: remove this, this is cheating
-        #     results['outer_loss'] = current_outer_loss_value
-        #     results['accuracy_after'] = current_acc
+#        if not same_nways: #TODO: remove this, this is cheating
+#            results['outer_loss'] = current_outer_loss_value
+#            results['accuracy_after'] = current_acc
 
         #----------------- CL strategies ------------------#
 
@@ -556,12 +560,19 @@ class ModelAgnosticMetaLearning(object):
                 ood = 1
                 if self.cl_strategy in ['loss', 'acc']:
                     if self.cl_strategy=='acc':
-                        if results['accuracy_after'] >= self.cl_strategy_thres:
-                            ood = 0
-
+                        if same_nways:
+                            if results['accuracy_after'] >= self.cl_strategy_thres:
+                                ood = 0
+                        else:
+                            if current_acc >= self.cl_strategy_thres:
+                                ood = 0
                     elif self.cl_strategy=='loss':
-                        if results['outer_loss'] <= self.cl_strategy_thres:
-                            ood = 0
+                        if same_nways:
+                            if results['outer_loss'] <= self.cl_strategy_thres:
+                                ood = 0
+                        else:
+                            if current_outer_loss_value >= self.cl_strategy_thres:
+                                ood = 0
 
                 # update the slow weights \phi
                 if self.cl_strategy != 'never_retrain' and ood:
@@ -575,10 +586,15 @@ class ModelAgnosticMetaLearning(object):
                 ood = 1.0
                 if self.cl_strategy in ['loss', 'acc']:
                     if self.cl_strategy=='acc':
-                        ood = min(1.0, (results['accuracy_after']/self.cl_strategy_thres)**self.um_power)
-
+                        if same_nways:
+                            ood = min(1.0, (results['accuracy_after']/self.cl_strategy_thres)**self.um_power)
+                        else:
+                            ood = min(1.0, (current_acc/self.cl_strategy_thres)**self.um_power)
                     elif self.cl_strategy=='loss':
-                        ood = min(1.0, (results['outer_loss']/self.cl_strategy_thres)**self.um_power)
+                        if same_nways:
+                            ood = min(1.0, (results['outer_loss']/self.cl_strategy_thres)**self.um_power)
+                        else:
+                            ood = min(1.0, (current_outer_loss_value/self.cl_strategy_thres)**self.um_power)
 
                 if self.cl_strategy != 'never_retrain':
                     if same_nways:
