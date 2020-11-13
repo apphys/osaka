@@ -116,9 +116,9 @@ logs/
 
 
 #Data
-data/*
-!data/**/*.py
-!data/**/*.yaml
+Data/*
+!Data/**/*.py
+!Data/**/*.yaml
 
 # Editor Folders:
 .vscode/
