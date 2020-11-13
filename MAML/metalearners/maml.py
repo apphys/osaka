@@ -388,19 +388,28 @@ class ModelAgnosticMetaLearning(object):
 
         # line 18, update fast_weight, generated from slow weights \phi, but \phi not changed
         self.current_model, _ = self.adapt(inputs, targets, ways[0], shots[0]) 
+        with torch.no_grad():
+            # line 19, current_outer_loss is second term, loss of line 18
+            logits = self.model(inputs, params=self.current_model)
+            current_outer_loss = self.loss_function(logits, targets).item()
+        current_acc = compute_accuracy(logits, targets)
+        # commented this out because when n_ways change for Proto-MAML, the current
+        # task is already used to initialize the last FC layer to get current_model,
+        # it's kind of cheating to test acc on the same data again. The evalutation
+        # should happen in the next task when it's still the same kind of task, but
+        # different data.
+#        if not same_nways:
+#            results['outer_loss'] = current_outer_loss
+#            results['accuracy_after'] = current_acc
 
         #----------------- CL strategies ------------------#
 
         # if num_ways changed, then must be a task switch, skip the rest
         tbd = 0
-        if same_nways:
+        if not same_nways:
+            tbd = 1
+        else: # same_nways
             if self.cl_tbd_thres != -1: # gamma, !=-1, so need to check if task shifted
-                with torch.no_grad():
-                    # line 19, current_outer_loss is second term, loss of line 18
-                    logits = self.model(inputs, params=self.current_model)
-                    current_outer_loss = self.loss_function(logits, targets).item()
-                current_acc = compute_accuracy(logits, targets)
-
                 ## if task switched, than inner and outer loop have a missmatch!
                 if self.cl_strategy=='acc':
                     if current_acc >= results['accuracy_after'] + self.cl_tbd_thres:
@@ -425,6 +434,9 @@ class ModelAgnosticMetaLearning(object):
                 # no task shifting and it's an ood task, update the slow weights \phi
                 if self.cl_strategy != 'never_retrain' and not tbd and ood:
                     self.outer_update(outer_loss) #  line 22
+                #else:
+                #    ol = results['outer_loss']
+                #    print(f'--- no UM, task shifted? {tbd}, ood? {ood} no slow weight update. {ol}, {current_outer_loss}')
             else:
                 # With Update Modulation (UM)
                 ood = 1.0
@@ -436,6 +448,8 @@ class ModelAgnosticMetaLearning(object):
                         ood = min(1.0, (results['outer_loss']/self.cl_strategy_thres)**self.um_power)
                 if self.cl_strategy != 'never_retrain' and not tbd:
                     self.outer_update(outer_loss*ood) #  line 22
+                #else:
+                #    print('--- UM, task shifted. no slow weight update')
                 
         #--------------------------------------------------#
 
@@ -527,9 +541,9 @@ class ModelAgnosticMetaLearning(object):
         current_outer_loss = self.loss_function(logits, targets)
         current_outer_loss_value = current_outer_loss.item()
         current_acc = compute_accuracy(logits, targets)
-        if not same_nways:
-            results['outer_loss'] = current_outer_loss_value
-            results['accuracy_after'] = current_acc
+#        if not same_nways: #TODO: remove this, this is cheating
+#            results['outer_loss'] = current_outer_loss_value
+#            results['accuracy_after'] = current_acc
 
         #----------------- CL strategies ------------------#
 
@@ -550,14 +564,20 @@ class ModelAgnosticMetaLearning(object):
                 # Without Update Modulation (UM)
                 ood = 1
                 if self.cl_strategy in ['loss', 'acc']:
-
                     if self.cl_strategy=='acc':
-                        if results['accuracy_after'] >= self.cl_strategy_thres:
-                            ood = 0
-
+                        if same_nways:
+                            if results['accuracy_after'] >= self.cl_strategy_thres:
+                                ood = 0
+                        else:
+                            if current_acc >= self.cl_strategy_thres:
+                                ood = 0
                     elif self.cl_strategy=='loss':
-                        if results['outer_loss'] <= self.cl_strategy_thres:
-                            ood = 0
+                        if same_nways:
+                            if results['outer_loss'] <= self.cl_strategy_thres:
+                                ood = 0
+                        else:
+                            if current_outer_loss_value >= self.cl_strategy_thres:
+                                ood = 0
 
                 # update the slow weights \phi
                 if self.cl_strategy != 'never_retrain' and ood:
@@ -571,10 +591,15 @@ class ModelAgnosticMetaLearning(object):
                 ood = 1.0
                 if self.cl_strategy in ['loss', 'acc']:
                     if self.cl_strategy=='acc':
-                        ood = min(1.0, (results['accuracy_after']/self.cl_strategy_thres)**self.um_power)
-
+                        if same_nways:
+                            ood = min(1.0, (results['accuracy_after']/self.cl_strategy_thres)**self.um_power)
+                        else:
+                            ood = min(1.0, (current_acc/self.cl_strategy_thres)**self.um_power)
                     elif self.cl_strategy=='loss':
-                        ood = min(1.0, (results['outer_loss']/self.cl_strategy_thres)**self.um_power)
+                        if same_nways:
+                            ood = min(1.0, (results['outer_loss']/self.cl_strategy_thres)**self.um_power)
+                        else:
+                            ood = min(1.0, (current_outer_loss_value/self.cl_strategy_thres)**self.um_power)
 
                 if self.cl_strategy != 'never_retrain':
                     if same_nways:
