@@ -85,7 +85,7 @@ class ModelAgnosticMetaLearning(object):
            (https://arxiv.org/abs/1810.09502)
     """
 
-    def __init__(self, model, optimizer, loss_function, args):
+    def __init__(self, model, optimizer, loss_function, args, wandb=None):
         self.device = args.device
         self.model = model.to(device=self.device)
         self.optimizer = optimizer
@@ -96,6 +96,7 @@ class ModelAgnosticMetaLearning(object):
         self.scheduler = None
         self.loss_function = loss_function
         self.is_classification_task = args.is_classification_task
+        self.wandb = wandb
 
         self.current_model = None
         self.last_mode = None
@@ -363,6 +364,7 @@ class ModelAgnosticMetaLearning(object):
             boundary_detected = self._task_boundary_detected(logits, targets, results)
 
         ood = self.g_lambda(results)
+        self.wandb.log({'g_lambda': ood})
         if all((self.cl_strategy != 'never_retrain',
                 not boundary_detected,
                 ood > 0)):
@@ -370,21 +372,6 @@ class ModelAgnosticMetaLearning(object):
 
         results['tbd'] = task_switch.item() == int(boundary_detected)
         return results
-
-    def g_lambda(self, results):
-        if not self._should_do_update_modulation():
-            if self.cl_strategy == 'acc':
-                if results['accuracy_after'] >= self.cl_strategy_thres:
-                    return 0
-            elif self.cl_strategy == 'loss':
-                if results['outer_loss'] <= self.cl_strategy_thres:
-                    return 0
-            return 1
-        else:
-            if self.cl_strategy == 'acc':
-                return min(1.0, (results['accuracy_after'] / self.cl_strategy_thres) ** self.um_power)
-            elif self.cl_strategy == 'loss':
-                return min(1.0, (results['outer_loss'] / self.cl_strategy_thres) ** self.um_power)
 
     # Algo 3
     def observe2(self, batch):
@@ -600,6 +587,21 @@ class ModelAgnosticMetaLearning(object):
                 mse += loss
         return acc, mse, outer_loss
 
+    def g_lambda(self, results):
+        if not self._should_do_update_modulation():
+            if self.cl_strategy == 'acc':
+                if results['accuracy_after'] >= self.cl_strategy_thres:
+                    return 0
+            elif self.cl_strategy == 'loss':
+                if results['outer_loss'] <= self.cl_strategy_thres:
+                    return 0
+            return 1
+        else:
+            if self.cl_strategy == 'acc':
+                return min(1.0, (results['accuracy_after'] / self.cl_strategy_thres) ** self.um_power)
+            elif self.cl_strategy == 'loss':
+                return min(1.0, (results['outer_loss'] / self.cl_strategy_thres) ** self.um_power)
+
     def _should_detect_task_boundaries(self) -> bool:
         """Whether or not to detect task boundaries / context shifts."""
         return self.gamma != -1
@@ -640,8 +642,8 @@ class ModelAgnosticMetaLearning(object):
 
 class ProtoMAML(ModelAgnosticMetaLearning):
 
-    def __init__(self, model, optimizer, loss_function, args):
-        super(ProtoMAML, self).__init__(model, optimizer, loss_function, args)
+    def __init__(self, model, optimizer, loss_function, args, wandb=None):
+        super(ProtoMAML, self).__init__(model, optimizer, loss_function, args, wandb=wandb)
         self.args = args
         self.num_ways = None
         self.um_power = args.um_power

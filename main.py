@@ -86,9 +86,9 @@ def init_models(args, wandb, metalearner=None):
 
     if metalearner is None:
         if args.method == 'MAML':
-            metalearner = ModelAgnosticMetaLearning(model, meta_optimizer, loss_function, args)
+            metalearner = ModelAgnosticMetaLearning(model, meta_optimizer, loss_function, args, wandb=wandb)
         elif args.method == 'ProtoMAML':
-            metalearner = ProtoMAML(model, meta_optimizer, loss_function, args)
+            metalearner = ProtoMAML(model, meta_optimizer, loss_function, args, wandb=wandb)
         elif args.method == 'ModularMAML':
             metalearner = ModularMAML(model, meta_optimizer, loss_function, args, wandb=wandb)
         else:
