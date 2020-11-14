@@ -13,22 +13,22 @@ from args import parse_args
 
 # final report
 # MAML, Alg4, no UM
-#python main.py -v --prob_statio 0.9 --num_ways 10 --num_shots=3 --num_epochs 1 --n_runs 1 --cl_tbd_thres 0.8 --cl_strategy_thres 0.9 --cl_strategy 'loss'
+#python main.py -v --prob_statio 0.9 --num_ways 10 --num_shots=3 --num_epochs 1 --n_runs 1 --gamma 0.8 --cl_strategy_thres 0.9 --cl_strategy 'loss'
 # MAML, Alg4, with UM
-#python main.py -v --prob_statio 0.9 --num_ways 10 --num_shots=3 --num_epochs 1 --n_runs 1 --cl_tbd_thres 0.8 --cl_strategy_thres 0.9 --cl_strategy 'loss' --um_power 1.0
+#python main.py -v --prob_statio 0.9 --num_ways 10 --num_shots=3 --num_epochs 1 --n_runs 1 --gamma 0.8 --cl_strategy_thres 0.9 --cl_strategy 'loss' --um_power 1.0
 # MAML, Alg3, with UM
-#python main.py -v --prob_statio 0.9 --num_ways 10 --num_shots=3 --num_epochs 1 --n_runs 1 --cl_tbd_thres 3.0 --cl_strategy_thres 5.0 --cl_strategy 'loss' --um_power 1.0 --algo3 True
+#python main.py -v --prob_statio 0.9 --num_ways 10 --num_shots=3 --num_epochs 1 --n_runs 1 --gamma 3.0 --cl_strategy_thres 5.0 --cl_strategy 'loss' --um_power 1.0 --algo3 True
 # Proto-MAML, Alg3, with UM
-#python main.py -v --model_name protomaml --prob_statio 0.9 --num_ways 10 --num_shots=3 --num_epochs 2 --n_runs 1 --cl_tbd_thres 2.0 --cl_strategy_thres 3.0 --cl_strategy 'loss' --um_power 1.0 --algo3 True
+#python main.py -v --model_name protomaml --prob_statio 0.9 --num_ways 10 --num_shots=3 --num_epochs 2 --n_runs 1 --gamma 2.0 --cl_strategy_thres 3.0 --cl_strategy 'loss' --um_power 1.0 --algo3 True
 # Proto-MAML, Alg3, with UM, with changing ways. worse than algo4
-# python main.py -v --model_name protomaml --prob_statio 0.9 --num_ways 5 --num_shots=3 --num_epochs 1 --n_runs 1 --cl_tbd_thres 2.0 --cl_strategy_thres 3.0 --cl_strategy 'loss' --um_power 1.0 --algo3 True --use_different_nway True
+# python main.py -v --model_name protomaml --prob_statio 0.9 --num_ways 5 --num_shots=3 --num_epochs 1 --n_runs 1 --gamma 2.0 --cl_strategy_thres 3.0 --cl_strategy 'loss' --um_power 1.0 --algo3 True --use_different_nway True
 NAME_TO_ARGS = {
     'default': {
         'wandb': 'cs330_finalproject_debugging',
         'name': 'maml',
         'prob_statio': 0.9,
         'cl_strategy': 'loss',
-        'cl_tbd_thresh': 0.5,
+        'gammah': 0.5,
         'num_epochs': 1,
         'num_shots': 3,
         'verbose': True,

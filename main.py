@@ -157,7 +157,7 @@ def continual_learning(args, wandb, cl_model_init, meta_optimizer_cl, cl_dataloa
     cl_model_init.optimizer_cl = meta_optimizer_cl
     cl_model_init.cl_strategy = args.cl_strategy
     cl_model_init.cl_strategy_thres = args.cl_strategy_thres
-    cl_model_init.cl_tbd_thres = args.cl_tbd_thres
+    cl_model_init.gamma = args.gamma
     # TODO: where is this assigned/defined? Can't find in args.py or dataloaders.py.
     if args.no_cl_meta_learning:
         cl_model_init.no_meta_learning = True

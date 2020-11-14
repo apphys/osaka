@@ -13,6 +13,12 @@ from Utils.bgd_lib.bgd_optimizer import BGD
 from collections import OrderedDict
 from MAML.utils import update_parameters, tensors_to_device, compute_accuracy
 
+
+def assert_equal(a, b):
+    if a != b:
+        raise AssertionError(f'{a} != {b}')
+
+
 __all__ = ['ModelAgnosticMetaLearning', 'MAML', 'ProtoMAML', 'FOMAML', 'ModularMAML']
 
 
@@ -85,6 +91,7 @@ class ModelAgnosticMetaLearning(object):
         self.is_classification_task = args.is_classification_task
 
         self.current_model = None
+        self.last_mode = None
         self.cl_strategy = None
         self.freeze_visual_features = args.freeze_visual_features
         self.no_meta_learning = False
@@ -108,6 +115,13 @@ class ModelAgnosticMetaLearning(object):
                     for group in self.optimizer.param_groups])
         self.num_ways = args.num_ways
         self.um_power = args.um_power
+
+    @property
+    def metric_name(self):
+        if self.is_classification_task:
+            return 'accuracy'
+        else:
+            return 'mse'
 
     # Called during pretraining.
     def train(self, dataloader, max_batches=500, verbose=True, **kwargs):
@@ -211,9 +225,12 @@ class ModelAgnosticMetaLearning(object):
 
         return mean_outer_loss, results
 
-    # used both in pretraining and CL time
-    # a few gradient descent steps starting from \phi (slow weights, accumulated knowledge)
     def adapt(self, inputs, targets, ways=None, shots=None, params=None):
+        """Perform inner-loop updates.
+
+        Used both in pretraining and CL time. Performs a few gradient descent
+        steps starting from \phi (slow weights, accumulated knowledge).
+        """
         results = {'inner_losses': np.zeros(
             (self.num_adaptation_steps,), dtype=np.float32)}
 
@@ -248,101 +265,34 @@ class ModelAgnosticMetaLearning(object):
 
         return params_local, results
 
-    def evaluate(self, dataloader, max_batches=500, verbose=True, epoch=0, **kwargs):
-        mean_outer_loss, mean_inner_loss, mean_accuracy, count = 0., 0., 0, 0
-        with tqdm(total=max_batches, disable=not verbose, **kwargs) as pbar:
-            for results in self.evaluate_iter(dataloader, max_batches=max_batches):
-                pbar.update(1)
-                count += 1
-                mean_outer_loss += (results['mean_outer_loss']
-                    - mean_outer_loss) / count
-                postfix = {'loss': '{0:.4f}'.format(mean_outer_loss)}
-                if 'accuracies_after' in results:
-                    mean_accuracy += (np.mean(results['accuracies_after'])
-                        - mean_accuracy) / count
-                    postfix['accuracy'] = '{0:.4f}'.format(mean_accuracy)
-                if 'inner_losses' in results:
-                    mean_inner_loss += (np.mean(results['inner_losses'])
-                        - mean_inner_loss) / count
-                    postfix['inner_loss'] = '{0:.4f}'.format(mean_inner_loss)
-                pbar.set_postfix(**postfix)
-
-        results = {
-            'mean_outer_loss': mean_outer_loss,
-            'accuracies_after': mean_accuracy,
-            'mean_inner_loss': mean_inner_loss}
-
-        return results
-
-    def evaluate_iter(self, dataloader, max_batches=500):
-        num_batches = 0
-        self.model.eval()
-        while num_batches < max_batches:
-            for batch in dataloader:
-                if num_batches >= max_batches:
-                    break
-
-                batch = tensors_to_device(batch, device=self.device)
-                _, results = self.get_outer_loss(batch)
-                yield results
-
-                num_batches += 1
-
-    def get_outer_loss_bgd(self,inputs,targets,num_of_mc_iters):
-        self.model.zero_grad()
-        self.optimizer_cl.zero_grad()
-        self.optimizer_cl._init_accumulators()
-        outer_loss = []
-        acc = 0
-        mse = 0
-        for mc_iter in range(num_of_mc_iters):
-            self.optimizer_cl.randomize_weights()
-            self.model.zero_grad()
-            self.optimizer_cl.zero_grad()
-            if isinstance(self, ModularMAML):
-                logits = self.model(inputs, params=self.reset_masks())
-            else:
-                logits = self.model(inputs, params=self.current_model)
-            loss = self.loss_function(logits, targets)
-            outer_loss.append(loss)
-            self.model.zero_grad()
-            self.optimizer_cl.zero_grad()
-            loss.backward(retain_graph=not self.first_order)
-            self.optimizer_cl.aggregate_grads(self.batch_size)
-            # self.optimizer.step()
-            if self.is_classification_task:
-                acc += compute_accuracy(logits, targets)
-            else:
-                mse += loss
-        return acc, mse, outer_loss
-
-    # update the slow weights \phi at CL time
-    def outer_update(self, outer_loss):
-        if isinstance(self.optimizer_cl, BGD):
-            self.optimizer_cl.step()
-        else:
-            self.optimizer.zero_grad()
-            outer_loss.backward()
-            self.optimizer.step()
-
-    @property
-    def metric_name(self):
-        if self.is_classification_task:
-            return 'accuracy'
-        else:
-            return 'mse'
-
     def observe(self, batch):
+        """Main CL method, called on each CL batch.
+
+        Legend for shorthand:
+            N: num ways
+            K: num shots
+        """
         if self.cl_strategy == 'never_retrain':
             self.model.eval()
         else:
             self.model.train()
 
-        #inputs, targets, _ , _ = batch
         # inputs [1, ways*shots, 1, 28, 28], targets [1, ways*shots]
+        # inputs.shape:         (1, N*K, 1, 28, 28)
+        # targets.shape:        (1, N*K)
+        # task_switch.shape:    (1)
+        # mode: tuple of str (single elem?)
+        # ways: single-elem tensor specifying N for this batch.
+        # shots: single-elem tensor specifying K for this batch.
+        # FIXME: targets don't appear to be shuffled. Problem?
         inputs, targets, task_switch, mode, ways, shots = batch
-
-        assert inputs.shape[0] == 1
+        assert_equal(ways.shape, [1])
+        assert_equal(shots.shape, [1])
+        N = ways[0]
+        K = shots[0]
+        assert_equal(inputs.shape, (1, N*K, 28, 28))
+        assert_equal(targets.shape, (1, N*K))
+        assert_equal(len(mode), 1)
         assert self.optimizer_cl is not None, 'Set optimizer_cl'
 
         # mc sampling for bgd optimizer
@@ -361,11 +311,11 @@ class ModelAgnosticMetaLearning(object):
 
         # There's no \theta_{t-1}
         if self.current_model is None:
-            self.current_model, _ = self.adapt(inputs, targets, ways[0], shots[0])
+            self.current_model, _ = self.adapt(inputs, targets, N, K)
             self.last_mode = mode[0]
             return results
 
-        same_nways = 1 if self.num_ways == ways[0] else 0
+        same_nways = self.num_ways == N
         if same_nways:
             # try the prev model on the incoming data:
             with torch.set_grad_enabled(self.model.training):
@@ -383,79 +333,48 @@ class ModelAgnosticMetaLearning(object):
                     logits = self.model(inputs, params=self.current_model)
                     outer_loss = self.loss_function(logits, targets)
                     results['outer_loss'] = outer_loss.item()
-                    if self.is_classification_task:
-                        results['accuracy_after'] = compute_accuracy(logits, targets)
-                    else:
-                        results["mse_after"] = F.mse_loss(logits, targets)
-        #else:
-        #    print('---- CL ways changed from ', self.num_ways, ' to ', ways[0])
+                    results[f'{self.metric_name}_after'] = self._compute_metric(
+                        logits, targets)
 
-        ## prediction is done and you can now use the labels
+        # prediction is done and you can now use the labels
         # line 18, update fast_weight, generated from slow weights \phi, but \phi not changed
-        self.current_model, _ = self.adapt(inputs, targets, ways[0], shots[0])
+        self.current_model, _ = self.adapt(inputs, targets, N, K)
         with torch.no_grad():
             # line 19, current_outer_loss is second term, loss of line 18
             logits = self.model(inputs, params=self.current_model)
-            current_outer_loss = self.loss_function(logits, targets).item()
-        current_acc = compute_accuracy(logits, targets)
-        # commented this out because when n_ways change for Proto-MAML, the current
-        # task is already used to initialize the last FC layer to get current_model,
-        # it's kind of cheating to test acc on the same data again. The evalutation
-        # should happen in the next task when it's still the same kind of task, but
-        # different data.
-#        if not same_nways:
-#            results['outer_loss'] = current_outer_loss
-#            results['accuracy_after'] = current_acc
 
-        #----------------- CL strategies ------------------#
         # if num_ways changed, then must be a task switch, skip the rest
-        tbd = 0
+        tbd = False
         if not same_nways:
-            tbd = 1
-        else: # same_nways
-            if self.cl_tbd_thres != -1: # gamma, !=-1, so need to check if task shifted
-                ## if task switched, than inner and outer loop have a missmatch!
-                if self.cl_strategy == 'acc':
-                    if current_acc >= results['accuracy_after'] + self.cl_tbd_thres:
-                        tbd = 1
-                elif self.cl_strategy == 'loss':
-                    if current_outer_loss + self.cl_tbd_thres <= results['outer_loss']:
-                        tbd = 1  # task shifted
+            tbd = True
+        else:
+            if self._should_detect_task_boundaries():
+                tbd = self._task_boundary_detected(logits, targets, results)
 
             if self.um_power == 0.0:
                 # No Update Modulation (UM)
                 ood = 1
-                if self.cl_strategy in ['loss', 'acc']:
-
-                    if self.cl_strategy == 'acc':
-                        if results['accuracy_after'] >= self.cl_strategy_thres:
-                            ood = 0
-
-                    elif self.cl_strategy == 'loss':
-                        if results['outer_loss'] <= self.cl_strategy_thres: # lambda
-                            ood = 0
+                if self.cl_strategy == 'acc':
+                    if results['accuracy_after'] >= self.cl_strategy_thres:
+                        ood = 0
+                elif self.cl_strategy == 'loss':
+                    if results['outer_loss'] <= self.cl_strategy_thres: # lambda
+                        ood = 0
 
                 # no task shifting and it's an ood task, update the slow weights \phi
                 if self.cl_strategy != 'never_retrain' and not tbd and ood:
                     self.outer_update(outer_loss) #  line 22
-                #else:
-                #    ol = results['outer_loss']
-                #    print(f'--- no UM, task shifted? {tbd}, ood? {ood} no slow weight update. {ol}, {current_outer_loss}')
             else:
                 # With Update Modulation (UM)
                 ood = 1.0
-                if self.cl_strategy in ['loss', 'acc']:
-                    if self.cl_strategy == 'acc':
-                        ood = min(1.0, (results['accuracy_after']/self.cl_strategy_thres)**self.um_power)
-
-                    elif self.cl_strategy == 'loss':
-                        ood = min(1.0, (results['outer_loss']/self.cl_strategy_thres)**self.um_power)
+                if self.cl_strategy == 'acc':
+                    ood = min(1.0, (results['accuracy_after']/self.cl_strategy_thres)**self.um_power)
+                elif self.cl_strategy == 'loss':
+                    ood = min(1.0, (results['outer_loss']/self.cl_strategy_thres)**self.um_power)
                 if self.cl_strategy != 'never_retrain' and not tbd:
                     self.outer_update(outer_loss*ood) #  line 22
-                #else:
-                #    print('--- UM, task shifted. no slow weight update')
-        #--------------------------------------------------#
-        results['tbd'] = task_switch.item()==tbd
+
+        results['tbd'] = task_switch.item() == int(tbd)
         return results
 
     # Algo 3
@@ -525,14 +444,13 @@ class ModelAgnosticMetaLearning(object):
         current_acc = compute_accuracy(logits, targets)
 
         #----------------- CL strategies ------------------#
-
         tbd = 0 if same_nways else 1
-        if tbd == 0 and self.cl_tbd_thres != -1: # must be same nways, still need to check task shift
+        if tbd == 0 and self.gamma != -1: # must be same nways, still need to check task shift
             if self.cl_strategy=='acc':
-                if current_acc >= results['accuracy_after'] + self.cl_tbd_thres:
+                if current_acc >= results['accuracy_after'] + self.gamma:
                     tbd = 1
             elif self.cl_strategy=='loss':
-                if current_outer_loss_value + self.cl_tbd_thres <= results['outer_loss']:
+                if current_outer_loss_value + self.gamma <= results['outer_loss']:
                     tbd = 1  # task shifted
         if tbd == 0: # no task shift
             # update fast weight \theta_t from previous fast weight
@@ -592,6 +510,117 @@ class ModelAgnosticMetaLearning(object):
 
         results['tbd'] = task_switch.item()==tbd
         return results
+
+    def outer_update(self, outer_loss):
+        """Update the slow weights \phi at CL time.
+
+        Only called by the observe methods.
+        """
+        if isinstance(self.optimizer_cl, BGD):
+            self.optimizer_cl.step()
+        else:
+            self.optimizer.zero_grad()
+            outer_loss.backward()
+            self.optimizer.step()
+
+    def evaluate(self, dataloader, max_batches=500, verbose=True, epoch=0, **kwargs):
+        mean_outer_loss, mean_inner_loss, mean_accuracy, count = 0., 0., 0, 0
+        with tqdm(total=max_batches, disable=not verbose, **kwargs) as pbar:
+            for results in self.evaluate_iter(dataloader, max_batches=max_batches):
+                pbar.update(1)
+                count += 1
+                mean_outer_loss += (results['mean_outer_loss']
+                    - mean_outer_loss) / count
+                postfix = {'loss': '{0:.4f}'.format(mean_outer_loss)}
+                if 'accuracies_after' in results:
+                    mean_accuracy += (np.mean(results['accuracies_after'])
+                        - mean_accuracy) / count
+                    postfix['accuracy'] = '{0:.4f}'.format(mean_accuracy)
+                if 'inner_losses' in results:
+                    mean_inner_loss += (np.mean(results['inner_losses'])
+                        - mean_inner_loss) / count
+                    postfix['inner_loss'] = '{0:.4f}'.format(mean_inner_loss)
+                pbar.set_postfix(**postfix)
+
+        results = {
+            'mean_outer_loss': mean_outer_loss,
+            'accuracies_after': mean_accuracy,
+            'mean_inner_loss': mean_inner_loss}
+
+        return results
+
+    def evaluate_iter(self, dataloader, max_batches=500):
+        num_batches = 0
+        self.model.eval()
+        while num_batches < max_batches:
+            for batch in dataloader:
+                if num_batches >= max_batches:
+                    break
+
+                batch = tensors_to_device(batch, device=self.device)
+                _, results = self.get_outer_loss(batch)
+                yield results
+
+                num_batches += 1
+
+    def get_outer_loss_bgd(self,inputs,targets,num_of_mc_iters):
+        self.model.zero_grad()
+        self.optimizer_cl.zero_grad()
+        self.optimizer_cl._init_accumulators()
+        outer_loss = []
+        acc = 0
+        mse = 0
+        for mc_iter in range(num_of_mc_iters):
+            self.optimizer_cl.randomize_weights()
+            self.model.zero_grad()
+            self.optimizer_cl.zero_grad()
+            if isinstance(self, ModularMAML):
+                logits = self.model(inputs, params=self.reset_masks())
+            else:
+                logits = self.model(inputs, params=self.current_model)
+            loss = self.loss_function(logits, targets)
+            outer_loss.append(loss)
+            self.model.zero_grad()
+            self.optimizer_cl.zero_grad()
+            loss.backward(retain_graph=not self.first_order)
+            self.optimizer_cl.aggregate_grads(self.batch_size)
+            # self.optimizer.step()
+            if self.is_classification_task:
+                acc += compute_accuracy(logits, targets)
+            else:
+                mse += loss
+        return acc, mse, outer_loss
+
+    def _should_detect_task_boundaries(self) -> bool:
+        """Whether or not to detect task boundaries / context shifts."""
+        return self.gamma != -1
+
+    def _compute_metric(self, logits, targets):
+        if self.is_classification_task:
+            return compute_accuracy(logits, targets)
+        else:
+            return F.mse_loss(logits, targets)
+
+    def _compute_cl_metric(self, logits, targets):
+        """Returns metric determined by self.cl_strategy."""
+        # if task switched, than inner and outer loop have a mismatch!
+        if self.cl_strategy == 'acc':
+            with torch.no_grad():
+                return compute_accuracy(logits, targets)
+        elif self.cl_strategy == 'loss':
+            with torch.no_grad():
+                return self.loss_function(logits, targets).item()
+        else:
+            raise ValueError(f'No metric for cl_strategy={self.cl_strategy}')
+
+    def _task_boundary_detected(self, logits, targets, results) -> bool:
+        cl_metric = self._compute_cl_metric(logits, targets)
+        if self.cl_strategy == 'acc':
+            return cl_metric >= results[f'accuracy_after'] + self.gamma
+        elif self.cl_strategy == 'loss':
+            return cl_metric + self.gamma <= results['outer_loss']
+        else:
+            return False
 
 
 class ProtoMAML(ModelAgnosticMetaLearning):
