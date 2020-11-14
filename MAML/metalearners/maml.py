@@ -71,6 +71,7 @@ class ModelAgnosticMetaLearning(object):
            International Conference on Learning Representations (ICLR).
            (https://arxiv.org/abs/1810.09502)
     """
+
     def __init__(self, model, optimizer, loss_function, args):
         self.device = args.device
         self.model = model.to(device=self.device)
@@ -107,6 +108,57 @@ class ModelAgnosticMetaLearning(object):
                     for group in self.optimizer.param_groups])
         self.num_ways = args.num_ways
         self.um_power = args.um_power
+
+    # Called during pretraining.
+    def train(self, dataloader, max_batches=500, verbose=True, **kwargs):
+        with tqdm(total=max_batches, disable=not verbose, **kwargs) as pbar:
+            for results in self.train_iter(dataloader, max_batches=max_batches):
+                pbar.update(1)
+                postfix = {'outer_loss': '{0:.4f}'.format(results['mean_outer_loss'])}
+                if 'accuracies_after' in results:
+                    postfix['accuracy'] = '{0:.4f}'.format(
+                        np.mean(results['accuracies_after']))
+                if 'inner_losses' in results:
+                    postfix['inner_loss'] = '{0:.4f}'.format(
+                        np.mean(results['inner_losses']))
+                pbar.set_postfix(**postfix)
+
+    def train_iter(self, dataloader, max_batches=500):
+        """one meta-update"""
+        if self.optimizer is None:
+            raise RuntimeError('Trying to call `train_iter`, while the '
+                'optimizer is `None`. In order to train `{0}`, you must '
+                'specify a Pytorch optimizer as the argument of `{0}` '
+                '(eg. `{0}(model, optimizer=torch.optim.SGD(model.'
+                'parameters(), lr=0.01), ...).'.format(__class__.__name__))
+        num_batches = 0
+        self.model.train()
+        while num_batches < max_batches:
+            '''
+            for batch in dataloader:
+                batch = {'train', 'test'}
+                batch['train'][0] = batch-size x num_shots*num_ways x input_dim
+                batch['train'][1] = batch-size x num_shots*num_ways x output_dim
+                batch['test'][0]  = batch-size x num_shots-test*num_ways x input_dim
+                batch['test'][1]  = batch-size x num_shots-test*num_ways x output_dim
+            '''
+            for batch in dataloader:
+                if num_batches >= max_batches:
+                    break
+
+                if self.scheduler is not None:
+                    self.scheduler.step(epoch=num_batches)
+
+                self.optimizer.zero_grad()
+
+                batch = tensors_to_device(batch, device=self.device)
+                outer_loss, results = self.get_outer_loss(batch)
+                yield results
+
+                outer_loss.backward()
+                self.optimizer.step()
+
+                num_batches += 1
 
     def get_outer_loss(self, batch):
         if 'test' not in batch:
@@ -195,57 +247,6 @@ class ModelAgnosticMetaLearning(object):
                 no_meta_learning=self.no_meta_learning)
 
         return params_local, results
-
-    # Called during pretraining.
-    def train(self, dataloader, max_batches=500, verbose=True, **kwargs):
-        with tqdm(total=max_batches, disable=not verbose, **kwargs) as pbar:
-            for results in self.train_iter(dataloader, max_batches=max_batches):
-                pbar.update(1)
-                postfix = {'outer_loss': '{0:.4f}'.format(results['mean_outer_loss'])}
-                if 'accuracies_after' in results:
-                    postfix['accuracy'] = '{0:.4f}'.format(
-                        np.mean(results['accuracies_after']))
-                if 'inner_losses' in results:
-                    postfix['inner_loss'] = '{0:.4f}'.format(
-                        np.mean(results['inner_losses']))
-                pbar.set_postfix(**postfix)
-
-    def train_iter(self, dataloader, max_batches=500):
-        """one meta-update"""
-        if self.optimizer is None:
-            raise RuntimeError('Trying to call `train_iter`, while the '
-                'optimizer is `None`. In order to train `{0}`, you must '
-                'specify a Pytorch optimizer as the argument of `{0}` '
-                '(eg. `{0}(model, optimizer=torch.optim.SGD(model.'
-                'parameters(), lr=0.01), ...).'.format(__class__.__name__))
-        num_batches = 0
-        self.model.train()
-        while num_batches < max_batches:
-            '''
-            for batch in dataloader:
-                batch = {'train', 'test'}
-                batch['train'][0] = batch-size x num_shots*num_ways x input_dim
-                batch['train'][1] = batch-size x num_shots*num_ways x output_dim
-                batch['test'][0]  = batch-size x num_shots-test*num_ways x input_dim
-                batch['test'][1]  = batch-size x num_shots-test*num_ways x output_dim
-            '''
-            for batch in dataloader:
-                if num_batches >= max_batches:
-                    break
-
-                if self.scheduler is not None:
-                    self.scheduler.step(epoch=num_batches)
-
-                self.optimizer.zero_grad()
-
-                batch = tensors_to_device(batch, device=self.device)
-                outer_loss, results = self.get_outer_loss(batch)
-                yield results
-
-                outer_loss.backward()
-                self.optimizer.step()
-
-                num_batches += 1
 
     def evaluate(self, dataloader, max_batches=500, verbose=True, epoch=0, **kwargs):
         mean_outer_loss, mean_inner_loss, mean_accuracy, count = 0., 0., 0, 0
@@ -474,7 +475,6 @@ class ModelAgnosticMetaLearning(object):
         # mc sampling for bgd optimizer
         self.batch_size = inputs.shape[1]
         num_of_mc_iters = 1
-        #set_trace()
         if hasattr(self.optimizer_cl, "get_mc_iters"):
             num_of_mc_iters = self.optimizer_cl.get_mc_iters()
         inputs, targets  = inputs[0], targets[0]
@@ -483,17 +483,8 @@ class ModelAgnosticMetaLearning(object):
             'inner_losses': np.zeros((self.num_adaptation_steps,), dtype=np.float32),
             'outer_loss': 0.,
             'tbd':0.,
-        }
-        if self.is_classification_task:
-            results.update({
-                'accuracy_before': 0.,
-                'accuracy_after': 0.
-            })
-        else:
-            results.update({
-                "mse_before": 0.,
-                "mse_after": 0.,
-            })
+            f'{self.metric_name}_before': 0.,
+            f'{self.metric_name}_after': 0.}
 
         # There's no \theta_{t-1}
         if self.current_model is None:
@@ -514,7 +505,7 @@ class ModelAgnosticMetaLearning(object):
                         results["mse_after"]  = mse / num_of_mc_iters
                     results['outer_loss'] = torch.mean(torch.tensor(outer_loss)).item()
                 else:
-                    ## using SGD
+                    # using SGD
                     # line 17, outer_loss is loss of previous fast weights \theta_{t-1}
                     logits = self.model(inputs, params=self.current_model)
                     outer_loss = self.loss_function(logits, targets)
@@ -532,9 +523,6 @@ class ModelAgnosticMetaLearning(object):
         current_outer_loss = self.loss_function(logits, targets)
         current_outer_loss_value = current_outer_loss.item()
         current_acc = compute_accuracy(logits, targets)
-#        if not same_nways: #TODO: remove this, this is cheating
-#            results['outer_loss'] = current_outer_loss_value
-#            results['accuracy_after'] = current_acc
 
         #----------------- CL strategies ------------------#
 
@@ -550,7 +538,6 @@ class ModelAgnosticMetaLearning(object):
             # update fast weight \theta_t from previous fast weight
             self.current_model, _ = self.adapt(inputs, targets, ways[0], shots[0], params=self.current_model)
         else:  # task shifted, tbd == 1
-#            print('--- task shifted', current_outer_loss_value+self.cl_tbd_thres,' < ', results['outer_loss'])
             if self.um_power == 0.0:
                 # Without Update Modulation (UM)
                 ood = 1
@@ -602,18 +589,8 @@ class ModelAgnosticMetaLearning(object):
 
             # update fast weight \theta_t from slow weight
             self.current_model, _ = self.adapt(inputs, targets, ways[0], shots[0])
-        #--------------------------------------------------#
 
         results['tbd'] = task_switch.item()==tbd
-        #print('{} {} loss={:.2f} curr_loss={:.2f} acc={:.2f} curr_acc={:.2f} tbd: {}'.format(
-        #                                   task_switch.item(),
-        #                                   mode[0],
-        #                                   results['outer_loss'],
-        #                                   current_outer_loss,
-        #                                   results['accuracy_after'],
-        #                                   current_acc,
-        #                                   results['tbd']))
-
         return results
 
 
