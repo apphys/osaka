@@ -85,7 +85,7 @@ class ModelAgnosticMetaLearning(object):
            (https://arxiv.org/abs/1810.09502)
     """
 
-    def __init__(self, model, optimizer, loss_function, args, wandb=None):
+    def __init__(self, model, optimizer, loss_function, args):
         self.device = args.device
         self.model = model.to(device=self.device)
         self.optimizer = optimizer
@@ -96,7 +96,6 @@ class ModelAgnosticMetaLearning(object):
         self.scheduler = None
         self.loss_function = loss_function
         self.is_classification_task = args.is_classification_task
-        self.wandb = wandb
 
         self.current_model = None
         self.last_mode = None
@@ -364,12 +363,12 @@ class ModelAgnosticMetaLearning(object):
             boundary_detected = self._task_boundary_detected(logits, targets, results)
 
         ood = self.g_lambda(results)
-        self.wandb.log({'g_lambda': ood})
         if all((self.cl_strategy != 'never_retrain',
                 not boundary_detected,
                 ood > 0)):
             self.outer_update(outer_loss * ood) #  line 22
 
+        results['g_lambda'] = ood
         results['tbd'] = task_switch.item() == int(boundary_detected)
         return results
 
@@ -642,8 +641,8 @@ class ModelAgnosticMetaLearning(object):
 
 class ProtoMAML(ModelAgnosticMetaLearning):
 
-    def __init__(self, model, optimizer, loss_function, args, wandb=None):
-        super(ProtoMAML, self).__init__(model, optimizer, loss_function, args, wandb=wandb)
+    def __init__(self, model, optimizer, loss_function, args):
+        super(ProtoMAML, self).__init__(model, optimizer, loss_function, args)
         self.args = args
         self.num_ways = None
         self.um_power = args.um_power

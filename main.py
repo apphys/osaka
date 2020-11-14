@@ -86,9 +86,9 @@ def init_models(args, wandb, metalearner=None):
 
     if metalearner is None:
         if args.method == 'MAML':
-            metalearner = ModelAgnosticMetaLearning(model, meta_optimizer, loss_function, args, wandb=wandb)
+            metalearner = ModelAgnosticMetaLearning(model, meta_optimizer, loss_function, args)
         elif args.method == 'ProtoMAML':
-            metalearner = ProtoMAML(model, meta_optimizer, loss_function, args, wandb=wandb)
+            metalearner = ProtoMAML(model, meta_optimizer, loss_function, args)
         elif args.method == 'ModularMAML':
             metalearner = ModularMAML(model, meta_optimizer, loss_function, args, wandb=wandb)
         else:
@@ -126,7 +126,7 @@ def pretraining(args, wandb, metalearner, meta_train_dataloader, meta_val_datalo
                     desc=epoch_desc.format(epoch + 1))
                 result_val = results['accuracies_after']
                 # early stopping:
-                if (best_val is None) or (best_val < result_val):
+                if (best_val is None) or (result_val > best_val):
                     epochs_overfitting = 0
                     best_val = result_val
                     best_metalearner = copy.deepcopy(metalearner)
@@ -139,7 +139,7 @@ def pretraining(args, wandb, metalearner, meta_train_dataloader, meta_val_datalo
                         break
             print('\npretraining done!\n')
             if wandb is not None:
-                wandb.log({'best_val': best_val}, step=epoch)
+                wandb.log({'pretrain/best_acc': best_val, 'pretrain/best_epoch': epoch})# , step=epoch)
     else:
         best_metalearner = copy.deepcopy(metalearner)
 
@@ -171,9 +171,10 @@ def continual_learning(args, wandb, cl_model_init, meta_optimizer_cl, cl_dataloa
     tbds = np.zeros([args.n_runs, args.timesteps])
     avg_accuracies_mode = dict(zip(modes, [[], [], []]))
     avg_mses_mode = dict(zip(modes, [[], [], []]))
+    log_interval = 100
     print(f'\n Continual learning for {args.n_runs} iterations...')
     for run in range(args.n_runs):
-        # set_seed(args, rgs.seed) if run==0 else set_seed(args, random.randint(0,100000))
+        print('=================', f'STARTING RUN {run}', '===============')
         accuracies_mode = dict(zip(modes, [[], [], []]))
         mses_mode = dict(zip(modes, [[], [], []]))
 
@@ -182,11 +183,14 @@ def continual_learning(args, wandb, cl_model_init, meta_optimizer_cl, cl_dataloa
         cl_model.optimizer_cl = meta_optimizer_cl
 
         for i, batch in enumerate(cl_dataloader):
+            # step = i + run * args.timesteps
+
             data, labels, task_switch, mode, _, _ = batch
             if args.algo3:
                 results = cl_model.observe2(batch)
             else:
                 results = cl_model.observe(batch)
+
 
             # Reporting:
             if is_classification_task:
@@ -200,14 +204,13 @@ def continual_learning(args, wandb, cl_model_init, meta_optimizer_cl, cl_dataloa
 
             tbds[run, i] = float(results['tbd'])
 
-            if wandb is not None and run == 0:
+            if wandb is not None and run == 0 and i % log_interval == 0:
                 if is_classification_task:
                     accuracy_after = results["accuracy_after"]
                     wandb.log({
-                        'temp_cl_acc': accuracy_after,
-                        'timestep1': i,
-                        f'temp_cl_acc_{mode[0]}': accuracy_after,
-                        'timestep2': i})
+                        'accuracy_after': accuracy_after,
+                        'timestep_i': i,
+                    }) #, step=step)
                 else:
                     mse_after = results["mse_after"]
                     wandb.log({'temp_cl_mse': mse_after,
@@ -215,7 +218,9 @@ def continual_learning(args, wandb, cl_model_init, meta_optimizer_cl, cl_dataloa
                     wandb.log({f'temp_cl_mse_{mode[0]}': mse_after,
                                'timestep2': i})
 
-            if (args.verbose and i % 100 == 0) or i == args.timesteps - 1:
+            if (args.verbose and i % log_interval == 0) or i == args.timesteps - 1:
+                if 'g_lambda' in results:
+                    wandb.log({'g_lambda': results['g_lambda']}) # step=step)
                 if is_classification_task:
                     acc = np.mean(accuracies[run, :i])
                     acc_mode = []
@@ -223,7 +228,7 @@ def continual_learning(args, wandb, cl_model_init, meta_optimizer_cl, cl_dataloa
                         acc_mode.append(np.mean(accuracies_mode[mode]))
                     acc_mode_str = [f'{m}_acc={a:.2f}' for m, a in zip(modes, acc_mode)]
                     print(f'total Acc: {acc:.2f},', f'mode accs: {acc_mode_str}', end='\t')
-                    wandb.log({'console acc': acc})
+                    wandb.log({'console acc': acc})# , step=step)
                 else:
                     mse = np.mean(mses[run, :i])
                     print(f'mean MSE: {mse:.5f} MSE: {mses[run, i]:.3f}', end='\t')
@@ -236,7 +241,7 @@ def continual_learning(args, wandb, cl_model_init, meta_optimizer_cl, cl_dataloa
                 for mode in modes:
                     avg_accuracies_mode[mode].append(np.mean(accuracies_mode[mode]))
                 if wandb is not None:
-                    wandb.log({'cl_acc_by_runs': np.mean(accuracies[run, :]), 'run': run})
+                    wandb.log({'cl_acc_by_runs': np.mean(accuracies[run, :])})
                 if run == 0 and is_classification_task:
                     if acc < 1. / float(args.num_ways) + 0.2:
                         wandb.log({'fail': 1})
@@ -246,11 +251,12 @@ def continual_learning(args, wandb, cl_model_init, meta_optimizer_cl, cl_dataloa
     if wandb is not None:
         # avg accuracy per time steps:
         for i in range(args.timesteps):
-            wandb.log({
-                'cl_acc': np.mean(accuracies[:, i]),
-                'timestep3': i,
-                'cl_acc_std': np.std(accuracies[:, i]),
-                'timestep4': i})
+            if i % log_interval == 0:
+                wandb.log({
+                    'run_agg/cl_acc_avg': np.mean(accuracies[:, i]),
+                    'run_agg/cl_acc_std': np.std(accuracies[:, i]),
+                    'run_agg/timestep_i': i
+            }) #, step=i)
 
         # final avgs:
         final_accs = np.mean(accuracies, axis=1)
