@@ -9,7 +9,6 @@ maml_base = {
     'num_ways': 10,
     'num_shots': 3,
     'gamma': 0.8,  # tbd
-    'cl_strategy_thres': 0.9,
 }
 
 NAME_TO_ARGS = {
@@ -17,7 +16,7 @@ NAME_TO_ARGS = {
         'wandb': 'cs330_finalproject_finalreport',
         'prob_statio': 0.9,
         'cl_strategy': 'loss',
-        'cl_strategy_thres': 4.0,  # used within g_lambda (but neq lamabda itself)
+        # 'cl_strategy_thres': 4.0,  # used within g_lambda (but neq lamabda itself)
         'gamma': -1,
         'n_runs': 4,
         'num_ways': 5,
@@ -26,6 +25,14 @@ NAME_TO_ARGS = {
     'maml_alg4_no_um': {
         **maml_base,
         'um_power': 0.0},
+    'maml_alg4_no_um_G2': {
+        **maml_base,
+        'um_power': 0.0,
+        'gamma': 2.0},
+    'maml_alg4_no_um_G02': {
+        **maml_base,
+        'um_power': 0.0,
+        'gamma': 0.2},
     'maml_alg4_yes_um': {
         **maml_base,
         'um_power': 1.0},
@@ -41,6 +48,11 @@ NAME_TO_ARGS = {
         **maml_base,
         'model_name': 'protomaml',
         'um_power': 0.0},
+    'protomaml_alg4_no_um_G2': {
+        **maml_base,
+        'model_name': 'protomaml',
+        'um_power': 0.0,
+        'gamma': 2.0},
     'protomaml_alg4_yes_um': {
         **maml_base,
         'model_name': 'protomaml',
@@ -70,12 +82,14 @@ if __name__ == '__main__':
     NAME = args.name
     overrides = {**NAME_TO_ARGS['default'], **NAME_TO_ARGS[NAME]}
 
-    NAME += f'_G{args.gamma}'
+    # NAME += f'_G{args.gamma}'
     NAME += f'_E{args.num_epochs}'
     if args.deeper > 0:
         NAME += f'_L{args.deeper}'
     if args.hidden_size != 64:
         NAME += f'_H{args.hidden_size}'
+    if args.cl_strategy_thres != 0.9:
+        NAME += f'_SThr{args.cl_strategy_thres}'
 
     print(f'NAME={NAME}')
     overrides['name'] = NAME
