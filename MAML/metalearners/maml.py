@@ -268,6 +268,8 @@ class ModelAgnosticMetaLearning(object):
     def observe(self, batch):
         """Main CL method, called on each CL batch.
 
+        Implement Algorithm 4 in paper appendix (No PAP!)
+
         Legend for shorthand:
             N: num ways
             K: num shots
@@ -277,10 +279,10 @@ class ModelAgnosticMetaLearning(object):
         else:
             self.model.train()
 
-        # inputs [1, ways*shots, 1, 28, 28], targets [1, ways*shots]
         # inputs.shape:         (1, N*K, 1, 28, 28)
         # targets.shape:        (1, N*K)
         # task_switch.shape:    (1)
+        #   - ground truth of whether this represents a task switch
         # mode: tuple of str (single elem?)
         # ways: single-elem tensor specifying N for this batch.
         # shots: single-elem tensor specifying K for this batch.
@@ -329,8 +331,9 @@ class ModelAgnosticMetaLearning(object):
                     results['outer_loss'] = torch.mean(torch.tensor(outer_loss)).item()
                 else:
                     # using SGD (or Adam)
-                    # line 17, outer_loss is loss of previous fast weights \theta_{t-1}
                     logits = self.model(inputs, params=self.current_model)
+                    # line 17, outer_loss is loss of previous fast weights \theta_{t-1}
+                    # aka L(f_{theta_{t-1}))
                     outer_loss = self.loss_function(logits, targets)
                     results['outer_loss'] = outer_loss.item()
                     results[f'{self.metric_name}_after'] = self._compute_metric(
@@ -344,38 +347,37 @@ class ModelAgnosticMetaLearning(object):
             logits = self.model(inputs, params=self.current_model)
 
         # if num_ways changed, then must be a task switch, skip the rest
-        tbd = False
         if not same_nways:
-            tbd = True
-        else:
-            if self._should_detect_task_boundaries():
-                tbd = self._task_boundary_detected(logits, targets, results)
+            results['tbd'] = task_switch.item() == 1
+            return results
 
-            if self.um_power == 0.0:
-                # No Update Modulation (UM)
-                ood = 1
-                if self.cl_strategy == 'acc':
-                    if results['accuracy_after'] >= self.cl_strategy_thres:
-                        ood = 0
-                elif self.cl_strategy == 'loss':
-                    if results['outer_loss'] <= self.cl_strategy_thres: # lambda
-                        ood = 0
+        boundary_detected = False
+        if self._should_detect_task_boundaries():
+            boundary_detected = self._task_boundary_detected(logits, targets, results)
 
-                # no task shifting and it's an ood task, update the slow weights \phi
-                if self.cl_strategy != 'never_retrain' and not tbd and ood:
-                    self.outer_update(outer_loss) #  line 22
-            else:
-                # With Update Modulation (UM)
-                ood = 1.0
-                if self.cl_strategy == 'acc':
-                    ood = min(1.0, (results['accuracy_after']/self.cl_strategy_thres)**self.um_power)
-                elif self.cl_strategy == 'loss':
-                    ood = min(1.0, (results['outer_loss']/self.cl_strategy_thres)**self.um_power)
-                if self.cl_strategy != 'never_retrain' and not tbd:
-                    self.outer_update(outer_loss*ood) #  line 22
+        ood = self.g_lambda(results)
+        if all((self.cl_strategy != 'never_retrain',
+                not boundary_detected,
+                ood > 0)):
+            self.outer_update(outer_loss * ood) #  line 22
 
-        results['tbd'] = task_switch.item() == int(tbd)
+        results['tbd'] = task_switch.item() == int(boundary_detected)
         return results
+
+    def g_lambda(self, results):
+        if not self._should_do_update_modulation():
+            if self.cl_strategy == 'acc':
+                if results['accuracy_after'] >= self.cl_strategy_thres:
+                    return 0
+            elif self.cl_strategy == 'loss':
+                if results['outer_loss'] <= self.cl_strategy_thres:
+                    return 0
+            return 1
+        else:
+            if self.cl_strategy == 'acc':
+                return min(1.0, (results['accuracy_after'] / self.cl_strategy_thres) ** self.um_power)
+            elif self.cl_strategy == 'loss':
+                return min(1.0, (results['outer_loss'] / self.cl_strategy_thres) ** self.um_power)
 
     # Algo 3
     def observe2(self, batch):
@@ -595,6 +597,9 @@ class ModelAgnosticMetaLearning(object):
         """Whether or not to detect task boundaries / context shifts."""
         return self.gamma != -1
 
+    def _should_do_update_modulation(self) -> bool:
+        return self.um_power != 0.0
+
     def _compute_metric(self, logits, targets):
         if self.is_classification_task:
             return compute_accuracy(logits, targets)
@@ -618,6 +623,9 @@ class ModelAgnosticMetaLearning(object):
         if self.cl_strategy == 'acc':
             return cl_metric >= results[f'accuracy_after'] + self.gamma
         elif self.cl_strategy == 'loss':
+            # NB: this is basically the opposite [in]equality from
+            # the paper, but that's because the code uses "NOT this_result" to
+            # determine whether to perform the UM.
             return cl_metric + self.gamma <= results['outer_loss']
         else:
             return False
