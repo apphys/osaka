@@ -69,7 +69,7 @@ def loss_fn_for_dataset(args):
 def init_models(args, wandb, metalearner=None):
     """Returns meta{learner, optimizer, optimizer_cl}."""
     if metalearner is not None:
-        model = metalearner
+        model = metalearner.model
     else:
         model = model_for_dataset(args)
     loss_function = loss_fn_for_dataset(args)

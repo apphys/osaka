@@ -19,6 +19,13 @@ def assert_equal(a, b):
         raise AssertionError(f'{a} != {b}')
 
 
+def assert_has_shape(t: torch.Tensor, shape):
+    shape = [int(s) for s in shape]
+    t_shape = list(t.size())
+    if t_shape != shape:
+        raise AssertionError(f'[ShapeError] {t_shape} != {shape}')
+
+
 __all__ = ['ModelAgnosticMetaLearning', 'MAML', 'ProtoMAML', 'FOMAML', 'ModularMAML']
 
 
@@ -288,12 +295,12 @@ class ModelAgnosticMetaLearning(object):
         # shots: single-elem tensor specifying K for this batch.
         # FIXME: targets don't appear to be shuffled. Problem?
         inputs, targets, task_switch, mode, ways, shots = batch
-        assert_equal(ways.shape, [1])
-        assert_equal(shots.shape, [1])
+        assert_has_shape(ways, [1])
+        assert_has_shape(shots, [1])
         N = ways[0]
         K = shots[0]
-        assert_equal(inputs.shape, (1, N*K, 28, 28))
-        assert_equal(targets.shape, (1, N*K))
+        assert_has_shape(inputs, (1, N*K, 1, 28, 28))
+        assert_has_shape(targets, (1, N*K))
         assert_equal(len(mode), 1)
         assert self.optimizer_cl is not None, 'Set optimizer_cl'
 
