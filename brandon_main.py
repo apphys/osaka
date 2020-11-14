@@ -17,9 +17,9 @@ NAME_TO_ARGS = {
         'prob_statio': 0.9,
         'cl_strategy': 'loss',
         'cl_strategy_thres': 4.0,  # used within g_lambda (but neq lamabda itself)
-        'gamma': 0.5,
+        'gamma': -1,
         'num_epochs': 1,
-        'n_runs': 1,
+        'n_runs': 4,
         'num_ways': 5,
         'num_shots': 5,
         'verbose': True},
