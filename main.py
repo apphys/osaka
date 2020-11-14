@@ -66,9 +66,12 @@ def loss_fn_for_dataset(args):
         raise RuntimeError(f'Unknown dataset: {args.dataset}')
 
 
-def init_models(args, wandb):
+def init_models(args, wandb, metalearner=None):
     """Returns meta{learner, optimizer, optimizer_cl}."""
-    model = model_for_dataset(args)
+    if metalearner is not None:
+        model = metalearner
+    else:
+        model = model_for_dataset(args)
     loss_function = loss_fn_for_dataset(args)
     if args.bgd_optimizer:
         meta_optimizer = torch.optim.Adam(model.parameters(), lr=args.meta_lr)
@@ -81,14 +84,15 @@ def init_models(args, wandb):
         meta_optimizer = torch.optim.Adam(model.parameters(), lr=args.meta_lr)
         meta_optimizer_cl = meta_optimizer
 
-    if args.method == 'MAML':
-        metalearner = ModelAgnosticMetaLearning(model, meta_optimizer, loss_function, args)
-    elif args.method == 'ProtoMAML':
-        metalearner = ProtoMAML(model, meta_optimizer, loss_function, args)
-    elif args.method == 'ModularMAML':
-        metalearner = ModularMAML(model, meta_optimizer, loss_function, args, wandb=wandb)
-    else:
-        raise RuntimeError()
+    if metalearner is None:
+        if args.method == 'MAML':
+            metalearner = ModelAgnosticMetaLearning(model, meta_optimizer, loss_function, args)
+        elif args.method == 'ProtoMAML':
+            metalearner = ProtoMAML(model, meta_optimizer, loss_function, args)
+        elif args.method == 'ModularMAML':
+            metalearner = ModularMAML(model, meta_optimizer, loss_function, args, wandb=wandb)
+        else:
+            raise RuntimeError()
     return metalearner, meta_optimizer, meta_optimizer_cl
 
 
@@ -174,7 +178,7 @@ def continual_learning(args, wandb, cl_model_init, meta_optimizer_cl, cl_dataloa
         mses_mode = dict(zip(modes, [[], [], []]))
 
         cl_model = copy.deepcopy(cl_model_init)
-        _, _, meta_optimizer_cl = init_models(args, cl_model)
+        _, _, meta_optimizer_cl = init_models(args, wandb, metalearner=cl_model)
         cl_model.optimizer_cl = meta_optimizer_cl
 
         for i, batch in enumerate(cl_dataloader):
