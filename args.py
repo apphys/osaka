@@ -58,6 +58,7 @@ def parse_args():
     group.add_argument('--num_shots',      type=int, default=5,      help='Number of training example per class (k in "k-shot").')
     group.add_argument('--num_shots_test', type=int, default=15,     help='Number of test example per class. If negative, same as the number of training examples `--num_shots`')
     group.add_argument('--seed',           type=int, default=100,    help='Seed')
+    # group.add_argument('--gpu',           type=int, default=0,    help='Integer index of GPU to use. Default is 0.')
 
     # Model
     group = parser.add_argument_group("Model Settings")

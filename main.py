@@ -263,16 +263,16 @@ def continual_learning(args, wandb, cl_model_init, meta_optimizer_cl, cl_dataloa
         final_begin_accs = np.mean(accuracies[:, :args.timesteps], axis=1)
         final_tbds = np.mean(tbds, axis=1)
         wandb.log({
-            'final_acc': np.mean(final_accs),
-            'final_acc_std': np.std(final_accs),
-            'final_begin_acc': np.mean(final_begin_accs),
-            'final_begin_acc_std': np.std(final_begin_accs),
-            'final_tbd': np.mean(final_tbds),
-            'final_tbd_std': np.std(final_tbds)})
+            'final/acc': np.mean(final_accs),
+            'final/acc_std': np.std(final_accs),
+            'final/begin_acc': np.mean(final_begin_accs),
+            'final/begin_acc_std': np.std(final_begin_accs),
+            'final/tbd': np.mean(final_tbds),
+            'final/tbd_std': np.std(final_tbds)})
         for mode in modes:
             wandb.log({
-                f'final_{mode}': np.mean(avg_accuracies_mode[mode]),
-                f'final_{mode}_std': np.std(avg_accuracies_mode[mode])})
+                f'final/{mode}': np.mean(avg_accuracies_mode[mode]),
+                f'final/{mode}_std': np.std(avg_accuracies_mode[mode])})
 
 
 def main(args):

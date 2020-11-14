@@ -1,5 +1,6 @@
 #!/usr/bin/env python3.6
 
+import os
 import main
 from args import parse_args
 
@@ -56,16 +57,25 @@ NAME_TO_ARGS = {
         'algo3': True},
 }
 
-# import os
 # NAME = os.getenv('RUN_NAME', 'no_pretrain')
 # print(f'NAME={NAME}')
 
 if __name__ == '__main__':
     args = parse_args()
+
+    # gpu_id = args.gpu
+    # print(f'SETTING GPU TO {gpu_id}')
+    # os.environ['CUDA_VISIBLE_DEVICES'] = f'{gpu_id}'
+
     NAME = args.name
     overrides = {**NAME_TO_ARGS['default'], **NAME_TO_ARGS[NAME]}
 
     NAME += f'_E{args.num_epochs}'
+    if args.deeper > 0:
+        NAME += f'_L{args.deeper}'
+    if args.hidden_size != 64:
+        NAME += f'_H{args.hidden_size}'
+
     print(f'NAME={NAME}')
     overrides['name'] = NAME
 
