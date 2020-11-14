@@ -33,6 +33,10 @@ NAME_TO_ARGS = {
         'num_shots': 3,
         'verbose': True,
     },
+    'no_pretrain': {
+        'num_epochs': 0,
+        'n_runs': 10,
+    },
     'protomaml': {
         'name': 'protomaml',
         'model_name': 'protomaml',
@@ -40,7 +44,7 @@ NAME_TO_ARGS = {
     }
 }
 
-NAME = 'protomaml'
+NAME = 'no_pretrain'
 
 if __name__ == '__main__':
     args = parse_args()
