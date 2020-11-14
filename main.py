@@ -191,7 +191,6 @@ def continual_learning(args, wandb, cl_model_init, meta_optimizer_cl, cl_dataloa
             else:
                 results = cl_model.observe(batch)
 
-
             # Reporting:
             if is_classification_task:
                 accuracy_after = results["accuracy_after"]
@@ -221,6 +220,8 @@ def continual_learning(args, wandb, cl_model_init, meta_optimizer_cl, cl_dataloa
             if (args.verbose and i % log_interval == 0) or i == args.timesteps - 1:
                 if 'g_lambda' in results:
                     wandb.log({'g_lambda': results['g_lambda']}) # step=step)
+                if 'delta_loss' in results:
+                    wandb.log({'delta_loss': results['delta_loss']}) # step=step)
                 if is_classification_task:
                     acc = np.mean(accuracies[run, :i])
                     acc_mode = []

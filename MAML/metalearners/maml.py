@@ -634,6 +634,7 @@ class ModelAgnosticMetaLearning(object):
             # NB: this is basically the opposite [in]equality from
             # the paper, but that's because the code uses "NOT this_result" to
             # determine whether to perform the UM.
+            results['delta_loss'] = results['outer_loss'] - cl_metric
             return cl_metric + self.gamma <= results['outer_loss']
         else:
             return False

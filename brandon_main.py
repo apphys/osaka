@@ -70,6 +70,7 @@ if __name__ == '__main__':
     NAME = args.name
     overrides = {**NAME_TO_ARGS['default'], **NAME_TO_ARGS[NAME]}
 
+    NAME += f'_G{args.gamma}'
     NAME += f'_E{args.num_epochs}'
     if args.deeper > 0:
         NAME += f'_L{args.deeper}'
