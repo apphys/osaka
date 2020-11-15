@@ -237,7 +237,7 @@ def continual_learning(args, wandb, cl_model_init, meta_optimizer_cl, cl_dataloa
                     acc_mode_str = [f'{m}_acc={a:.2f}' for m, a in zip(modes, acc_mode)]
                     print(f'total Acc: {acc:.2f},', f'mode accs: {acc_mode_str}', end='\t')
                     for m in modes:
-                        wandb.log({f'acc_{mode}': acc_mode[mode_to_int[m]]})
+                        wandb.log({f'acc_{m}': acc_mode[mode_to_int[m]]})
                     wandb.log({'console acc': acc})# , step=step)
                 else:
                     mse = np.mean(mses[run, :i])
