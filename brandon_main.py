@@ -36,6 +36,7 @@ NAME_TO_ARGS = {
     'maml_alg4_yes_um': {
         **maml_base,
         'um_power': 1.0},
+    # BEGIN: SUNDAY
     'maml_diffN_yes_um_G3': {
         **maml_base,
         'use_different_nways': True,
@@ -45,6 +46,34 @@ NAME_TO_ARGS = {
         **maml_base,
         'um_power': 1.0,
         'gamma': 3.0},
+    'maml_diffN_yes_um_G03': {
+        **maml_base,
+        'use_different_nways': True,
+        'um_power': 1.0,
+        'gamma': 0.3},
+    'maml_sameN_yes_um_G03': {
+        **maml_base,
+        'um_power': 1.0,
+        'gamma': 0.3},
+    'maml_diffN_no_um_G3': {
+        **maml_base,
+        'use_different_nways': True,
+        'um_power': 0.0,
+        'gamma': 3.0},
+    'maml_sameN_no_um_G3': {
+        **maml_base,
+        'um_power': 0.0,
+        'gamma': 3.0},
+    'maml_diffN_no_um_G03': {
+        **maml_base,
+        'use_different_nways': True,
+        'um_power': 0.0,
+        'gamma': 0.3},
+    'maml_sameN_no_um_G03': {
+        **maml_base,
+        'um_power': 0.0,
+        'gamma': 0.3},
+    # END: SUNDAY
     'maml_alg3_no_um': {
         **maml_base,
         'um_power': 0.0,

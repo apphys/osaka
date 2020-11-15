@@ -169,6 +169,7 @@ def continual_learning(args, wandb, cl_model_init, meta_optimizer_cl, cl_dataloa
     mses = np.zeros([args.n_runs, args.timesteps])
 
     tbds = np.zeros([args.n_runs, args.timesteps])
+    mode_to_int = dict(zip(modes, [0, 1, 2]))
     avg_accuracies_mode = dict(zip(modes, [[], [], []]))
     avg_mses_mode = dict(zip(modes, [[], [], []]))
     log_interval = 100
@@ -222,7 +223,7 @@ def continual_learning(args, wandb, cl_model_init, meta_optimizer_cl, cl_dataloa
                     wandb.log({'g_lambda': results['g_lambda']}) # step=step)
                 if 'delta_loss' in results:
                     wandb.log({'delta_loss': results['delta_loss']}) # step=step)
-                wandb.log({'mode': mode})
+                wandb.log({'mode': mode_to_int[mode[0]]})
                 wandb.log({'tbd_i': float(results['tbd'])})
                 if 'l1' in results:
                     wandb.log({
@@ -231,10 +232,12 @@ def continual_learning(args, wandb, cl_model_init, meta_optimizer_cl, cl_dataloa
                 if is_classification_task:
                     acc = np.mean(accuracies[run, :i])
                     acc_mode = []
-                    for mode in modes:
-                        acc_mode.append(np.mean(accuracies_mode[mode]))
+                    for m in modes:
+                        acc_mode.append(np.mean(accuracies_mode[m]))
                     acc_mode_str = [f'{m}_acc={a:.2f}' for m, a in zip(modes, acc_mode)]
                     print(f'total Acc: {acc:.2f},', f'mode accs: {acc_mode_str}', end='\t')
+                    for m in modes:
+                        wandb.log({f'acc_{mode}': acc_mode[mode_to_int[m]]})
                     wandb.log({'console acc': acc})# , step=step)
                 else:
                     mse = np.mean(mses[run, :i])

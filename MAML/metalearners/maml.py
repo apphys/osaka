@@ -242,30 +242,37 @@ class ModelAgnosticMetaLearning(object):
             (self.num_adaptation_steps,), dtype=np.float32)}
 
         if self.num_ways is None or ways != self.num_ways:
-            print('YEEEEHAAWWl', self.num_ways, ways)
-            self.model.update_classifier(ways.to('cpu').tolist())
+            self.model.update_classifier(ways.to(self.device).tolist())
+            self.model.classifier.weight = torch.nn.Parameter(self.model.classifier.weight.to('cuda'))
+            self.model.classifier.bias = torch.nn.Parameter(self.model.classifier.bias.to('cuda'))
+            torch.nn.init.xavier_uniform_(self.model.classifier.weight)
+            torch.nn.init.zeros_(self.model.classifier.bias)
         self.num_ways = ways
 
-        prototypes = self.model.forward_conv(inputs) # [ways*shots, 64]
-        prototypes = torch.reshape(prototypes, (ways, shots, prototypes.shape[-1])) #[ways, shots, 64]
-        prototypes = torch.mean(prototypes, axis=1) # [ways, 64]
+        # prototypes = self.model.forward_conv(inputs) # [ways*shots, 64]
+        # prototypes = torch.reshape(prototypes, (ways, shots, prototypes.shape[-1])) #[ways, shots, 64]
+        # prototypes = torch.mean(prototypes, axis=1) # [ways, 64]
 
-        # Proto-MAML: init last FC layer with prototype weights
-        self.model.classifier.weight=torch.nn.Parameter(2.0*prototypes) # w_k = 2c_k
-        self.model.classifier.bias=torch.nn.Parameter(
-                -torch.sum(prototypes*prototypes, axis=1)) # b_k = -|c_k|^2
+        # # Proto-MAML: init last FC layer with prototype weights
+        # self.model.classifier.weight=torch.nn.Parameter(2.0*prototypes) # w_k = 2c_k
+        # self.model.classifier.bias=torch.nn.Parameter(
+                # -torch.sum(prototypes*prototypes, axis=1)) # b_k = -|c_k|^2
+        # print(f'W', self.model.classifier.weight.shape)
+        # print(f'B', self.model.classifier.bias.shape)
+
         # self.model.classifier.weight = torch.nn.Parameter(torch.zeros(ways * shots, 64)) # w_k = 2c_k
         # self.model.classifier.bias = torch.nn.Parameter(torch.zeros(ways * shots))
 
-        params_local = None
-        if params is not None:
-            #TODO: need this, otherwise backprop too many steps, OOM!!
-            params_local = OrderedDict({
-                k: v.clone().detach().requires_grad_(True)
-                for k, v in params.items()})
+        params_local = params
+        # params_local = None
+        # if params is not None:
+            # #TODO: need this, otherwise backprop too many steps, OOM!!
+            # params_local = OrderedDict({
+                # k: v.clone().detach().requires_grad_(True)
+                # for k, v in params.items()})
 
         for step in range(self.num_adaptation_steps):
-            logits = self.model(inputs, params=params_local)
+            logits = self.model(inputs.to(self.device), params=params_local)
             inner_loss = self.loss_function(logits, targets)
             results['inner_losses'][step] = inner_loss.item()
             if step == 0:
