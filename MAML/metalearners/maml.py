@@ -324,51 +324,50 @@ class ModelAgnosticMetaLearning(object):
             self.last_mode = mode[0]
             return results
 
+        # NOTE: I've realigned comments below to match the algs in our report.
         same_nways = self.num_ways == N
         if same_nways:
-            # try the prev model on the incoming data:
+            # Loss of the previous fast weight.
             with torch.set_grad_enabled(self.model.training):
                 if isinstance(self.optimizer_cl, BGD):
-                    ## using BGD:
-                    acc, mse, outer_loss  = self.get_outer_loss_bgd(inputs, targets, num_of_mc_iters)
+                    acc, mse, l0 = self.get_outer_loss_bgd(inputs, targets, num_of_mc_iters)
                     if self.is_classification_task:
                         results['accuracy_after'] = acc / num_of_mc_iters
                     else:
-                        results["mse_after"]  = mse / num_of_mc_iters
-                    results['outer_loss'] = torch.mean(torch.tensor(outer_loss)).item()
+                        results["mse_after"] = mse / num_of_mc_iters
+                    results['outer_loss'] = torch.mean(torch.tensor(l0)).item()
                 else:
-                    # using SGD (or Adam)
                     logits = self.model(inputs, params=self.current_model)
-                    # line 17, outer_loss is loss of previous fast weights \theta_{t-1}
-                    # aka L(f_{theta_{t-1}))
-                    outer_loss = self.loss_function(logits, targets)
-                    results['outer_loss'] = outer_loss.item()
+                    l0 = self.loss_function(logits, targets)
+                    results['outer_loss'] = l0.item()
                     results[f'{self.metric_name}_after'] = self._compute_metric(
                         logits, targets)
 
-        # prediction is done and you can now use the labels
-        # line 18, update fast_weight, generated from slow weights \phi, but \phi not changed
+        # Get current fast weight from the slow weight.
         self.current_model, _ = self.adapt(inputs, targets, N, K)
-        with torch.no_grad():
-            # line 19, current_outer_loss is second term, loss of line 18
-            logits = self.model(inputs, params=self.current_model)
 
         # if num_ways changed, then must be a task switch, skip the rest
         if not same_nways:
             results['tbd'] = task_switch.item() == 1
             return results
 
+        # Note: we compute l1 within self._task_boundary_detected (cl_metric).
+        # We don't compute it out here because it's only needed if `same_nways`.
         boundary_detected = False
         if self._should_detect_task_boundaries():
             boundary_detected = self._task_boundary_detected(logits, targets, results)
 
-        ood = self.g_lambda(results)
+        # Compute UM factor that will be applied to learning rate eta for this
+        # iteration. If `not self._should_do_update_modulation()`, then this is
+        # either 0 or 1, where "0" essentially means
+        # "dont update the slow weights".
+        update_modulation_factor = self.g_lambda(results)
         if all((self.cl_strategy != 'never_retrain',
                 not boundary_detected,
-                ood > 0)):
-            self.outer_update(outer_loss * ood) #  line 22
+                update_modulation_factor > 0)):
+            self.outer_update(l0 * update_modulation_factor)
 
-        results['g_lambda'] = ood
+        results['g_lambda'] = update_modulation_factor
         results['tbd'] = task_switch.item() == int(boundary_detected)
         return results
 
@@ -586,21 +585,6 @@ class ModelAgnosticMetaLearning(object):
                 mse += loss
         return acc, mse, outer_loss
 
-    def g_lambda(self, results):
-        if not self._should_do_update_modulation():
-            if self.cl_strategy == 'acc':
-                if results['accuracy_after'] >= self.cl_strategy_thres:
-                    return 0
-            elif self.cl_strategy == 'loss':
-                if results['outer_loss'] <= self.cl_strategy_thres:
-                    return 0
-            return 1
-        else:
-            if self.cl_strategy == 'acc':
-                return min(1.0, (results['accuracy_after'] / self.cl_strategy_thres) ** self.um_power)
-            elif self.cl_strategy == 'loss':
-                return min(1.0, (results['outer_loss'] / self.cl_strategy_thres) ** self.um_power)
-
     def _should_detect_task_boundaries(self) -> bool:
         """Whether or not to detect task boundaries / context shifts."""
         return self.gamma != -1
@@ -626,7 +610,12 @@ class ModelAgnosticMetaLearning(object):
         else:
             raise ValueError(f'No metric for cl_strategy={self.cl_strategy}')
 
-    def _task_boundary_detected(self, logits, targets, results) -> bool:
+    def _task_boundary_detected(self, inputs, targets, results) -> bool:
+        """
+        Uses: gamma
+        """
+        with torch.no_grad():
+            logits = self.model(inputs, params=self.current_model)
         cl_metric = self._compute_cl_metric(logits, targets)
         if self.cl_strategy == 'acc':
             return cl_metric >= results[f'accuracy_after'] + self.gamma
@@ -638,6 +627,24 @@ class ModelAgnosticMetaLearning(object):
             return cl_metric + self.gamma <= results['outer_loss']
         else:
             return False
+
+    def g_lambda(self, results):
+        """
+        Uses: cl_strategy_thres (informally is lambda but not really).
+        """
+        if not self._should_do_update_modulation():
+            if self.cl_strategy == 'acc':
+                if results['accuracy_after'] >= self.cl_strategy_thres:
+                    return 0
+            elif self.cl_strategy == 'loss':
+                if results['outer_loss'] <= self.cl_strategy_thres:
+                    return 0
+            return 1
+        else:
+            if self.cl_strategy == 'acc':
+                return min(1.0, (results['accuracy_after'] / self.cl_strategy_thres) ** self.um_power)
+            elif self.cl_strategy == 'loss':
+                return min(1.0, (results['outer_loss'] / self.cl_strategy_thres) ** self.um_power)
 
 
 class ProtoMAML(ModelAgnosticMetaLearning):
