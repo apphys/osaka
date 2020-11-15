@@ -383,7 +383,7 @@ class ModelAgnosticMetaLearning(object):
         boundary_detected = False
         if self._should_detect_task_boundaries():
             boundary_detected = self._task_boundary_detected(
-                logits, targets, results)
+                inputs, targets, results)
 
         # Compute UM factor that will be applied to learning rate eta for this
         # iteration. If `not self._should_do_update_modulation()`, then this is
