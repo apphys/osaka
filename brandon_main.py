@@ -6,7 +6,7 @@ from args import parse_args
 
 maml_base = {
     'model_name': 'ours',  # seems equiv to MAML?
-    'num_ways': 10,
+    'num_ways': 5,
     'num_shots': 3,
     'gamma': 0.8,  # tbd
 }
@@ -99,6 +99,7 @@ if __name__ == '__main__':
         NAME += f'_H{args.hidden_size}'
     if args.cl_strategy_thres != 0.9:
         NAME += f'_SThr{args.cl_strategy_thres}'
+    NAME += f'_NW{args.num_ways}'
 
     print(f'NAME={NAME}')
     overrides['name'] = NAME

@@ -470,7 +470,7 @@ class VariableClassStreamDataset(torch.utils.data.Dataset):
             assert len(modes) == 2
             assert len(probs) == 2
             self._mode = np.random.choice(modes, p=probs)
-            #self.n_way_current = np.random.randint(self.n_way+1, 21)
+            # self.n_way_current = np.random.randint(self.n_way+1, 21)
             self.n_way_current = np.random.randint(self.n_way+1, 11)
 
             mode_data = self.data[self._mode]
