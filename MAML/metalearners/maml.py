@@ -241,6 +241,10 @@ class ModelAgnosticMetaLearning(object):
         results = {'inner_losses': np.zeros(
             (self.num_adaptation_steps,), dtype=np.float32)}
 
+        if self.num_ways is None or ways != self.num_ways:
+            self.model.update_classifier(ways.to('cpu').tolist())
+        self.num_ways = ways
+
         params_local = None
         if params is not None:
             #TODO: need this, otherwise backprop too many steps, OOM!!
