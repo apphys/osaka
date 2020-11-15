@@ -372,6 +372,9 @@ class ModelAgnosticMetaLearning(object):
 
         # if num_ways changed, then must be a task switch, skip the rest
         if not same_nways:
+            cl_metric = self._cl_metric_from_inp(inputs, targets)
+            assert self.cl_strategy == 'loss', 'am assuming cl_metric returns l1...'
+            results['l1'] = cl_metric
             results['tbd'] = task_switch.item() == 1
             return results
 
