@@ -343,6 +343,26 @@ class ModelAgnosticMetaLearning(object):
                     results[f'{self.metric_name}_after'] = self._compute_metric(
                         logits, targets)
 
+        # pap = False
+        # if pap:
+        #     # Get virtual fast weight from slow weight.
+        #     virtual_model, _ = self.adapt(inputs, targets, N, K)
+        #     # Loss of virtual fast weight.
+        #     l1 = self._cl_metric_from_inp(inputs, targets, params=virtual_model)
+        #     assert self._should_detect_task_boundaries()
+        #     # If task has not shifted...
+        #     if l0 < l1 + self.gamma:
+        #         # Get current fast weight from previous one (PAP!)
+        #         self.current_model, _ = self.adapt(
+        #             inputs, targets, N, K, params=self.current_model)
+        #     else:
+        #         update_modulation_factor = self.g_lambda(results)
+        #         assert self.cl_strategy != 'never_retrain'  # temp assumption i'm making during code sketch...
+        #         # Update the slow weight.
+        #         self.outer_update(l0 * update_modulation_factor)
+        #         # Get current fast weight from updated slow.
+        #         self.current_model, _ = self.adapt(inputs, targets, N, K)
+
         # Get current fast weight from the slow weight.
         self.current_model, _ = self.adapt(inputs, targets, N, K)
 
@@ -355,7 +375,8 @@ class ModelAgnosticMetaLearning(object):
         # We don't compute it out here because it's only needed if `same_nways`.
         boundary_detected = False
         if self._should_detect_task_boundaries():
-            boundary_detected = self._task_boundary_detected(logits, targets, results)
+            boundary_detected = self._task_boundary_detected(
+                logits, targets, results)
 
         # Compute UM factor that will be applied to learning rate eta for this
         # iteration. If `not self._should_do_update_modulation()`, then this is
@@ -373,66 +394,74 @@ class ModelAgnosticMetaLearning(object):
 
     # Algo 3
     def observe2(self, batch):
+        raise RuntimeError(f'don\'t call me :)')
         if self.cl_strategy == 'never_retrain':
             self.model.eval()
         else:
             self.model.train()
 
-        #inputs, targets, _ , _ = batch
-        # inputs [1, ways*shots, 1, 28, 28], targets [1, ways*shots]
-        inputs, targets, task_switch , mode, ways, shots = batch
+        # inputs.shape:         (1, N*K, 1, 28, 28)
+        # targets.shape:        (1, N*K)
+        # task_switch.shape:    (1)
+        #   - ground truth of whether this represents a task switch
+        # mode: tuple of str (single elem?)
+        # ways: single-elem tensor specifying N for this batch.
+        # shots: single-elem tensor specifying K for this batch.
+        # FIXME: targets don't appear to be shuffled. Problem?
+        inputs, targets, task_switch, mode, ways, shots = batch
+        assert_has_shape(ways, [1])
+        assert_has_shape(shots, [1])
+        N = ways[0]
+        K = shots[0]
+        assert_has_shape(inputs, (1, N*K, 1, 28, 28))
+        assert_has_shape(targets, (1, N*K))
+        assert_equal(len(mode), 1)
+        assert self.optimizer_cl is not None, 'Set optimizer_cl'
 
-        # for now we are doing one task at a time
-        assert inputs.shape[0] == 1
-        assert self.optimizer_cl != None, 'Set optimizer_cl'
         # mc sampling for bgd optimizer
         self.batch_size = inputs.shape[1]
         num_of_mc_iters = 1
         if hasattr(self.optimizer_cl, "get_mc_iters"):
             num_of_mc_iters = self.optimizer_cl.get_mc_iters()
-        inputs, targets  = inputs[0], targets[0]
+        inputs, targets = inputs[0], targets[0]
 
         results = {
             'inner_losses': np.zeros((self.num_adaptation_steps,), dtype=np.float32),
             'outer_loss': 0.,
-            'tbd':0.,
+            'tbd': 0.,
             f'{self.metric_name}_before': 0.,
             f'{self.metric_name}_after': 0.}
 
         # There's no \theta_{t-1}
         if self.current_model is None:
-            self.current_model, _ = self.adapt(inputs, targets, ways[0], shots[0])
+            self.current_model, _ = self.adapt(inputs, targets, N, K)
             self.last_mode = mode[0]
             return results
 
-        same_nways = 1 if self.num_ways == ways[0] else 0
-        if same_nways :
-            ## try the prev model on the incoming data:
+        # NOTE: I've realigned comments below to match the algs in our report.
+        same_nways = self.num_ways == N
+        if same_nways:
+            # Loss of the previous fast weight.
             with torch.set_grad_enabled(self.model.training):
                 if isinstance(self.optimizer_cl, BGD):
-                    ## using BGD:
-                    acc, mse, outer_loss  = self.get_outer_loss_bgd(inputs, targets, num_of_mc_iters)
+                    acc, mse, l0 = self.get_outer_loss_bgd(inputs, targets, num_of_mc_iters)
                     if self.is_classification_task:
                         results['accuracy_after'] = acc / num_of_mc_iters
                     else:
-                        results["mse_after"]  = mse / num_of_mc_iters
-                    results['outer_loss'] = torch.mean(torch.tensor(outer_loss)).item()
+                        results["mse_after"] = mse / num_of_mc_iters
+                    results['outer_loss'] = torch.mean(torch.tensor(l0)).item()
                 else:
-                    # using SGD
-                    # line 17, outer_loss is loss of previous fast weights \theta_{t-1}
                     logits = self.model(inputs, params=self.current_model)
-                    outer_loss = self.loss_function(logits, targets)
-                    results['outer_loss'] = outer_loss.item()
-                    if self.is_classification_task:
-                        results['accuracy_after'] = compute_accuracy(logits, targets)
-                    else:
-                        results["mse_after"] = F.mse_loss(logits, targets)
+                    l0 = self.loss_function(logits, targets)
+                    results['outer_loss'] = l0.item()
+                    results[f'{self.metric_name}_after'] = self._compute_metric(
+                        logits, targets)
 
         # virtual fast_weight, generated from slow weights \phi, but \phi not changed
-        self.current_virtual_model, _ = self.adapt(inputs, targets, ways[0], shots[0])
+        current_virtual_model, _ = self.adapt(inputs, targets, N, K)
         #with torch.no_grad():
         # line 19, current_outer_loss is second term, loss of line 18
-        logits = self.model(inputs, params=self.current_virtual_model)
+        logits = self.model(inputs, params=current_virtual_model)
         current_outer_loss = self.loss_function(logits, targets)
         current_outer_loss_value = current_outer_loss.item()
         current_acc = compute_accuracy(logits, targets)
@@ -598,7 +627,7 @@ class ModelAgnosticMetaLearning(object):
         else:
             return F.mse_loss(logits, targets)
 
-    def _compute_cl_metric(self, logits, targets):
+    def _cl_metric_from_logits(self, logits, targets):
         """Returns metric determined by self.cl_strategy."""
         # if task switched, than inner and outer loop have a mismatch!
         if self.cl_strategy == 'acc':
@@ -610,13 +639,18 @@ class ModelAgnosticMetaLearning(object):
         else:
             raise ValueError(f'No metric for cl_strategy={self.cl_strategy}')
 
+    def _cl_metric_from_inp(self, inputs, targets, params=None):
+        """Returns metric determined by self.cl_strategy."""
+        params = params or self.current_model
+        with torch.no_grad():
+            logits = self.model(inputs, params=params)
+        return self._cl_metric_from_logits(logits, targets)
+
     def _task_boundary_detected(self, inputs, targets, results) -> bool:
         """
         Uses: gamma
         """
-        with torch.no_grad():
-            logits = self.model(inputs, params=self.current_model)
-        cl_metric = self._compute_cl_metric(logits, targets)
+        cl_metric = self._cl_metric_from_inp(inputs, targets)
         if self.cl_strategy == 'acc':
             return cl_metric >= results[f'accuracy_after'] + self.gamma
         elif self.cl_strategy == 'loss':
@@ -624,6 +658,7 @@ class ModelAgnosticMetaLearning(object):
             # the paper, but that's because the code uses "NOT this_result" to
             # determine whether to perform the UM.
             results['delta_loss'] = results['outer_loss'] - cl_metric
+            results['l1'] = cl_metric
             return cl_metric + self.gamma <= results['outer_loss']
         else:
             return False

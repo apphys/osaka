@@ -464,7 +464,12 @@ class VariableClassStreamDataset(torch.utils.data.Dataset):
             # task_switch = mode != self._mode
             # TODO: this makes a switch even if staying in same mode!
             task_switch = 1
-            self._mode  = np.random.choice([0,1,2], p=self.probs)
+            modes_probs = [(m, p) for m, p in zip([0, 1, 2], self.probs) if m != self._mode]
+            modes, probs = zip(*modes_probs)
+            probs = [p / sum(probs) for p in probs]
+            assert len(modes) == 2
+            assert len(probs) == 2
+            self._mode = np.random.choice(modes, p=probs)
             #self.n_way_current = np.random.randint(self.n_way+1, 21)
             self.n_way_current = np.random.randint(self.n_way+1, 11)
 
