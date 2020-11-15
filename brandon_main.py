@@ -36,6 +36,15 @@ NAME_TO_ARGS = {
     'maml_alg4_yes_um': {
         **maml_base,
         'um_power': 1.0},
+    'maml_diffN_yes_um_G3': {
+        **maml_base,
+        'use_different_nways': True,
+        'um_power': 1.0,
+        'gamma': 3.0},
+    'maml_sameN_yes_um_G3': {
+        **maml_base,
+        'um_power': 1.0,
+        'gamma': 3.0},
     'maml_alg3_no_um': {
         **maml_base,
         'um_power': 0.0,
