@@ -345,7 +345,7 @@ class ModelAgnosticMetaLearning(object):
                     l0 = self.loss_function(logits, targets)
                     results['outer_loss'] = l0.item()
                     results[f'{self.metric_name}_after'] = self._compute_metric(
-                        inputs, targets)
+                        logits, targets)
 
         # pap = False
         # if pap:
