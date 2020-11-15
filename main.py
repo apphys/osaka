@@ -224,9 +224,10 @@ def continual_learning(args, wandb, cl_model_init, meta_optimizer_cl, cl_dataloa
                     wandb.log({'delta_loss': results['delta_loss']}) # step=step)
                 wandb.log({'mode': mode})
                 wandb.log({'tbd_i': float(results['tbd'])})
-                wandb.log({
-                    'l0': results['outer_loss'],
-                    'l1': results['l1']})
+                if 'l1' in results:
+                    wandb.log({
+                        'l0': results['outer_loss'],
+                        'l1': results['l1']})
                 if is_classification_task:
                     acc = np.mean(accuracies[run, :i])
                     acc_mode = []
