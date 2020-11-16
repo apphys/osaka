@@ -392,8 +392,9 @@ class ModelAgnosticMetaLearning(object):
         # if num_ways changed, then must be a task switch, skip the rest
         if not same_nways:
             cl_metric = self._cl_metric_from_inp(inputs, targets)
-            assert self.cl_strategy == 'loss', 'am assuming cl_metric returns l1...'
-            results['l1'] = cl_metric
+            #assert self.cl_strategy == 'loss', 'am assuming cl_metric returns l1...'
+            if cl_metric:
+                results['l1'] = cl_metric
             results['tbd'] = task_switch.item() == 1
             return results
 
@@ -663,7 +664,8 @@ class ModelAgnosticMetaLearning(object):
             with torch.no_grad():
                 return self.loss_function(logits, targets).item()
         else:
-            raise ValueError(f'No metric for cl_strategy={self.cl_strategy}')
+            return None
+            #raise ValueError(f'No metric for cl_strategy={self.cl_strategy}')
 
     def _cl_metric_from_inp(self, inputs, targets, params=None):
         """Returns metric determined by self.cl_strategy."""
@@ -711,6 +713,7 @@ class ModelAgnosticMetaLearning(object):
 class ProtoMAML(ModelAgnosticMetaLearning):
 
     def __init__(self, model, optimizer, loss_function, args):
+        import pdb; pdb.set_trace()
         super(ProtoMAML, self).__init__(model, optimizer, loss_function, args)
         self.args = args
         self.num_ways = None

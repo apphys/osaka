@@ -39,6 +39,20 @@ def str2bool(value: Union[str, bool]) -> bool:
     else:
         raise argparse.ArgumentTypeError(f"Boolean value expected for argument, received '{value}'")
 
+def update_from_config(args):
+    if args.model_name != "ours" and args.model_config == "Config/ours.yaml":
+        # use the custom config file if a different model_name was passed.
+        args.model_config = f"Config/{args.model_name}.yaml"
+
+    # Load a set of pre-configured arguments.
+    if args.model_config:
+        with open(args.model_config) as f:
+            file_args = yaml.load(f, Loader=yaml.FullLoader)
+        # overwrite the default values with the values from the file.
+        args_dict = vars(args)
+        args_dict.update(vars(file_args))
+        args = argparse.Namespace(**args_dict)
+
 def parse_args():
     help_formatter = argparse.ArgumentDefaultsHelpFormatter
     parser = argparse.ArgumentParser('MAML', formatter_class=help_formatter)
@@ -126,18 +140,19 @@ def parse_args():
     if args.num_shots_test <= 0:
         args.num_shots_test = args.num_shots
 
-    if args.model_name != "ours" and args.model_config == "Config/ours.yaml":
-        # use the custom config file if a different model_name was passed.
-        args.model_config = f"Config/{args.model_name}.yaml"
-
-    # Load a set of pre-configured arguments.
-    if args.model_config:
-        with open(args.model_config) as f:
-            file_args = yaml.load(f, Loader=yaml.FullLoader)
-        # overwrite the default values with the values from the file.
-        args_dict = vars(args)
-        args_dict.update(vars(file_args))
-        args = argparse.Namespace(**args_dict)
+    update_from_config(args)
+#    if args.model_name != "ours" and args.model_config == "Config/ours.yaml":
+#        # use the custom config file if a different model_name was passed.
+#        args.model_config = f"Config/{args.model_name}.yaml"
+#
+#    # Load a set of pre-configured arguments.
+#    if args.model_config:
+#        with open(args.model_config) as f:
+#            file_args = yaml.load(f, Loader=yaml.FullLoader)
+#        # overwrite the default values with the values from the file.
+#        args_dict = vars(args)
+#        args_dict.update(vars(file_args))
+#        args = argparse.Namespace(**args_dict)
 
     if args.debug:
         print('\nDEBUGGING\n')
