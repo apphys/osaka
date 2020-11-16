@@ -30,8 +30,63 @@ NAME_TO_ARGS = {
         'use_different_nways': True,
         'cl_strategy': None,
         'num_epochs': 1,
+        'n_runs': 1,
         'gamma': -1,
         'um_power': 0.0},
+
+    'xp_maml_diffN_alg4_always_update_slow_weight': {
+        'num_ways': 5,
+        'num_shots': 3,
+        'use_different_nways': True,
+        'cl_strategy': None,
+        'num_epochs': 1,
+        'n_runs': 1,
+        'gamma': -1,
+        'um_power': 0.0},
+
+    'xp_maml_alg4_no_um': {
+        'num_ways': 10,
+        'num_shots': 3,
+        'cl_strategy': 'loss',
+        'num_epochs': 1,
+        'n_runs': 1,
+        'gamma': 0.8,
+        'cl_strategy_thres': 0.9,
+        'um_power': 0.0},
+
+    'xp_protomaml_alg4_no_um': {
+        'model_name': 'protomaml',
+        'num_ways': 10,
+        'num_shots': 3,
+        'cl_strategy': 'loss',
+        'num_epochs': 1,
+        'n_runs': 1,
+        'gamma': 0.8,
+        'cl_strategy_thres':0.9,
+        'um_power': 0.0},
+
+    'xp_protomaml_alg4_yes_um': {
+        'model_name': 'protomaml',
+        'num_ways': 10,
+        'num_shots': 3,
+        'cl_strategy': 'loss',
+        'num_epochs': 1,
+        'n_runs': 1,
+        'gamma': 0.8,
+        'cl_strategy_thres':0.9, 
+        'um_power': 1.0},
+
+    'xp_protomaml_alg3_yes_um': {
+        'model_name': 'protomaml',
+        'algo3': True,
+        'num_ways': 10,
+        'num_shots': 3,
+        'cl_strategy': 'loss',
+        'num_epochs': 1,
+        'n_runs': 1,
+        'gamma': 0.8,
+        'cl_strategy_thres':0.9, 
+        'um_power': 1.0},
 
 #    'maml_alg4_no_um': {
 #        **maml_base,
@@ -132,7 +187,13 @@ if __name__ == '__main__':
     NAME = args.name
     overrides = {**NAME_TO_ARGS['default'], **NAME_TO_ARGS[NAME]}
 
+    for k, v in overrides.items():
+        print(f"Setting args.{k} = {v}")
+        setattr(args, k, v)
+    update_from_config(args)
+
     # NAME += f'_G{args.gamma}'
+    NAME += '_algo3' if args.algo3 else ''
     NAME += f'_E{args.num_epochs}'
     if args.deeper > 0:
         NAME += f'_L{args.deeper}'
@@ -141,13 +202,7 @@ if __name__ == '__main__':
     if args.cl_strategy_thres != 0.9:
         NAME += f'_SThr{args.cl_strategy_thres}'
     NAME += f'_NW{args.num_ways}'
-
     print(f'NAME={NAME}')
-    overrides['name'] = NAME
-
-    for k, v in overrides.items():
-        print(f"Setting args.{k} = {v}")
-        setattr(args, k, v)
-    update_from_config(args)
+    args.name = NAME
 
     main.main(args)

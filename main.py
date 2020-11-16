@@ -172,7 +172,7 @@ def continual_learning(args, wandb, cl_model_init, meta_optimizer_cl, cl_dataloa
     mode_to_int = dict(zip(modes, [0, 1, 2]))
     avg_accuracies_mode = dict(zip(modes, [[], [], []]))
     avg_mses_mode = dict(zip(modes, [[], [], []]))
-    log_interval = 100
+    log_interval = 1
     print(f'\n Continual learning for {args.n_runs} iterations...')
     for run in range(args.n_runs):
         print('=================', f'STARTING RUN {run}', '===============')
@@ -186,7 +186,7 @@ def continual_learning(args, wandb, cl_model_init, meta_optimizer_cl, cl_dataloa
         for i, batch in enumerate(cl_dataloader):
             # step = i + run * args.timesteps
 
-            data, labels, task_switch, mode, _, _ = batch
+            data, labels, task_switch, mode, nways, _ = batch
             if args.algo3:
                 results = cl_model.observe2(batch)
             else:
@@ -224,7 +224,10 @@ def continual_learning(args, wandb, cl_model_init, meta_optimizer_cl, cl_dataloa
                 if 'delta_loss' in results:
                     wandb.log({'delta_loss': results['delta_loss']}) # step=step)
                 wandb.log({'mode': mode_to_int[mode[0]]})
-                wandb.log({'tbd_i': float(results['tbd'])})
+                wandb.log({'tbd_correct': float(results['tbd'])})
+                wandb.log({'tbd_ground_truth': float(task_switch)})
+                wandb.log({'nways': float(nways)})
+               
                 if 'l1' in results:
                     wandb.log({
                         'l0': results['outer_loss'],
@@ -245,7 +248,12 @@ def continual_learning(args, wandb, cl_model_init, meta_optimizer_cl, cl_dataloa
 
                 # Note: tbd==task boundary detection
                 tbd = np.mean(tbds[run, :i])
-                print(f'Total tbd: {tbd:.2f}', f'it: {i}', sep='\t')
+                tbd_local = results['tbd']
+                delta_loss = results['delta_loss'] if 'delta_loss' in results else 'na'
+                print(f'Total tbd acc: {tbd:.2f}  tbd_local: {float(tbd_local)} ', 
+                    f'delta_loss={delta_loss}', end='\t')
+                print(f'tb: {task_switch.item()} mode: {mode_to_int[mode[0]]} '
+                    f'nways: {nways.item()} it: {i}', sep='\t')
 
             if i == args.timesteps - 1:
                 for mode in modes:

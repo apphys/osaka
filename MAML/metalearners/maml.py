@@ -713,7 +713,6 @@ class ModelAgnosticMetaLearning(object):
 class ProtoMAML(ModelAgnosticMetaLearning):
 
     def __init__(self, model, optimizer, loss_function, args):
-        import pdb; pdb.set_trace()
         super(ProtoMAML, self).__init__(model, optimizer, loss_function, args)
         self.args = args
         self.num_ways = None
@@ -735,14 +734,15 @@ class ProtoMAML(ModelAgnosticMetaLearning):
             self.model.update_classifier(ways.to('cpu').tolist())
         self.num_ways = ways
 
-        prototypes = self.model.forward_conv(inputs) # [ways*shots, 64]
-        prototypes = torch.reshape(prototypes, (ways, shots, prototypes.shape[-1])) #[ways, shots, 64]
-        prototypes = torch.mean(prototypes, axis=1) # [ways, 64]
+        if params is None:
+            prototypes = self.model.forward_conv(inputs) # [ways*shots, 64]
+            prototypes = torch.reshape(prototypes, (ways, shots, prototypes.shape[-1])) #[ways, shots, 64]
+            prototypes = torch.mean(prototypes, axis=1) # [ways, 64]
 
-        # Proto-MAML: init last FC layer with prototype weights
-        self.model.classifier.weight=torch.nn.Parameter(2.0*prototypes) # w_k = 2c_k
-        self.model.classifier.bias=torch.nn.Parameter(
-                -torch.sum(prototypes*prototypes, axis=1)) # b_k = -|c_k|^2
+            # Proto-MAML: init last FC layer with prototype weights
+            self.model.classifier.weight=torch.nn.Parameter(2.0*prototypes) # w_k = 2c_k
+            self.model.classifier.bias=torch.nn.Parameter(
+                    -torch.sum(prototypes*prototypes, axis=1)) # b_k = -|c_k|^2
         #else: # param not None, must be the same task, same nway
         if params is not None:
             #TODO: need this, otherwise backprop too many steps, OOM!!
