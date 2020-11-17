@@ -76,6 +76,17 @@ NAME_TO_ARGS = {
         'cl_strategy_thres':0.9, 
         'um_power': 1.0},
 
+    'xp_maml_alg3_yes_um': {
+        'algo3': True,
+        'num_ways': 10,
+        'num_shots': 3,
+        'cl_strategy': 'loss',
+        'num_epochs': 2,
+        'n_runs': 1,
+        'gamma': 3.0, 
+        'cl_strategy_thres': 5.0, 
+        'um_power': 1.0},
+
     'xp_protomaml_alg3_yes_um': {
         'model_name': 'protomaml',
         'algo3': True,
@@ -85,7 +96,7 @@ NAME_TO_ARGS = {
         'num_epochs': 1,
         'n_runs': 1,
         'gamma': 0.8,
-        'cl_strategy_thres':0.9, 
+        'cl_strategy_thres': 3.0, 
         'um_power': 1.0},
 
 #    'maml_alg4_no_um': {
