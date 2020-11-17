@@ -1,0 +1,1148 @@
+Setting args.wandb = cs330_finalproject_finalreport
+Setting args.prob_statio = 0.9
+Setting args.cl_strategy = loss
+Setting args.gamma = 0.8
+Setting args.n_runs = 10
+Setting args.num_ways = 10
+Setting args.num_shots = 3
+Setting args.verbose = True
+Setting args.model_name = protomaml
+Setting args.algo3 = True
+Setting args.num_epochs = 1
+Setting args.cl_strategy_thres = 3.0
+Setting args.um_power = 1.0
+NAME=xp_protomaml_alg3_yes_um_algo3_E1_SThr3.0_NW10
+DEBUG:git.cmd:Popen(['git', 'version'], cwd=/root/osaka, universal_newlines=False, shell=None, istream=None)
+DEBUG:git.cmd:Popen(['git', 'version'], cwd=/root/osaka, universal_newlines=False, shell=None, istream=None)
+DEBUG:git.cmd:Popen(['git', 'rev-parse', '--show-toplevel'], cwd=/root/osaka, universal_newlines=False, shell=None, istream=None)
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): api.wandb.ai:443
+DEBUG:urllib3.connectionpool:https://api.wandb.ai:443 "POST /graphql HTTP/1.1" 200 None
+wandb: Currently logged in as: bmckinz (use `wandb login --relogin` to force relogin)
+wandb: Tracking run with wandb version 0.10.10
+wandb: Syncing run xp_protomaml_alg3_yes_um_algo3_E1_SThr3.0_NW10
+wandb: ⭐️ View project at https://wandb.ai/bmckinz/cs330_finalproject_finalreport
+wandb: 🚀 View run at https://wandb.ai/bmckinz/cs330_finalproject_finalreport/runs/2bsos5b0
+wandb: Run data is saved locally in /root/osaka/wandb/run-20201117_163617-2bsos5b0
+wandb: Run `wandb off` to turn off syncing.
+
+Initializing dataloaders...
+load from omniglot.npy.
+Initializing models...
+Training:   0%|          | 0/100 [00:00<?, ?it/s]
+
+pretraining for 1 epochs...
+
+Epoch 1: 100%|██████████| 100/100 [00:03<00:00, 31.68it/s, accuracy=0.7684, inner_loss=0.1479, loss=0.7026]       
+
+pretraining done!
+
+Executing continual learning...
+
+ Continual learning for 10 iterations...
+================= STARTING RUN 0 ===============
+/root/osaka/env/lib/python3.6/site-packages/numpy/core/fromnumeric.py:3373: RuntimeWarning: Mean of empty slice.
+  out=out, **kwargs)
+total Acc: nan,/root/osaka/env/lib/python3.6/site-packages/numpy/core/_methods.py:170: RuntimeWarning: invalid value encountered in double_scalars
+  ret = ret.dtype.type(ret / rcount)
+ mode accs: ['train_acc=0.00', 'test_acc=nan', 'ood_acc=nan']	Total tbd acc: nan  tbd_local: 0.0  delta_loss=na	tb: 1 mode: 0 nways: 10 it: 0
+total Acc: 0.41, mode accs: ['train_acc=0.53', 'test_acc=0.29', 'ood_acc=0.20']	Total tbd acc: 0.33  tbd_local: 0.0  delta_loss=0.8671679496765137	tb: 0 mode: 0 nways: 10 it: 100
+total Acc: 0.44, mode accs: ['train_acc=0.57', 'test_acc=0.30', 'ood_acc=0.20']	Total tbd acc: 0.41  tbd_local: 0.0  delta_loss=1.061880275607109	tb: 0 mode: 0 nways: 10 it: 200
+total Acc: 0.48, mode accs: ['train_acc=0.65', 'test_acc=0.31', 'ood_acc=0.26']	Total tbd acc: 0.47  tbd_local: 1.0  delta_loss=0.6697697639465332	tb: 0 mode: 1 nways: 10 it: 300
+total Acc: 0.52, mode accs: ['train_acc=0.67', 'test_acc=0.42', 'ood_acc=0.28']	Total tbd acc: 0.57  tbd_local: 1.0  delta_loss=-0.5076795816421509	tb: 0 mode: 2 nways: 10 it: 400
+total Acc: 0.52, mode accs: ['train_acc=0.68', 'test_acc=0.42', 'ood_acc=0.31']	Total tbd acc: 0.62  tbd_local: 1.0  delta_loss=0.6713053584098816	tb: 0 mode: 1 nways: 10 it: 500
+total Acc: 0.53, mode accs: ['train_acc=0.68', 'test_acc=0.45', 'ood_acc=0.30']	Total tbd acc: 0.67  tbd_local: 1.0  delta_loss=-0.6009694635868073	tb: 0 mode: 0 nways: 10 it: 600
+total Acc: 0.54, mode accs: ['train_acc=0.69', 'test_acc=0.48', 'ood_acc=0.31']	Total tbd acc: 0.72  tbd_local: 1.0  delta_loss=-0.36966145038604736	tb: 0 mode: 0 nways: 10 it: 700
+total Acc: 0.56, mode accs: ['train_acc=0.72', 'test_acc=0.48', 'ood_acc=0.34']	Total tbd acc: 0.73  tbd_local: 1.0  delta_loss=0.7750905752182007	tb: 0 mode: 2 nways: 10 it: 800
+total Acc: 0.56, mode accs: ['train_acc=0.71', 'test_acc=0.47', 'ood_acc=0.38']	Total tbd acc: 0.74  tbd_local: 1.0  delta_loss=0.04422152042388916	tb: 0 mode: 0 nways: 10 it: 900
+total Acc: 0.56, mode accs: ['train_acc=0.71', 'test_acc=0.48', 'ood_acc=0.39']	Total tbd acc: 0.76  tbd_local: 1.0  delta_loss=0.2983790338039398	tb: 0 mode: 0 nways: 10 it: 1000
+total Acc: 0.57, mode accs: ['train_acc=0.73', 'test_acc=0.48', 'ood_acc=0.39']	Total tbd acc: 0.78  tbd_local: 1.0  delta_loss=0.2341710329055786	tb: 0 mode: 0 nways: 10 it: 1100
+total Acc: 0.58, mode accs: ['train_acc=0.74', 'test_acc=0.48', 'ood_acc=0.39']	Total tbd acc: 0.80  tbd_local: 1.0  delta_loss=-0.1566009521484375	tb: 0 mode: 1 nways: 10 it: 1200
+total Acc: 0.59, mode accs: ['train_acc=0.74', 'test_acc=0.52', 'ood_acc=0.41']	Total tbd acc: 0.81  tbd_local: 1.0  delta_loss=0.32963770627975464	tb: 0 mode: 2 nways: 10 it: 1300
+total Acc: 0.60, mode accs: ['train_acc=0.74', 'test_acc=0.54', 'ood_acc=0.42']	Total tbd acc: 0.82  tbd_local: 1.0  delta_loss=-0.4131363034248352	tb: 0 mode: 0 nways: 10 it: 1400
+total Acc: 0.60, mode accs: ['train_acc=0.74', 'test_acc=0.54', 'ood_acc=0.42']	Total tbd acc: 0.84  tbd_local: 1.0  delta_loss=0.03190155327320099	tb: 0 mode: 0 nways: 10 it: 1500
+total Acc: 0.62, mode accs: ['train_acc=0.75', 'test_acc=0.54', 'ood_acc=0.42']	Total tbd acc: 0.84  tbd_local: 1.0  delta_loss=-0.4971110373735428	tb: 0 mode: 0 nways: 10 it: 1600
+total Acc: 0.62, mode accs: ['train_acc=0.75', 'test_acc=0.54', 'ood_acc=0.43']	Total tbd acc: 0.85  tbd_local: 1.0  delta_loss=-0.2836451232433319	tb: 0 mode: 0 nways: 10 it: 1700
+total Acc: 0.62, mode accs: ['train_acc=0.75', 'test_acc=0.54', 'ood_acc=0.45']	Total tbd acc: 0.86  tbd_local: 1.0  delta_loss=-0.44957709312438965	tb: 0 mode: 0 nways: 10 it: 1800
+total Acc: 0.63, mode accs: ['train_acc=0.76', 'test_acc=0.54', 'ood_acc=0.45']	Total tbd acc: 0.86  tbd_local: 1.0  delta_loss=-0.3384908139705658	tb: 0 mode: 0 nways: 10 it: 1900
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.54', 'ood_acc=0.45']	Total tbd acc: 0.87  tbd_local: 1.0  delta_loss=-0.4255378842353821	tb: 0 mode: 0 nways: 10 it: 2000
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.54', 'ood_acc=0.47']	Total tbd acc: 0.88  tbd_local: 1.0  delta_loss=-0.3522483706474304	tb: 0 mode: 0 nways: 10 it: 2100
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.54', 'ood_acc=0.47']	Total tbd acc: 0.88  tbd_local: 1.0  delta_loss=2.2064854502677917	tb: 1 mode: 0 nways: 10 it: 2200
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.54', 'ood_acc=0.47']	Total tbd acc: 0.89  tbd_local: 1.0  delta_loss=-0.8981117606163025	tb: 0 mode: 1 nways: 10 it: 2300
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.54', 'ood_acc=0.47']	Total tbd acc: 0.89  tbd_local: 1.0  delta_loss=0.1894688606262207	tb: 0 mode: 1 nways: 10 it: 2400
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.55', 'ood_acc=0.48']	Total tbd acc: 0.90  tbd_local: 1.0  delta_loss=0.42794299125671387	tb: 0 mode: 0 nways: 10 it: 2500
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.55', 'ood_acc=0.48']	Total tbd acc: 0.90  tbd_local: 1.0  delta_loss=-0.7575340121984482	tb: 0 mode: 0 nways: 10 it: 2600
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.56', 'ood_acc=0.48']	Total tbd acc: 0.90  tbd_local: 1.0  delta_loss=-0.5804270505905151	tb: 0 mode: 1 nways: 10 it: 2700
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.56', 'ood_acc=0.48']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=-0.44895556569099426	tb: 0 mode: 0 nways: 10 it: 2800
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.56', 'ood_acc=0.48']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=0.3717294931411743	tb: 0 mode: 1 nways: 10 it: 2900
+total Acc: 0.64, mode accs: ['train_acc=0.78', 'test_acc=0.56', 'ood_acc=0.48']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=0.25988006591796875	tb: 0 mode: 2 nways: 10 it: 3000
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.56', 'ood_acc=0.49']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=-0.04983240365982056	tb: 0 mode: 2 nways: 10 it: 3100
+total Acc: 0.64, mode accs: ['train_acc=0.78', 'test_acc=0.55', 'ood_acc=0.51']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=0.21988427639007568	tb: 0 mode: 2 nways: 10 it: 3200
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.55', 'ood_acc=0.51']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=-0.7805226780474186	tb: 0 mode: 0 nways: 10 it: 3300
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.55', 'ood_acc=0.51']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=-0.3728027045726776	tb: 0 mode: 0 nways: 10 it: 3400
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.55', 'ood_acc=0.53']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=-0.245111346244812	tb: 0 mode: 2 nways: 10 it: 3500
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.55', 'ood_acc=0.53']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=0.03379669785499573	tb: 0 mode: 0 nways: 10 it: 3600
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.55', 'ood_acc=0.53']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=0.3539736866950989	tb: 0 mode: 0 nways: 10 it: 3700
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.55', 'ood_acc=0.53']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.05791831016540527	tb: 0 mode: 0 nways: 10 it: 3800
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.55', 'ood_acc=0.53']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.10564267635345459	tb: 0 mode: 1 nways: 10 it: 3900
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.55', 'ood_acc=0.54']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.5348480045795441	tb: 0 mode: 0 nways: 10 it: 4000
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.55', 'ood_acc=0.54']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.4281606674194336	tb: 0 mode: 0 nways: 10 it: 4100
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.55', 'ood_acc=0.54']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.39620059728622437	tb: 0 mode: 2 nways: 10 it: 4200
+total Acc: 0.65, mode accs: ['train_acc=0.77', 'test_acc=0.55', 'ood_acc=0.54']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.08229672908782959	tb: 0 mode: 0 nways: 10 it: 4300
+total Acc: 0.65, mode accs: ['train_acc=0.77', 'test_acc=0.54', 'ood_acc=0.54']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=1.4325133562088013	tb: 1 mode: 2 nways: 10 it: 4400
+total Acc: 0.65, mode accs: ['train_acc=0.77', 'test_acc=0.54', 'ood_acc=0.54']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-1.0001836270093918	tb: 0 mode: 0 nways: 10 it: 4500
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.54', 'ood_acc=0.54']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=1.6550287008285522	tb: 1 mode: 0 nways: 10 it: 4600
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.54', 'ood_acc=0.54']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.9007250666618347	tb: 0 mode: 0 nways: 10 it: 4700
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.54', 'ood_acc=0.54']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.23652756214141846	tb: 0 mode: 1 nways: 10 it: 4800
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.54', 'ood_acc=0.54']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.2885732650756836	tb: 0 mode: 1 nways: 10 it: 4900
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.54', 'ood_acc=0.54']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.7178786396980286	tb: 0 mode: 0 nways: 10 it: 5000
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.54', 'ood_acc=0.54']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.7888476252555847	tb: 0 mode: 1 nways: 10 it: 5100
+total Acc: 0.65, mode accs: ['train_acc=0.77', 'test_acc=0.54', 'ood_acc=0.54']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.2713165283203125	tb: 0 mode: 0 nways: 10 it: 5200
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.54', 'ood_acc=0.54']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.2402796745300293	tb: 0 mode: 0 nways: 10 it: 5300
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.54', 'ood_acc=0.54']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.2398829460144043	tb: 0 mode: 2 nways: 10 it: 5400
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.54', 'ood_acc=0.54']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.10855025053024292	tb: 0 mode: 2 nways: 10 it: 5500
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.54', 'ood_acc=0.54']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.2672785520553589	tb: 0 mode: 1 nways: 10 it: 5600
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.54', 'ood_acc=0.54']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.12606149911880493	tb: 0 mode: 2 nways: 10 it: 5700
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.54', 'ood_acc=0.54']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.6131423711776733	tb: 0 mode: 0 nways: 10 it: 5800
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.54', 'ood_acc=0.54']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.4459803104400635	tb: 0 mode: 2 nways: 10 it: 5900
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.54', 'ood_acc=0.54']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.3784646987915039	tb: 0 mode: 0 nways: 10 it: 6000
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.53', 'ood_acc=0.54']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.17361557483673096	tb: 0 mode: 1 nways: 10 it: 6100
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.53', 'ood_acc=0.54']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.13631343841552734	tb: 0 mode: 0 nways: 10 it: 6200
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.53', 'ood_acc=0.54']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.2882148027420044	tb: 0 mode: 2 nways: 10 it: 6300
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.53', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.5515543818473816	tb: 0 mode: 0 nways: 10 it: 6400
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.53', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.572582483291626	tb: 0 mode: 1 nways: 10 it: 6500
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.52', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.4211925268173218	tb: 0 mode: 1 nways: 10 it: 6600
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.52', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.07625806331634521	tb: 0 mode: 2 nways: 10 it: 6700
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.52', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.5288017392158508	tb: 0 mode: 0 nways: 10 it: 6800
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.52', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.10958302021026611	tb: 0 mode: 1 nways: 10 it: 6900
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.52', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.2498995065689087	tb: 0 mode: 2 nways: 10 it: 7000
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.52', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.22528529167175293	tb: 0 mode: 2 nways: 10 it: 7100
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.52', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.7667129635810852	tb: 0 mode: 0 nways: 10 it: 7200
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.52', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=1.4840612411499023	tb: 1 mode: 2 nways: 10 it: 7300
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.52', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.04523873329162598	tb: 0 mode: 0 nways: 10 it: 7400
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.52', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.019274473190307617	tb: 0 mode: 2 nways: 10 it: 7500
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.52', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.3175424337387085	tb: 0 mode: 2 nways: 10 it: 7600
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.52', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=1.3108274936676025	tb: 1 mode: 2 nways: 10 it: 7700
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.52', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.31106847524642944	tb: 0 mode: 2 nways: 10 it: 7800
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.52', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.010706543922424316	tb: 0 mode: 2 nways: 10 it: 7900
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.52', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.32227635383605957	tb: 0 mode: 1 nways: 10 it: 8000
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.52', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.05537891387939453	tb: 0 mode: 0 nways: 10 it: 8100
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.52', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.6743010878562927	tb: 0 mode: 0 nways: 10 it: 8200
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.51', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.03266549110412598	tb: 0 mode: 0 nways: 10 it: 8300
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.51', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.05217742919921875	tb: 0 mode: 0 nways: 10 it: 8400
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.51', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.14274466037750244	tb: 0 mode: 2 nways: 10 it: 8500
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.51', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.05217635631561279	tb: 0 mode: 2 nways: 10 it: 8600
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.51', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=3.480913758277893	tb: 1 mode: 0 nways: 10 it: 8700
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.51', 'ood_acc=0.56']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.04793858528137207	tb: 0 mode: 0 nways: 10 it: 8800
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.51', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.23695147037506104	tb: 0 mode: 2 nways: 10 it: 8900
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.51', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.22384846210479736	tb: 0 mode: 0 nways: 10 it: 9000
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.52', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.2346898317337036	tb: 0 mode: 2 nways: 10 it: 9100
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.52', 'ood_acc=0.56']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-1.132298320531845	tb: 0 mode: 0 nways: 10 it: 9200
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.52', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.23501837253570557	tb: 0 mode: 0 nways: 10 it: 9300
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.52', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=1.67178475856781	tb: 1 mode: 2 nways: 10 it: 9400
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.52', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.8173807263374329	tb: 0 mode: 0 nways: 10 it: 9500
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.52', 'ood_acc=0.55']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-0.9448397755622864	tb: 0 mode: 1 nways: 10 it: 9600
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.52', 'ood_acc=0.55']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=0.11892008781433105	tb: 0 mode: 2 nways: 10 it: 9700
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.52', 'ood_acc=0.55']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-1.1297907829284668	tb: 0 mode: 0 nways: 10 it: 9800
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.51', 'ood_acc=0.55']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=0.06393682956695557	tb: 0 mode: 0 nways: 10 it: 9900
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.51', 'ood_acc=0.55']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=2.323713183403015	tb: 1 mode: 0 nways: 10 it: 9999
+================= STARTING RUN 1 ===============
+total Acc: nan, mode accs: ['train_acc=0.00', 'test_acc=nan', 'ood_acc=nan']	Total tbd acc: nan  tbd_local: 0.0  delta_loss=na	tb: 0 mode: 0 nways: 10 it: 0
+total Acc: 0.53, mode accs: ['train_acc=0.69', 'test_acc=0.47', 'ood_acc=0.25']	Total tbd acc: 0.50  tbd_local: 0.0  delta_loss=1.1088579446077347	tb: 0 mode: 1 nways: 10 it: 100
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.50', 'ood_acc=0.25']	Total tbd acc: 0.64  tbd_local: 1.0  delta_loss=-0.12495601084083319	tb: 0 mode: 0 nways: 10 it: 200
+total Acc: 0.62, mode accs: ['train_acc=0.76', 'test_acc=0.51', 'ood_acc=0.28']	Total tbd acc: 0.62  tbd_local: 1.0  delta_loss=-2.986025810241699	tb: 0 mode: 2 nways: 10 it: 300
+total Acc: 0.62, mode accs: ['train_acc=0.75', 'test_acc=0.50', 'ood_acc=0.30']	Total tbd acc: 0.61  tbd_local: 1.0  delta_loss=-0.1679532527923584	tb: 0 mode: 0 nways: 10 it: 400
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.54', 'ood_acc=0.30']	Total tbd acc: 0.68  tbd_local: 1.0  delta_loss=0.2793769836425781	tb: 0 mode: 1 nways: 10 it: 500
+total Acc: 0.65, mode accs: ['train_acc=0.77', 'test_acc=0.56', 'ood_acc=0.28']	Total tbd acc: 0.71  tbd_local: 1.0  delta_loss=-0.23412702977657318	tb: 0 mode: 0 nways: 10 it: 600
+total Acc: 0.65, mode accs: ['train_acc=0.77', 'test_acc=0.59', 'ood_acc=0.35']	Total tbd acc: 0.73  tbd_local: 1.0  delta_loss=-0.5253802239894867	tb: 0 mode: 1 nways: 10 it: 700
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.60', 'ood_acc=0.35']	Total tbd acc: 0.76  tbd_local: 1.0  delta_loss=0.5867340564727783	tb: 0 mode: 2 nways: 10 it: 800
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.60', 'ood_acc=0.41']	Total tbd acc: 0.78  tbd_local: 1.0  delta_loss=-0.3039766997098923	tb: 0 mode: 0 nways: 10 it: 900
+total Acc: 0.66, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.42']	Total tbd acc: 0.80  tbd_local: 1.0  delta_loss=-0.7383135557174683	tb: 0 mode: 1 nways: 10 it: 1000
+total Acc: 0.67, mode accs: ['train_acc=0.80', 'test_acc=0.61', 'ood_acc=0.42']	Total tbd acc: 0.82  tbd_local: 1.0  delta_loss=0.2630620300769806	tb: 0 mode: 0 nways: 10 it: 1100
+total Acc: 0.68, mode accs: ['train_acc=0.80', 'test_acc=0.60', 'ood_acc=0.42']	Total tbd acc: 0.83  tbd_local: 1.0  delta_loss=0.022024989128112793	tb: 0 mode: 1 nways: 10 it: 1200
+total Acc: 0.68, mode accs: ['train_acc=0.80', 'test_acc=0.60', 'ood_acc=0.42']	Total tbd acc: 0.85  tbd_local: 1.0  delta_loss=0.38050588965415955	tb: 0 mode: 0 nways: 10 it: 1300
+total Acc: 0.69, mode accs: ['train_acc=0.80', 'test_acc=0.61', 'ood_acc=0.42']	Total tbd acc: 0.85  tbd_local: 1.0  delta_loss=-0.557594783604145	tb: 0 mode: 0 nways: 10 it: 1400
+total Acc: 0.68, mode accs: ['train_acc=0.80', 'test_acc=0.61', 'ood_acc=0.43']	Total tbd acc: 0.86  tbd_local: 1.0  delta_loss=-0.5428501963615417	tb: 0 mode: 1 nways: 10 it: 1500
+total Acc: 0.69, mode accs: ['train_acc=0.80', 'test_acc=0.61', 'ood_acc=0.43']	Total tbd acc: 0.87  tbd_local: 1.0  delta_loss=-0.5180870294570923	tb: 0 mode: 0 nways: 10 it: 1600
+total Acc: 0.69, mode accs: ['train_acc=0.80', 'test_acc=0.61', 'ood_acc=0.43']	Total tbd acc: 0.88  tbd_local: 1.0  delta_loss=2.6274291276931763	tb: 1 mode: 2 nways: 10 it: 1700
+total Acc: 0.69, mode accs: ['train_acc=0.80', 'test_acc=0.62', 'ood_acc=0.45']	Total tbd acc: 0.88  tbd_local: 1.0  delta_loss=-0.324259415268898	tb: 0 mode: 0 nways: 10 it: 1800
+total Acc: 0.69, mode accs: ['train_acc=0.80', 'test_acc=0.62', 'ood_acc=0.45']	Total tbd acc: 0.89  tbd_local: 1.0  delta_loss=-0.18657124042510986	tb: 0 mode: 1 nways: 10 it: 1900
+total Acc: 0.69, mode accs: ['train_acc=0.80', 'test_acc=0.62', 'ood_acc=0.46']	Total tbd acc: 0.89  tbd_local: 1.0  delta_loss=0.30523526668548584	tb: 0 mode: 0 nways: 10 it: 2000
+total Acc: 0.69, mode accs: ['train_acc=0.80', 'test_acc=0.62', 'ood_acc=0.46']	Total tbd acc: 0.90  tbd_local: 1.0  delta_loss=-0.1883687973022461	tb: 0 mode: 1 nways: 10 it: 2100
+total Acc: 0.70, mode accs: ['train_acc=0.81', 'test_acc=0.62', 'ood_acc=0.48']	Total tbd acc: 0.90  tbd_local: 1.0  delta_loss=-0.5381266251206398	tb: 0 mode: 0 nways: 10 it: 2200
+total Acc: 0.70, mode accs: ['train_acc=0.81', 'test_acc=0.61', 'ood_acc=0.49']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=-0.08616381883621216	tb: 0 mode: 0 nways: 10 it: 2300
+total Acc: 0.70, mode accs: ['train_acc=0.81', 'test_acc=0.61', 'ood_acc=0.49']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=0.5888364315032959	tb: 0 mode: 2 nways: 10 it: 2400
+total Acc: 0.69, mode accs: ['train_acc=0.81', 'test_acc=0.61', 'ood_acc=0.50']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=2.199440598487854	tb: 1 mode: 2 nways: 10 it: 2500
+total Acc: 0.69, mode accs: ['train_acc=0.81', 'test_acc=0.61', 'ood_acc=0.51']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=-0.579547107219696	tb: 0 mode: 1 nways: 10 it: 2600
+total Acc: 0.69, mode accs: ['train_acc=0.80', 'test_acc=0.62', 'ood_acc=0.51']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=-0.2816111445426941	tb: 0 mode: 0 nways: 10 it: 2700
+total Acc: 0.69, mode accs: ['train_acc=0.80', 'test_acc=0.62', 'ood_acc=0.52']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=0.29693710803985596	tb: 0 mode: 2 nways: 10 it: 2800
+total Acc: 0.69, mode accs: ['train_acc=0.81', 'test_acc=0.62', 'ood_acc=0.52']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.17911937832832336	tb: 0 mode: 0 nways: 10 it: 2900
+total Acc: 0.69, mode accs: ['train_acc=0.80', 'test_acc=0.61', 'ood_acc=0.52']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=2.042699635028839	tb: 1 mode: 0 nways: 10 it: 3000
+total Acc: 0.69, mode accs: ['train_acc=0.80', 'test_acc=0.62', 'ood_acc=0.52']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.4347635805606842	tb: 0 mode: 0 nways: 10 it: 3100
+total Acc: 0.70, mode accs: ['train_acc=0.81', 'test_acc=0.62', 'ood_acc=0.52']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=0.4047337770462036	tb: 0 mode: 2 nways: 10 it: 3200
+total Acc: 0.70, mode accs: ['train_acc=0.80', 'test_acc=0.62', 'ood_acc=0.52']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.19917985796928406	tb: 0 mode: 0 nways: 10 it: 3300
+total Acc: 0.70, mode accs: ['train_acc=0.80', 'test_acc=0.62', 'ood_acc=0.52']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.31273454427719116	tb: 0 mode: 0 nways: 10 it: 3400
+total Acc: 0.70, mode accs: ['train_acc=0.80', 'test_acc=0.62', 'ood_acc=0.53']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.25851547718048096	tb: 0 mode: 2 nways: 10 it: 3500
+total Acc: 0.70, mode accs: ['train_acc=0.80', 'test_acc=0.62', 'ood_acc=0.53']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=4.3647202253341675	tb: 1 mode: 0 nways: 10 it: 3600
+total Acc: 0.70, mode accs: ['train_acc=0.81', 'test_acc=0.63', 'ood_acc=0.53']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.6145926043391228	tb: 0 mode: 0 nways: 10 it: 3700
+total Acc: 0.69, mode accs: ['train_acc=0.80', 'test_acc=0.62', 'ood_acc=0.53']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.013877570629119873	tb: 0 mode: 2 nways: 10 it: 3800
+total Acc: 0.70, mode accs: ['train_acc=0.81', 'test_acc=0.62', 'ood_acc=0.53']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.42812854051589966	tb: 0 mode: 2 nways: 10 it: 3900
+total Acc: 0.70, mode accs: ['train_acc=0.81', 'test_acc=0.62', 'ood_acc=0.53']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.5050658881664276	tb: 0 mode: 0 nways: 10 it: 4000
+total Acc: 0.70, mode accs: ['train_acc=0.81', 'test_acc=0.63', 'ood_acc=0.53']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.06257474422454834	tb: 0 mode: 0 nways: 10 it: 4100
+total Acc: 0.70, mode accs: ['train_acc=0.80', 'test_acc=0.62', 'ood_acc=0.53']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=1.462410569190979	tb: 1 mode: 0 nways: 10 it: 4200
+total Acc: 0.70, mode accs: ['train_acc=0.80', 'test_acc=0.62', 'ood_acc=0.53']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.2063695192337036	tb: 0 mode: 0 nways: 10 it: 4300
+total Acc: 0.70, mode accs: ['train_acc=0.80', 'test_acc=0.63', 'ood_acc=0.53']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.16584515571594238	tb: 0 mode: 0 nways: 10 it: 4400
+total Acc: 0.70, mode accs: ['train_acc=0.80', 'test_acc=0.63', 'ood_acc=0.53']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.03370463848114014	tb: 0 mode: 1 nways: 10 it: 4500
+total Acc: 0.70, mode accs: ['train_acc=0.81', 'test_acc=0.63', 'ood_acc=0.53']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-1.0713630691170692	tb: 0 mode: 0 nways: 10 it: 4600
+total Acc: 0.70, mode accs: ['train_acc=0.81', 'test_acc=0.63', 'ood_acc=0.54']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.4762113094329834	tb: 0 mode: 0 nways: 10 it: 4700
+total Acc: 0.70, mode accs: ['train_acc=0.81', 'test_acc=0.63', 'ood_acc=0.54']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.7416722774505615	tb: 0 mode: 0 nways: 10 it: 4800
+total Acc: 0.70, mode accs: ['train_acc=0.81', 'test_acc=0.63', 'ood_acc=0.54']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.8270902037620544	tb: 0 mode: 1 nways: 10 it: 4900
+total Acc: 0.70, mode accs: ['train_acc=0.80', 'test_acc=0.63', 'ood_acc=0.54']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.6943616271018982	tb: 0 mode: 1 nways: 10 it: 5000
+total Acc: 0.70, mode accs: ['train_acc=0.80', 'test_acc=0.63', 'ood_acc=0.54']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.3149149417877197	tb: 0 mode: 0 nways: 10 it: 5100
+total Acc: 0.70, mode accs: ['train_acc=0.81', 'test_acc=0.63', 'ood_acc=0.54']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.44231516122817993	tb: 0 mode: 0 nways: 10 it: 5200
+total Acc: 0.70, mode accs: ['train_acc=0.81', 'test_acc=0.63', 'ood_acc=0.54']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.18915152549743652	tb: 0 mode: 1 nways: 10 it: 5300
+total Acc: 0.70, mode accs: ['train_acc=0.81', 'test_acc=0.63', 'ood_acc=0.54']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.19237065315246582	tb: 0 mode: 0 nways: 10 it: 5400
+total Acc: 0.70, mode accs: ['train_acc=0.81', 'test_acc=0.63', 'ood_acc=0.54']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.2818089723587036	tb: 0 mode: 2 nways: 10 it: 5500
+total Acc: 0.70, mode accs: ['train_acc=0.80', 'test_acc=0.62', 'ood_acc=0.54']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.3207244873046875	tb: 0 mode: 0 nways: 10 it: 5600
+total Acc: 0.70, mode accs: ['train_acc=0.80', 'test_acc=0.62', 'ood_acc=0.54']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.055959105491638184	tb: 0 mode: 2 nways: 10 it: 5700
+total Acc: 0.70, mode accs: ['train_acc=0.80', 'test_acc=0.62', 'ood_acc=0.54']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.25718486309051514	tb: 0 mode: 2 nways: 10 it: 5800
+total Acc: 0.70, mode accs: ['train_acc=0.80', 'test_acc=0.62', 'ood_acc=0.54']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.2880055904388428	tb: 0 mode: 0 nways: 10 it: 5900
+total Acc: 0.70, mode accs: ['train_acc=0.80', 'test_acc=0.62', 'ood_acc=0.54']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.08317303657531738	tb: 0 mode: 0 nways: 10 it: 6000
+total Acc: 0.70, mode accs: ['train_acc=0.80', 'test_acc=0.62', 'ood_acc=0.54']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-1.0591183751821518	tb: 0 mode: 0 nways: 10 it: 6100
+total Acc: 0.70, mode accs: ['train_acc=0.80', 'test_acc=0.62', 'ood_acc=0.54']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.3176116943359375	tb: 0 mode: 1 nways: 10 it: 6200
+total Acc: 0.69, mode accs: ['train_acc=0.80', 'test_acc=0.62', 'ood_acc=0.54']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=1.4313710927963257	tb: 1 mode: 0 nways: 10 it: 6300
+total Acc: 0.70, mode accs: ['train_acc=0.80', 'test_acc=0.62', 'ood_acc=0.54']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.33311259746551514	tb: 0 mode: 2 nways: 10 it: 6400
+total Acc: 0.70, mode accs: ['train_acc=0.80', 'test_acc=0.62', 'ood_acc=0.54']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.8230405151844025	tb: 0 mode: 0 nways: 10 it: 6500
+total Acc: 0.70, mode accs: ['train_acc=0.80', 'test_acc=0.62', 'ood_acc=0.54']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-0.5215771794319153	tb: 0 mode: 2 nways: 10 it: 6600
+total Acc: 0.70, mode accs: ['train_acc=0.80', 'test_acc=0.61', 'ood_acc=0.54']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=0.00364077091217041	tb: 0 mode: 0 nways: 10 it: 6700
+total Acc: 0.70, mode accs: ['train_acc=0.80', 'test_acc=0.61', 'ood_acc=0.54']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-0.00815582275390625	tb: 0 mode: 2 nways: 10 it: 6800
+total Acc: 0.69, mode accs: ['train_acc=0.80', 'test_acc=0.61', 'ood_acc=0.55']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-0.03287458419799805	tb: 0 mode: 1 nways: 10 it: 6900
+total Acc: 0.69, mode accs: ['train_acc=0.80', 'test_acc=0.60', 'ood_acc=0.55']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-0.2571244239807129	tb: 0 mode: 0 nways: 10 it: 7000
+total Acc: 0.69, mode accs: ['train_acc=0.80', 'test_acc=0.60', 'ood_acc=0.54']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-1.1121867299079895	tb: 0 mode: 0 nways: 10 it: 7100
+total Acc: 0.69, mode accs: ['train_acc=0.80', 'test_acc=0.60', 'ood_acc=0.55']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=0.369220495223999	tb: 0 mode: 0 nways: 10 it: 7200
+total Acc: 0.69, mode accs: ['train_acc=0.80', 'test_acc=0.60', 'ood_acc=0.55']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-0.09979856014251709	tb: 0 mode: 1 nways: 10 it: 7300
+total Acc: 0.69, mode accs: ['train_acc=0.80', 'test_acc=0.60', 'ood_acc=0.55']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-0.4188947081565857	tb: 0 mode: 2 nways: 10 it: 7400
+total Acc: 0.69, mode accs: ['train_acc=0.80', 'test_acc=0.60', 'ood_acc=0.55']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-0.07870030403137207	tb: 0 mode: 2 nways: 10 it: 7500
+total Acc: 0.69, mode accs: ['train_acc=0.80', 'test_acc=0.60', 'ood_acc=0.55']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=2.0804600715637207	tb: 1 mode: 0 nways: 10 it: 7600
+total Acc: 0.69, mode accs: ['train_acc=0.80', 'test_acc=0.60', 'ood_acc=0.55']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-0.15781348943710327	tb: 0 mode: 0 nways: 10 it: 7700
+total Acc: 0.69, mode accs: ['train_acc=0.80', 'test_acc=0.60', 'ood_acc=0.55']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=0.15138351917266846	tb: 0 mode: 0 nways: 10 it: 7800
+total Acc: 0.69, mode accs: ['train_acc=0.80', 'test_acc=0.59', 'ood_acc=0.55']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=0.05012822151184082	tb: 0 mode: 1 nways: 10 it: 7900
+total Acc: 0.69, mode accs: ['train_acc=0.80', 'test_acc=0.59', 'ood_acc=0.55']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-0.040644288063049316	tb: 0 mode: 2 nways: 10 it: 8000
+total Acc: 0.69, mode accs: ['train_acc=0.80', 'test_acc=0.59', 'ood_acc=0.55']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=1.1296433210372925	tb: 1 mode: 1 nways: 10 it: 8100
+total Acc: 0.69, mode accs: ['train_acc=0.80', 'test_acc=0.59', 'ood_acc=0.55']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-0.5402143001556396	tb: 0 mode: 1 nways: 10 it: 8200
+total Acc: 0.69, mode accs: ['train_acc=0.80', 'test_acc=0.59', 'ood_acc=0.55']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-0.5418034791946411	tb: 0 mode: 0 nways: 10 it: 8300
+total Acc: 0.69, mode accs: ['train_acc=0.80', 'test_acc=0.59', 'ood_acc=0.55']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-0.4475105404853821	tb: 0 mode: 2 nways: 10 it: 8400
+total Acc: 0.69, mode accs: ['train_acc=0.80', 'test_acc=0.59', 'ood_acc=0.56']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-0.218317449092865	tb: 0 mode: 2 nways: 10 it: 8500
+total Acc: 0.69, mode accs: ['train_acc=0.80', 'test_acc=0.58', 'ood_acc=0.56']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=0.28943586349487305	tb: 0 mode: 1 nways: 10 it: 8600
+total Acc: 0.68, mode accs: ['train_acc=0.80', 'test_acc=0.58', 'ood_acc=0.56']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-0.742009162902832	tb: 0 mode: 1 nways: 10 it: 8700
+total Acc: 0.69, mode accs: ['train_acc=0.80', 'test_acc=0.58', 'ood_acc=0.56']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=0.40046799182891846	tb: 0 mode: 0 nways: 10 it: 8800
+total Acc: 0.69, mode accs: ['train_acc=0.80', 'test_acc=0.58', 'ood_acc=0.56']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-0.2302495241165161	tb: 0 mode: 0 nways: 10 it: 8900
+total Acc: 0.69, mode accs: ['train_acc=0.80', 'test_acc=0.58', 'ood_acc=0.56']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=0.27615857124328613	tb: 0 mode: 2 nways: 10 it: 9000
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.58', 'ood_acc=0.56']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=0.10081779956817627	tb: 0 mode: 2 nways: 10 it: 9100
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.58', 'ood_acc=0.56']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=0.42999517917633057	tb: 0 mode: 1 nways: 10 it: 9200
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.58', 'ood_acc=0.56']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-0.9922752976417542	tb: 0 mode: 0 nways: 10 it: 9300
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.58', 'ood_acc=0.56']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-0.07253313064575195	tb: 0 mode: 1 nways: 10 it: 9400
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.58', 'ood_acc=0.56']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=0.1509242057800293	tb: 0 mode: 2 nways: 10 it: 9500
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.58', 'ood_acc=0.56']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-0.8508011698722839	tb: 0 mode: 1 nways: 10 it: 9600
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.58', 'ood_acc=0.56']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-0.08308970928192139	tb: 0 mode: 2 nways: 10 it: 9700
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.58', 'ood_acc=0.56']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=0.1301823854446411	tb: 0 mode: 0 nways: 10 it: 9800
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.58', 'ood_acc=0.56']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=0.36081957817077637	tb: 0 mode: 0 nways: 10 it: 9900
+total Acc: 0.69, mode accs: ['train_acc=0.79', 'test_acc=0.58', 'ood_acc=0.56']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=0.3359466791152954	tb: 0 mode: 0 nways: 10 it: 9999
+================= STARTING RUN 2 ===============
+total Acc: nan, mode accs: ['train_acc=0.00', 'test_acc=nan', 'ood_acc=nan']	Total tbd acc: nan  tbd_local: 0.0  delta_loss=na	tb: 0 mode: 0 nways: 10 it: 0
+total Acc: 0.54, mode accs: ['train_acc=0.70', 'test_acc=0.46', 'ood_acc=0.23']	Total tbd acc: 0.42  tbd_local: 1.0  delta_loss=6.333751775324345	tb: 1 mode: 0 nways: 10 it: 100
+total Acc: 0.51, mode accs: ['train_acc=0.68', 'test_acc=0.45', 'ood_acc=0.24']	Total tbd acc: 0.51  tbd_local: 1.0  delta_loss=-12.12411642074585	tb: 0 mode: 2 nways: 10 it: 200
+total Acc: 0.50, mode accs: ['train_acc=0.67', 'test_acc=0.47', 'ood_acc=0.36']	Total tbd acc: 0.48  tbd_local: 0.0  delta_loss=0.8739084601402283	tb: 0 mode: 2 nways: 10 it: 300
+total Acc: 0.51, mode accs: ['train_acc=0.67', 'test_acc=0.46', 'ood_acc=0.40']	Total tbd acc: 0.53  tbd_local: 1.0  delta_loss=0.6848530769348145	tb: 0 mode: 1 nways: 10 it: 400
+total Acc: 0.51, mode accs: ['train_acc=0.67', 'test_acc=0.46', 'ood_acc=0.42']	Total tbd acc: 0.57  tbd_local: 0.0  delta_loss=0.8919316530227661	tb: 0 mode: 2 nways: 10 it: 500
+total Acc: 0.51, mode accs: ['train_acc=0.67', 'test_acc=0.47', 'ood_acc=0.44']	Total tbd acc: 0.63  tbd_local: 1.0  delta_loss=0.25704750418663025	tb: 0 mode: 0 nways: 10 it: 600
+total Acc: 0.52, mode accs: ['train_acc=0.68', 'test_acc=0.48', 'ood_acc=0.44']	Total tbd acc: 0.67  tbd_local: 1.0  delta_loss=0.07103627920150757	tb: 0 mode: 0 nways: 10 it: 700
+total Acc: 0.55, mode accs: ['train_acc=0.72', 'test_acc=0.53', 'ood_acc=0.43']	Total tbd acc: 0.71  tbd_local: 0.0  delta_loss=1.516175925731659	tb: 0 mode: 2 nways: 10 it: 800
+total Acc: 0.57, mode accs: ['train_acc=0.73', 'test_acc=0.53', 'ood_acc=0.44']	Total tbd acc: 0.74  tbd_local: 1.0  delta_loss=-0.4747634828090668	tb: 0 mode: 0 nways: 10 it: 900
+total Acc: 0.58, mode accs: ['train_acc=0.74', 'test_acc=0.52', 'ood_acc=0.44']	Total tbd acc: 0.76  tbd_local: 1.0  delta_loss=-0.30400822311639786	tb: 0 mode: 0 nways: 10 it: 1000
+total Acc: 0.59, mode accs: ['train_acc=0.75', 'test_acc=0.52', 'ood_acc=0.47']	Total tbd acc: 0.78  tbd_local: 1.0  delta_loss=0.03685760498046875	tb: 0 mode: 2 nways: 10 it: 1100
+total Acc: 0.59, mode accs: ['train_acc=0.74', 'test_acc=0.56', 'ood_acc=0.47']	Total tbd acc: 0.80  tbd_local: 1.0  delta_loss=0.36498212814331055	tb: 0 mode: 2 nways: 10 it: 1200
+total Acc: 0.60, mode accs: ['train_acc=0.75', 'test_acc=0.56', 'ood_acc=0.47']	Total tbd acc: 0.81  tbd_local: 1.0  delta_loss=-0.38569462671875954	tb: 0 mode: 0 nways: 10 it: 1300
+total Acc: 0.61, mode accs: ['train_acc=0.76', 'test_acc=0.57', 'ood_acc=0.48']	Total tbd acc: 0.83  tbd_local: 1.0  delta_loss=2.617300420999527	tb: 1 mode: 0 nways: 10 it: 1400
+total Acc: 0.62, mode accs: ['train_acc=0.77', 'test_acc=0.56', 'ood_acc=0.48']	Total tbd acc: 0.84  tbd_local: 1.0  delta_loss=2.538343369960785	tb: 1 mode: 0 nways: 10 it: 1500
+total Acc: 0.63, mode accs: ['train_acc=0.77', 'test_acc=0.56', 'ood_acc=0.49']	Total tbd acc: 0.85  tbd_local: 1.0  delta_loss=0.013672411441802979	tb: 0 mode: 2 nways: 10 it: 1600
+total Acc: 0.63, mode accs: ['train_acc=0.77', 'test_acc=0.56', 'ood_acc=0.50']	Total tbd acc: 0.86  tbd_local: 1.0  delta_loss=0.2995707392692566	tb: 0 mode: 1 nways: 10 it: 1700
+total Acc: 0.63, mode accs: ['train_acc=0.77', 'test_acc=0.56', 'ood_acc=0.50']	Total tbd acc: 0.86  tbd_local: 1.0  delta_loss=0.3386693000793457	tb: 0 mode: 2 nways: 10 it: 1800
+total Acc: 0.63, mode accs: ['train_acc=0.76', 'test_acc=0.55', 'ood_acc=0.50']	Total tbd acc: 0.87  tbd_local: 1.0  delta_loss=0.28168535232543945	tb: 0 mode: 0 nways: 10 it: 1900
+total Acc: 0.64, mode accs: ['train_acc=0.78', 'test_acc=0.55', 'ood_acc=0.50']	Total tbd acc: 0.88  tbd_local: 1.0  delta_loss=-0.8885724265128374	tb: 0 mode: 0 nways: 10 it: 2000
+total Acc: 0.64, mode accs: ['train_acc=0.78', 'test_acc=0.55', 'ood_acc=0.50']	Total tbd acc: 0.88  tbd_local: 1.0  delta_loss=-0.13035738468170166	tb: 0 mode: 2 nways: 10 it: 2100
+total Acc: 0.64, mode accs: ['train_acc=0.78', 'test_acc=0.55', 'ood_acc=0.51']	Total tbd acc: 0.89  tbd_local: 1.0  delta_loss=-0.4891728162765503	tb: 0 mode: 1 nways: 10 it: 2200
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.56', 'ood_acc=0.51']	Total tbd acc: 0.89  tbd_local: 1.0  delta_loss=-0.01584625244140625	tb: 0 mode: 2 nways: 10 it: 2300
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.57', 'ood_acc=0.51']	Total tbd acc: 0.90  tbd_local: 1.0  delta_loss=-0.682081401348114	tb: 0 mode: 1 nways: 10 it: 2400
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.57', 'ood_acc=0.51']	Total tbd acc: 0.90  tbd_local: 1.0  delta_loss=1.5534571409225464	tb: 1 mode: 1 nways: 10 it: 2500
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.57', 'ood_acc=0.51']	Total tbd acc: 0.90  tbd_local: 1.0  delta_loss=0.11958664655685425	tb: 0 mode: 2 nways: 10 it: 2600
+total Acc: 0.65, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.51']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=0.41567742824554443	tb: 0 mode: 2 nways: 10 it: 2700
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.57', 'ood_acc=0.51']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=-0.45091959834098816	tb: 0 mode: 0 nways: 10 it: 2800
+total Acc: 0.65, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.51']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=-0.04215747117996216	tb: 0 mode: 0 nways: 10 it: 2900
+total Acc: 0.65, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.51']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=0.1571497917175293	tb: 0 mode: 2 nways: 10 it: 3000
+total Acc: 0.65, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.51']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=0.30655205249786377	tb: 0 mode: 2 nways: 10 it: 3100
+total Acc: 0.65, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.51']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=-0.30487722158432007	tb: 0 mode: 0 nways: 10 it: 3200
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.51']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=-1.0198338739573956	tb: 0 mode: 0 nways: 10 it: 3300
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.56', 'ood_acc=0.51']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.5094551146030426	tb: 0 mode: 0 nways: 10 it: 3400
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.56', 'ood_acc=0.51']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.7133384793996811	tb: 0 mode: 0 nways: 10 it: 3500
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.56', 'ood_acc=0.51']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=0.033162832260131836	tb: 0 mode: 1 nways: 10 it: 3600
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.56', 'ood_acc=0.51']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.3311813175678253	tb: 0 mode: 0 nways: 10 it: 3700
+total Acc: 0.67, mode accs: ['train_acc=0.78', 'test_acc=0.56', 'ood_acc=0.51']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.18543291091918945	tb: 0 mode: 1 nways: 10 it: 3800
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.56', 'ood_acc=0.51']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.058924317359924316	tb: 0 mode: 0 nways: 10 it: 3900
+total Acc: 0.67, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.51']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.7902529537677765	tb: 0 mode: 0 nways: 10 it: 4000
+total Acc: 0.67, mode accs: ['train_acc=0.78', 'test_acc=0.57', 'ood_acc=0.51']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.554289698600769	tb: 0 mode: 2 nways: 10 it: 4100
+total Acc: 0.67, mode accs: ['train_acc=0.78', 'test_acc=0.57', 'ood_acc=0.51']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.802340179681778	tb: 0 mode: 0 nways: 10 it: 4200
+total Acc: 0.67, mode accs: ['train_acc=0.78', 'test_acc=0.57', 'ood_acc=0.51']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.15090656280517578	tb: 0 mode: 2 nways: 10 it: 4300
+total Acc: 0.67, mode accs: ['train_acc=0.78', 'test_acc=0.57', 'ood_acc=0.51']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.18693947792053223	tb: 0 mode: 0 nways: 10 it: 4400
+total Acc: 0.67, mode accs: ['train_acc=0.78', 'test_acc=0.58', 'ood_acc=0.51']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.32145845890045166	tb: 0 mode: 2 nways: 10 it: 4500
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.58', 'ood_acc=0.51']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.24615836143493652	tb: 0 mode: 0 nways: 10 it: 4600
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.51']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.15673726797103882	tb: 0 mode: 0 nways: 10 it: 4700
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.58', 'ood_acc=0.51']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.3572697639465332	tb: 0 mode: 1 nways: 10 it: 4800
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.51']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=1.813104271888733	tb: 1 mode: 0 nways: 10 it: 4900
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.57', 'ood_acc=0.51']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.940632089972496	tb: 0 mode: 0 nways: 10 it: 5000
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.57', 'ood_acc=0.51']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.08636581897735596	tb: 0 mode: 1 nways: 10 it: 5100
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.57', 'ood_acc=0.51']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.05178987979888916	tb: 0 mode: 1 nways: 10 it: 5200
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.51']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.31615471839904785	tb: 0 mode: 0 nways: 10 it: 5300
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.58', 'ood_acc=0.51']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.3675743341445923	tb: 0 mode: 2 nways: 10 it: 5400
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.58', 'ood_acc=0.51']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.045961976051330566	tb: 0 mode: 0 nways: 10 it: 5500
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.51']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.41732537746429443	tb: 0 mode: 2 nways: 10 it: 5600
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.58', 'ood_acc=0.51']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.09077811241149902	tb: 0 mode: 0 nways: 10 it: 5700
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.58', 'ood_acc=0.51']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=2.5376542806625366	tb: 1 mode: 1 nways: 10 it: 5800
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.51']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.018871545791625977	tb: 0 mode: 1 nways: 10 it: 5900
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.51']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.9111374095082283	tb: 0 mode: 0 nways: 10 it: 6000
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.51']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.6403889656066895	tb: 0 mode: 0 nways: 10 it: 6100
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.52']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-1.0951629877090454	tb: 0 mode: 0 nways: 10 it: 6200
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.56', 'ood_acc=0.52']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.23279619216918945	tb: 0 mode: 1 nways: 10 it: 6300
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.52']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.15058976411819458	tb: 0 mode: 2 nways: 10 it: 6400
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.52']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.870023101568222	tb: 0 mode: 0 nways: 10 it: 6500
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.56', 'ood_acc=0.52']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.04347646236419678	tb: 0 mode: 1 nways: 10 it: 6600
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.56', 'ood_acc=0.52']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.1300298571586609	tb: 0 mode: 2 nways: 10 it: 6700
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.56', 'ood_acc=0.52']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-1.2343584448099136	tb: 0 mode: 0 nways: 10 it: 6800
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.56', 'ood_acc=0.52']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.38219964504241943	tb: 0 mode: 1 nways: 10 it: 6900
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.56', 'ood_acc=0.52']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.925201952457428	tb: 0 mode: 0 nways: 10 it: 7000
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.56', 'ood_acc=0.52']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.7584739327430725	tb: 0 mode: 0 nways: 10 it: 7100
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.56', 'ood_acc=0.52']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.02921426296234131	tb: 0 mode: 2 nways: 10 it: 7200
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.56', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.17483621835708618	tb: 0 mode: 2 nways: 10 it: 7300
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.56', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.34775233268737793	tb: 0 mode: 0 nways: 10 it: 7400
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.55', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.10448110103607178	tb: 0 mode: 2 nways: 10 it: 7500
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.55', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.23948824405670166	tb: 0 mode: 1 nways: 10 it: 7600
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.55', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.32485198974609375	tb: 0 mode: 0 nways: 10 it: 7700
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.55', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.29369091987609863	tb: 0 mode: 1 nways: 10 it: 7800
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.55', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.06457769870758057	tb: 0 mode: 1 nways: 10 it: 7900
+total Acc: 0.65, mode accs: ['train_acc=0.77', 'test_acc=0.55', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.3590494394302368	tb: 0 mode: 0 nways: 10 it: 8000
+total Acc: 0.65, mode accs: ['train_acc=0.77', 'test_acc=0.55', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.020099163055419922	tb: 0 mode: 2 nways: 10 it: 8100
+total Acc: 0.65, mode accs: ['train_acc=0.77', 'test_acc=0.54', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.19451546669006348	tb: 0 mode: 1 nways: 10 it: 8200
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.54', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.8012516796588898	tb: 0 mode: 0 nways: 10 it: 8300
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.54', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.8572092950344086	tb: 0 mode: 0 nways: 10 it: 8400
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.54', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.07717537879943848	tb: 0 mode: 0 nways: 10 it: 8500
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.54', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.35118257999420166	tb: 0 mode: 0 nways: 10 it: 8600
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.54', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.7779777646064758	tb: 0 mode: 0 nways: 10 it: 8700
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.54', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=1.2632694244384766	tb: 1 mode: 2 nways: 10 it: 8800
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.54', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.5728242993354797	tb: 0 mode: 0 nways: 10 it: 8900
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.54', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.07563841342926025	tb: 0 mode: 2 nways: 10 it: 9000
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.53', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.2391728162765503	tb: 0 mode: 0 nways: 10 it: 9100
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.53', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.11105096340179443	tb: 0 mode: 0 nways: 10 it: 9200
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.53', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.04889202117919922	tb: 0 mode: 2 nways: 10 it: 9300
+total Acc: 0.65, mode accs: ['train_acc=0.77', 'test_acc=0.53', 'ood_acc=0.53']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=1.3525152206420898	tb: 1 mode: 0 nways: 10 it: 9400
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.53', 'ood_acc=0.53']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.590168297290802	tb: 0 mode: 0 nways: 10 it: 9500
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.53', 'ood_acc=0.53']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.3574473261833191	tb: 0 mode: 2 nways: 10 it: 9600
+total Acc: 0.65, mode accs: ['train_acc=0.77', 'test_acc=0.53', 'ood_acc=0.53']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.31860148906707764	tb: 0 mode: 1 nways: 10 it: 9700
+total Acc: 0.65, mode accs: ['train_acc=0.77', 'test_acc=0.52', 'ood_acc=0.53']	Total tbd acc: 0.96  tbd_local: 0.0  delta_loss=0.6074808835983276	tb: 1 mode: 1 nways: 10 it: 9800
+total Acc: 0.65, mode accs: ['train_acc=0.77', 'test_acc=0.53', 'ood_acc=0.53']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.19012701511383057	tb: 0 mode: 1 nways: 10 it: 9900
+total Acc: 0.65, mode accs: ['train_acc=0.77', 'test_acc=0.52', 'ood_acc=0.53']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.05095267295837402	tb: 0 mode: 0 nways: 10 it: 9999
+================= STARTING RUN 3 ===============
+total Acc: nan, mode accs: ['train_acc=0.00', 'test_acc=nan', 'ood_acc=nan']	Total tbd acc: nan  tbd_local: 0.0  delta_loss=na	tb: 0 mode: 0 nways: 10 it: 0
+total Acc: 0.45, mode accs: ['train_acc=0.57', 'test_acc=nan', 'ood_acc=0.26']	Total tbd acc: 0.58  tbd_local: 1.0  delta_loss=30.88734006881714	tb: 1 mode: 0 nways: 10 it: 100
+total Acc: 0.46, mode accs: ['train_acc=0.56', 'test_acc=0.30', 'ood_acc=0.36']	Total tbd acc: 0.57  tbd_local: 0.0  delta_loss=2.696058601140976	tb: 0 mode: 1 nways: 10 it: 200
+total Acc: 0.50, mode accs: ['train_acc=0.59', 'test_acc=0.36', 'ood_acc=0.36']	Total tbd acc: 0.56  tbd_local: 1.0  delta_loss=-3.0109286308288574	tb: 0 mode: 2 nways: 10 it: 300
+total Acc: 0.54, mode accs: ['train_acc=0.64', 'test_acc=0.36', 'ood_acc=0.37']	Total tbd acc: 0.63  tbd_local: 1.0  delta_loss=0.5189346522092819	tb: 0 mode: 0 nways: 10 it: 400
+total Acc: 0.54, mode accs: ['train_acc=0.66', 'test_acc=0.37', 'ood_acc=0.36']	Total tbd acc: 0.64  tbd_local: 0.0  delta_loss=5.674242734909058	tb: 0 mode: 2 nways: 10 it: 500
+total Acc: 0.52, mode accs: ['train_acc=0.65', 'test_acc=0.37', 'ood_acc=0.36']	Total tbd acc: 0.63  tbd_local: 1.0  delta_loss=0.512993335723877	tb: 0 mode: 0 nways: 10 it: 600
+total Acc: 0.51, mode accs: ['train_acc=0.65', 'test_acc=0.38', 'ood_acc=0.38']	Total tbd acc: 0.62  tbd_local: 1.0  delta_loss=0.5645734667778015	tb: 0 mode: 1 nways: 10 it: 700
+total Acc: 0.55, mode accs: ['train_acc=0.70', 'test_acc=0.43', 'ood_acc=0.38']	Total tbd acc: 0.66  tbd_local: 0.0  delta_loss=0.8540387749671936	tb: 0 mode: 1 nways: 10 it: 800
+total Acc: 0.55, mode accs: ['train_acc=0.69', 'test_acc=0.47', 'ood_acc=0.38']	Total tbd acc: 0.68  tbd_local: 1.0  delta_loss=-0.11193951964378357	tb: 0 mode: 0 nways: 10 it: 900
+total Acc: 0.58, mode accs: ['train_acc=0.72', 'test_acc=0.50', 'ood_acc=0.39']	Total tbd acc: 0.70  tbd_local: 1.0  delta_loss=0.08067283034324646	tb: 0 mode: 0 nways: 10 it: 1000
+total Acc: 0.60, mode accs: ['train_acc=0.74', 'test_acc=0.50', 'ood_acc=0.39']	Total tbd acc: 0.73  tbd_local: 1.0  delta_loss=-0.12381580471992493	tb: 0 mode: 0 nways: 10 it: 1100
+total Acc: 0.61, mode accs: ['train_acc=0.75', 'test_acc=0.51', 'ood_acc=0.40']	Total tbd acc: 0.74  tbd_local: 1.0  delta_loss=-0.26933443546295166	tb: 0 mode: 1 nways: 10 it: 1200
+total Acc: 0.62, mode accs: ['train_acc=0.75', 'test_acc=0.55', 'ood_acc=0.40']	Total tbd acc: 0.75  tbd_local: 0.0  delta_loss=0.9586240649223328	tb: 0 mode: 2 nways: 10 it: 1300
+total Acc: 0.62, mode accs: ['train_acc=0.75', 'test_acc=0.55', 'ood_acc=0.41']	Total tbd acc: 0.76  tbd_local: 1.0  delta_loss=4.110148698091507	tb: 1 mode: 2 nways: 10 it: 1400
+total Acc: 0.62, mode accs: ['train_acc=0.76', 'test_acc=0.55', 'ood_acc=0.43']	Total tbd acc: 0.78  tbd_local: 1.0  delta_loss=0.26761066913604736	tb: 0 mode: 0 nways: 10 it: 1500
+total Acc: 0.62, mode accs: ['train_acc=0.75', 'test_acc=0.55', 'ood_acc=0.45']	Total tbd acc: 0.78  tbd_local: 1.0  delta_loss=-0.36326953768730164	tb: 0 mode: 0 nways: 10 it: 1600
+total Acc: 0.63, mode accs: ['train_acc=0.76', 'test_acc=0.55', 'ood_acc=0.45']	Total tbd acc: 0.79  tbd_local: 1.0  delta_loss=0.21318328380584717	tb: 0 mode: 1 nways: 10 it: 1700
+total Acc: 0.63, mode accs: ['train_acc=0.76', 'test_acc=0.55', 'ood_acc=0.46']	Total tbd acc: 0.79  tbd_local: 1.0  delta_loss=0.09781217575073242	tb: 0 mode: 1 nways: 10 it: 1800
+total Acc: 0.63, mode accs: ['train_acc=0.76', 'test_acc=0.55', 'ood_acc=0.46']	Total tbd acc: 0.80  tbd_local: 1.0  delta_loss=3.5212344229221344	tb: 1 mode: 2 nways: 10 it: 1900
+total Acc: 0.63, mode accs: ['train_acc=0.76', 'test_acc=0.57', 'ood_acc=0.46']	Total tbd acc: 0.80  tbd_local: 1.0  delta_loss=0.1514328122138977	tb: 0 mode: 0 nways: 10 it: 2000
+total Acc: 0.64, mode accs: ['train_acc=0.76', 'test_acc=0.57', 'ood_acc=0.46']	Total tbd acc: 0.81  tbd_local: 1.0  delta_loss=-0.37637175619602203	tb: 0 mode: 0 nways: 10 it: 2100
+total Acc: 0.65, mode accs: ['train_acc=0.77', 'test_acc=0.59', 'ood_acc=0.46']	Total tbd acc: 0.82  tbd_local: 1.0  delta_loss=-0.7286270260810852	tb: 0 mode: 1 nways: 10 it: 2200
+total Acc: 0.65, mode accs: ['train_acc=0.77', 'test_acc=0.60', 'ood_acc=0.46']	Total tbd acc: 0.83  tbd_local: 1.0  delta_loss=2.4399548172950745	tb: 1 mode: 0 nways: 10 it: 2300
+total Acc: 0.65, mode accs: ['train_acc=0.77', 'test_acc=0.60', 'ood_acc=0.46']	Total tbd acc: 0.83  tbd_local: 1.0  delta_loss=0.5022333860397339	tb: 0 mode: 2 nways: 10 it: 2400
+total Acc: 0.65, mode accs: ['train_acc=0.77', 'test_acc=0.60', 'ood_acc=0.47']	Total tbd acc: 0.84  tbd_local: 1.0  delta_loss=0.02721315622329712	tb: 0 mode: 0 nways: 10 it: 2500
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.60', 'ood_acc=0.47']	Total tbd acc: 0.84  tbd_local: 1.0  delta_loss=-0.514841828495264	tb: 0 mode: 0 nways: 10 it: 2600
+total Acc: 0.67, mode accs: ['train_acc=0.78', 'test_acc=0.60', 'ood_acc=0.47']	Total tbd acc: 0.85  tbd_local: 1.0  delta_loss=0.32244569063186646	tb: 0 mode: 2 nways: 10 it: 2700
+total Acc: 0.67, mode accs: ['train_acc=0.78', 'test_acc=0.61', 'ood_acc=0.47']	Total tbd acc: 0.85  tbd_local: 1.0  delta_loss=0.21597188711166382	tb: 0 mode: 0 nways: 10 it: 2800
+total Acc: 0.67, mode accs: ['train_acc=0.78', 'test_acc=0.60', 'ood_acc=0.47']	Total tbd acc: 0.86  tbd_local: 0.0  delta_loss=0.9333807826042175	tb: 0 mode: 2 nways: 10 it: 2900
+total Acc: 0.67, mode accs: ['train_acc=0.78', 'test_acc=0.60', 'ood_acc=0.48']	Total tbd acc: 0.86  tbd_local: 1.0  delta_loss=0.38333165645599365	tb: 0 mode: 1 nways: 10 it: 3000
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.60', 'ood_acc=0.49']	Total tbd acc: 0.87  tbd_local: 1.0  delta_loss=-0.4203437566757202	tb: 0 mode: 1 nways: 10 it: 3100
+total Acc: 0.67, mode accs: ['train_acc=0.78', 'test_acc=0.61', 'ood_acc=0.48']	Total tbd acc: 0.87  tbd_local: 1.0  delta_loss=0.7970278263092041	tb: 0 mode: 2 nways: 10 it: 3200
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.61', 'ood_acc=0.49']	Total tbd acc: 0.87  tbd_local: 1.0  delta_loss=0.524596631526947	tb: 0 mode: 2 nways: 10 it: 3300
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.61', 'ood_acc=0.49']	Total tbd acc: 0.87  tbd_local: 1.0  delta_loss=0.005048871040344238	tb: 0 mode: 0 nways: 10 it: 3400
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.60', 'ood_acc=0.49']	Total tbd acc: 0.88  tbd_local: 1.0  delta_loss=0.22762125730514526	tb: 0 mode: 2 nways: 10 it: 3500
+total Acc: 0.67, mode accs: ['train_acc=0.78', 'test_acc=0.61', 'ood_acc=0.49']	Total tbd acc: 0.88  tbd_local: 1.0  delta_loss=-0.6683395206928253	tb: 0 mode: 0 nways: 10 it: 3600
+total Acc: 0.67, mode accs: ['train_acc=0.78', 'test_acc=0.61', 'ood_acc=0.49']	Total tbd acc: 0.88  tbd_local: 1.0  delta_loss=0.1839689016342163	tb: 0 mode: 0 nways: 10 it: 3700
+total Acc: 0.67, mode accs: ['train_acc=0.78', 'test_acc=0.61', 'ood_acc=0.50']	Total tbd acc: 0.88  tbd_local: 1.0  delta_loss=-0.31214016675949097	tb: 0 mode: 0 nways: 10 it: 3800
+total Acc: 0.67, mode accs: ['train_acc=0.78', 'test_acc=0.61', 'ood_acc=0.49']	Total tbd acc: 0.89  tbd_local: 1.0  delta_loss=-0.9982874169945717	tb: 0 mode: 0 nways: 10 it: 3900
+total Acc: 0.67, mode accs: ['train_acc=0.78', 'test_acc=0.60', 'ood_acc=0.50']	Total tbd acc: 0.89  tbd_local: 1.0  delta_loss=0.4330652952194214	tb: 0 mode: 2 nways: 10 it: 4000
+total Acc: 0.67, mode accs: ['train_acc=0.78', 'test_acc=0.60', 'ood_acc=0.50']	Total tbd acc: 0.89  tbd_local: 1.0  delta_loss=-0.304861456155777	tb: 0 mode: 0 nways: 10 it: 4100
+total Acc: 0.67, mode accs: ['train_acc=0.79', 'test_acc=0.60', 'ood_acc=0.50']	Total tbd acc: 0.89  tbd_local: 1.0  delta_loss=-0.18400728702545166	tb: 0 mode: 0 nways: 10 it: 4200
+total Acc: 0.67, mode accs: ['train_acc=0.79', 'test_acc=0.60', 'ood_acc=0.50']	Total tbd acc: 0.89  tbd_local: 1.0  delta_loss=0.23178815841674805	tb: 0 mode: 0 nways: 10 it: 4300
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.60', 'ood_acc=0.50']	Total tbd acc: 0.89  tbd_local: 1.0  delta_loss=0.12234437465667725	tb: 0 mode: 1 nways: 10 it: 4400
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.60', 'ood_acc=0.51']	Total tbd acc: 0.90  tbd_local: 1.0  delta_loss=-0.16039836406707764	tb: 0 mode: 1 nways: 10 it: 4500
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.51']	Total tbd acc: 0.90  tbd_local: 1.0  delta_loss=3.0116053223609924	tb: 1 mode: 0 nways: 10 it: 4600
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.51']	Total tbd acc: 0.90  tbd_local: 1.0  delta_loss=-0.13090866804122925	tb: 0 mode: 0 nways: 10 it: 4700
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.51']	Total tbd acc: 0.90  tbd_local: 1.0  delta_loss=-0.23661458492279053	tb: 0 mode: 1 nways: 10 it: 4800
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.51']	Total tbd acc: 0.90  tbd_local: 1.0  delta_loss=-0.057988762855529785	tb: 0 mode: 1 nways: 10 it: 4900
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.51']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=-0.007781505584716797	tb: 0 mode: 0 nways: 10 it: 5000
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.51']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=-0.892643004655838	tb: 0 mode: 0 nways: 10 it: 5100
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.52']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=-0.10623884201049805	tb: 0 mode: 0 nways: 10 it: 5200
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.52']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=0.11840206384658813	tb: 0 mode: 0 nways: 10 it: 5300
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.53']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=0.7925554513931274	tb: 0 mode: 2 nways: 10 it: 5400
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.53']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=0.3739807605743408	tb: 0 mode: 2 nways: 10 it: 5500
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.53']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=0.10722309350967407	tb: 0 mode: 0 nways: 10 it: 5600
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.53']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=0.20541280508041382	tb: 0 mode: 2 nways: 10 it: 5700
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.54']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=0.7408206462860107	tb: 0 mode: 2 nways: 10 it: 5800
+total Acc: 0.68, mode accs: ['train_acc=0.78', 'test_acc=0.61', 'ood_acc=0.54']	Total tbd acc: 0.92  tbd_local: 0.0  delta_loss=0.8799803256988525	tb: 0 mode: 2 nways: 10 it: 5900
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.54']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=0.28885596990585327	tb: 0 mode: 2 nways: 10 it: 6000
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.54']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=0.49617791175842285	tb: 0 mode: 1 nways: 10 it: 6100
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.54']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=2.0846561193466187	tb: 1 mode: 2 nways: 10 it: 6200
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.54']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=0.2740072011947632	tb: 0 mode: 1 nways: 10 it: 6300
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.54']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=0.18902587890625	tb: 0 mode: 1 nways: 10 it: 6400
+total Acc: 0.68, mode accs: ['train_acc=0.78', 'test_acc=0.61', 'ood_acc=0.54']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=-0.20039522647857666	tb: 0 mode: 0 nways: 10 it: 6500
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.55']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=0.5400082468986511	tb: 0 mode: 0 nways: 10 it: 6600
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.55']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.5024894922971725	tb: 0 mode: 0 nways: 10 it: 6700
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.55']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=0.27791309356689453	tb: 0 mode: 2 nways: 10 it: 6800
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.56']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.43259504437446594	tb: 0 mode: 0 nways: 10 it: 6900
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.60', 'ood_acc=0.56']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=0.3354027271270752	tb: 0 mode: 1 nways: 10 it: 7000
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.60', 'ood_acc=0.56']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=4.308257877826691	tb: 1 mode: 2 nways: 10 it: 7100
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.60', 'ood_acc=0.56']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.3424179255962372	tb: 0 mode: 0 nways: 10 it: 7200
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.60', 'ood_acc=0.56']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=0.9005264043807983	tb: 1 mode: 1 nways: 10 it: 7300
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.60', 'ood_acc=0.56']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.3940219283103943	tb: 0 mode: 0 nways: 10 it: 7400
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.60', 'ood_acc=0.56']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.5725298821926117	tb: 0 mode: 0 nways: 10 it: 7500
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.60', 'ood_acc=0.57']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=1.6136260032653809	tb: 1 mode: 0 nways: 10 it: 7600
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.60', 'ood_acc=0.57']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.4129880368709564	tb: 0 mode: 0 nways: 10 it: 7700
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.60', 'ood_acc=0.57']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.14121806621551514	tb: 0 mode: 0 nways: 10 it: 7800
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.60', 'ood_acc=0.57']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.0720142126083374	tb: 0 mode: 1 nways: 10 it: 7900
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.60', 'ood_acc=0.57']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.66748908162117	tb: 0 mode: 0 nways: 10 it: 8000
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.60', 'ood_acc=0.57']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=1.2903310060501099	tb: 1 mode: 0 nways: 10 it: 8100
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.60', 'ood_acc=0.57']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.3559039831161499	tb: 0 mode: 0 nways: 10 it: 8200
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.60', 'ood_acc=0.57']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.2899296283721924	tb: 0 mode: 1 nways: 10 it: 8300
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.60', 'ood_acc=0.57']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.1080007553100586	tb: 0 mode: 1 nways: 10 it: 8400
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.60', 'ood_acc=0.57']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.5136451721191406	tb: 0 mode: 1 nways: 10 it: 8500
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.60', 'ood_acc=0.57']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.7166987955570221	tb: 0 mode: 0 nways: 10 it: 8600
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.60', 'ood_acc=0.57']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.09811073541641235	tb: 0 mode: 2 nways: 10 it: 8700
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.60', 'ood_acc=0.57']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.08735322952270508	tb: 0 mode: 0 nways: 10 it: 8800
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.59', 'ood_acc=0.57']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.2235633134841919	tb: 0 mode: 0 nways: 10 it: 8900
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.59', 'ood_acc=0.58']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.08376109600067139	tb: 0 mode: 1 nways: 10 it: 9000
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.60', 'ood_acc=0.58']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.09601950645446777	tb: 0 mode: 1 nways: 10 it: 9100
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.60', 'ood_acc=0.58']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.31001102924346924	tb: 0 mode: 1 nways: 10 it: 9200
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.60', 'ood_acc=0.58']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.2933772802352905	tb: 0 mode: 2 nways: 10 it: 9300
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.60', 'ood_acc=0.58']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.4143320322036743	tb: 0 mode: 0 nways: 10 it: 9400
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.60', 'ood_acc=0.58']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.03710150718688965	tb: 0 mode: 0 nways: 10 it: 9500
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.60', 'ood_acc=0.58']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.5595624446868896	tb: 0 mode: 2 nways: 10 it: 9600
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.60', 'ood_acc=0.58']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.0541234016418457	tb: 0 mode: 1 nways: 10 it: 9700
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.59', 'ood_acc=0.58']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.7825524210929871	tb: 0 mode: 0 nways: 10 it: 9800
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.59', 'ood_acc=0.58']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.3831039071083069	tb: 0 mode: 0 nways: 10 it: 9900
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.59', 'ood_acc=0.58']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.151891827583313	tb: 0 mode: 1 nways: 10 it: 9999
+================= STARTING RUN 4 ===============
+total Acc: nan, mode accs: ['train_acc=nan', 'test_acc=0.00', 'ood_acc=nan']	Total tbd acc: nan  tbd_local: 0.0  delta_loss=na	tb: 0 mode: 1 nways: 10 it: 0
+total Acc: 0.45, mode accs: ['train_acc=0.62', 'test_acc=0.33', 'ood_acc=0.21']	Total tbd acc: 0.41  tbd_local: 0.0  delta_loss=4.192266464233398	tb: 0 mode: 2 nways: 10 it: 100
+total Acc: 0.51, mode accs: ['train_acc=0.62', 'test_acc=0.29', 'ood_acc=0.21']	Total tbd acc: 0.53  tbd_local: 1.0  delta_loss=0.7237986326217651	tb: 0 mode: 0 nways: 10 it: 200
+total Acc: 0.48, mode accs: ['train_acc=0.60', 'test_acc=0.32', 'ood_acc=0.22']	Total tbd acc: 0.57  tbd_local: 1.0  delta_loss=0.44900715351104736	tb: 0 mode: 0 nways: 10 it: 300
+total Acc: 0.49, mode accs: ['train_acc=0.60', 'test_acc=0.33', 'ood_acc=0.24']	Total tbd acc: 0.59  tbd_local: 0.0  delta_loss=0.8231546878814697	tb: 0 mode: 2 nways: 10 it: 400
+total Acc: 0.48, mode accs: ['train_acc=0.59', 'test_acc=0.33', 'ood_acc=0.31']	Total tbd acc: 0.59  tbd_local: 0.0  delta_loss=0.869354248046875	tb: 0 mode: 1 nways: 10 it: 500
+total Acc: 0.47, mode accs: ['train_acc=0.58', 'test_acc=0.33', 'ood_acc=0.34']	Total tbd acc: 0.62  tbd_local: 1.0  delta_loss=0.2725061774253845	tb: 0 mode: 0 nways: 10 it: 600
+total Acc: 0.48, mode accs: ['train_acc=0.59', 'test_acc=0.32', 'ood_acc=0.34']	Total tbd acc: 0.66  tbd_local: 1.0  delta_loss=2.5051859617233276	tb: 1 mode: 0 nways: 10 it: 700
+total Acc: 0.48, mode accs: ['train_acc=0.60', 'test_acc=0.31', 'ood_acc=0.35']	Total tbd acc: 0.69  tbd_local: 1.0  delta_loss=0.5484293699264526	tb: 0 mode: 0 nways: 10 it: 800
+total Acc: 0.49, mode accs: ['train_acc=0.61', 'test_acc=0.34', 'ood_acc=0.36']	Total tbd acc: 0.72  tbd_local: 0.0  delta_loss=1.038856029510498	tb: 0 mode: 1 nways: 10 it: 900
+total Acc: 0.48, mode accs: ['train_acc=0.61', 'test_acc=0.33', 'ood_acc=0.36']	Total tbd acc: 0.72  tbd_local: 1.0  delta_loss=0.4707753658294678	tb: 0 mode: 1 nways: 10 it: 1000
+total Acc: 0.48, mode accs: ['train_acc=0.61', 'test_acc=0.33', 'ood_acc=0.37']	Total tbd acc: 0.73  tbd_local: 1.0  delta_loss=0.31900835037231445	tb: 0 mode: 2 nways: 10 it: 1100
+total Acc: 0.47, mode accs: ['train_acc=0.61', 'test_acc=0.34', 'ood_acc=0.37']	Total tbd acc: 0.74  tbd_local: 1.0  delta_loss=0.610350489616394	tb: 0 mode: 1 nways: 10 it: 1200
+total Acc: 0.47, mode accs: ['train_acc=0.60', 'test_acc=0.34', 'ood_acc=0.38']	Total tbd acc: 0.75  tbd_local: 1.0  delta_loss=0.38676249980926514	tb: 0 mode: 0 nways: 10 it: 1300
+total Acc: 0.47, mode accs: ['train_acc=0.60', 'test_acc=0.34', 'ood_acc=0.38']	Total tbd acc: 0.76  tbd_local: 1.0  delta_loss=0.2635751962661743	tb: 0 mode: 1 nways: 10 it: 1400
+total Acc: 0.48, mode accs: ['train_acc=0.60', 'test_acc=0.40', 'ood_acc=0.38']	Total tbd acc: 0.78  tbd_local: 1.0  delta_loss=-0.9791956543922424	tb: 0 mode: 1 nways: 10 it: 1500
+total Acc: 0.49, mode accs: ['train_acc=0.60', 'test_acc=0.44', 'ood_acc=0.38']	Total tbd acc: 0.79  tbd_local: 0.0  delta_loss=0.9098820686340332	tb: 0 mode: 2 nways: 10 it: 1600
+total Acc: 0.49, mode accs: ['train_acc=0.59', 'test_acc=0.45', 'ood_acc=0.38']	Total tbd acc: 0.80  tbd_local: 1.0  delta_loss=-1.104776531457901	tb: 0 mode: 1 nways: 10 it: 1700
+total Acc: 0.50, mode accs: ['train_acc=0.59', 'test_acc=0.46', 'ood_acc=0.38']	Total tbd acc: 0.81  tbd_local: 1.0  delta_loss=-0.8291779011487961	tb: 0 mode: 0 nways: 10 it: 1800
+total Acc: 0.49, mode accs: ['train_acc=0.59', 'test_acc=0.46', 'ood_acc=0.38']	Total tbd acc: 0.82  tbd_local: 1.0  delta_loss=0.5855920314788818	tb: 0 mode: 1 nways: 10 it: 1900
+total Acc: 0.50, mode accs: ['train_acc=0.60', 'test_acc=0.46', 'ood_acc=0.38']	Total tbd acc: 0.82  tbd_local: 1.0  delta_loss=-0.6366505771875381	tb: 0 mode: 0 nways: 10 it: 2000
+total Acc: 0.50, mode accs: ['train_acc=0.61', 'test_acc=0.45', 'ood_acc=0.38']	Total tbd acc: 0.83  tbd_local: 1.0  delta_loss=0.7310053110122681	tb: 0 mode: 2 nways: 10 it: 2100
+total Acc: 0.50, mode accs: ['train_acc=0.61', 'test_acc=0.45', 'ood_acc=0.39']	Total tbd acc: 0.84  tbd_local: 1.0  delta_loss=0.10424089431762695	tb: 0 mode: 2 nways: 10 it: 2200
+total Acc: 0.51, mode accs: ['train_acc=0.62', 'test_acc=0.46', 'ood_acc=0.39']	Total tbd acc: 0.84  tbd_local: 1.0  delta_loss=0.2372034788131714	tb: 0 mode: 2 nways: 10 it: 2300
+total Acc: 0.51, mode accs: ['train_acc=0.62', 'test_acc=0.46', 'ood_acc=0.39']	Total tbd acc: 0.85  tbd_local: 1.0  delta_loss=2.116493344306946	tb: 1 mode: 2 nways: 10 it: 2400
+total Acc: 0.51, mode accs: ['train_acc=0.62', 'test_acc=0.46', 'ood_acc=0.39']	Total tbd acc: 0.85  tbd_local: 1.0  delta_loss=0.3190872073173523	tb: 0 mode: 0 nways: 10 it: 2500
+total Acc: 0.51, mode accs: ['train_acc=0.62', 'test_acc=0.45', 'ood_acc=0.39']	Total tbd acc: 0.86  tbd_local: 0.0  delta_loss=0.9572200179100037	tb: 0 mode: 2 nways: 10 it: 2600
+total Acc: 0.51, mode accs: ['train_acc=0.62', 'test_acc=0.45', 'ood_acc=0.39']	Total tbd acc: 0.86  tbd_local: 1.0  delta_loss=2.062891721725464	tb: 1 mode: 1 nways: 10 it: 2700
+total Acc: 0.51, mode accs: ['train_acc=0.62', 'test_acc=0.45', 'ood_acc=0.39']	Total tbd acc: 0.86  tbd_local: 1.0  delta_loss=0.791164219379425	tb: 0 mode: 0 nways: 10 it: 2800
+total Acc: 0.51, mode accs: ['train_acc=0.61', 'test_acc=0.45', 'ood_acc=0.39']	Total tbd acc: 0.86  tbd_local: 1.0  delta_loss=0.3899078369140625	tb: 0 mode: 0 nways: 10 it: 2900
+total Acc: 0.51, mode accs: ['train_acc=0.63', 'test_acc=0.45', 'ood_acc=0.39']	Total tbd acc: 0.86  tbd_local: 1.0  delta_loss=-0.8552019968628883	tb: 0 mode: 0 nways: 10 it: 3000
+total Acc: 0.52, mode accs: ['train_acc=0.63', 'test_acc=0.44', 'ood_acc=0.40']	Total tbd acc: 0.87  tbd_local: 1.0  delta_loss=0.3483062982559204	tb: 0 mode: 2 nways: 10 it: 3100
+total Acc: 0.52, mode accs: ['train_acc=0.63', 'test_acc=0.44', 'ood_acc=0.40']	Total tbd acc: 0.87  tbd_local: 0.0  delta_loss=0.805338978767395	tb: 0 mode: 2 nways: 10 it: 3200
+total Acc: 0.52, mode accs: ['train_acc=0.63', 'test_acc=0.44', 'ood_acc=0.40']	Total tbd acc: 0.87  tbd_local: 1.0  delta_loss=-0.2707616090774536	tb: 0 mode: 0 nways: 10 it: 3300
+total Acc: 0.52, mode accs: ['train_acc=0.63', 'test_acc=0.44', 'ood_acc=0.40']	Total tbd acc: 0.88  tbd_local: 1.0  delta_loss=-0.29424387216567993	tb: 0 mode: 0 nways: 10 it: 3400
+total Acc: 0.52, mode accs: ['train_acc=0.63', 'test_acc=0.44', 'ood_acc=0.40']	Total tbd acc: 0.88  tbd_local: 1.0  delta_loss=-0.74591064453125	tb: 0 mode: 0 nways: 10 it: 3500
+total Acc: 0.52, mode accs: ['train_acc=0.63', 'test_acc=0.44', 'ood_acc=0.40']	Total tbd acc: 0.88  tbd_local: 1.0  delta_loss=-0.2591135501861572	tb: 0 mode: 0 nways: 10 it: 3600
+total Acc: 0.52, mode accs: ['train_acc=0.63', 'test_acc=0.44', 'ood_acc=0.40']	Total tbd acc: 0.88  tbd_local: 1.0  delta_loss=-0.5357864499092102	tb: 0 mode: 0 nways: 10 it: 3700
+total Acc: 0.52, mode accs: ['train_acc=0.63', 'test_acc=0.44', 'ood_acc=0.40']	Total tbd acc: 0.88  tbd_local: 1.0  delta_loss=-0.7381159663200378	tb: 0 mode: 0 nways: 10 it: 3800
+total Acc: 0.52, mode accs: ['train_acc=0.63', 'test_acc=0.43', 'ood_acc=0.40']	Total tbd acc: 0.89  tbd_local: 1.0  delta_loss=0.6015161275863647	tb: 0 mode: 2 nways: 10 it: 3900
+total Acc: 0.52, mode accs: ['train_acc=0.63', 'test_acc=0.43', 'ood_acc=0.41']	Total tbd acc: 0.89  tbd_local: 1.0  delta_loss=-0.09268748760223389	tb: 0 mode: 0 nways: 10 it: 4000
+total Acc: 0.52, mode accs: ['train_acc=0.63', 'test_acc=0.43', 'ood_acc=0.41']	Total tbd acc: 0.89  tbd_local: 1.0  delta_loss=0.25490009784698486	tb: 0 mode: 0 nways: 10 it: 4100
+total Acc: 0.52, mode accs: ['train_acc=0.63', 'test_acc=0.43', 'ood_acc=0.41']	Total tbd acc: 0.89  tbd_local: 1.0  delta_loss=0.30035603046417236	tb: 0 mode: 2 nways: 10 it: 4200
+total Acc: 0.52, mode accs: ['train_acc=0.63', 'test_acc=0.43', 'ood_acc=0.41']	Total tbd acc: 0.90  tbd_local: 1.0  delta_loss=-0.6029230952262878	tb: 0 mode: 0 nways: 10 it: 4300
+total Acc: 0.52, mode accs: ['train_acc=0.63', 'test_acc=0.43', 'ood_acc=0.41']	Total tbd acc: 0.90  tbd_local: 1.0  delta_loss=2.28193199634552	tb: 1 mode: 0 nways: 10 it: 4400
+total Acc: 0.52, mode accs: ['train_acc=0.63', 'test_acc=0.43', 'ood_acc=0.41']	Total tbd acc: 0.90  tbd_local: 1.0  delta_loss=0.21065163612365723	tb: 0 mode: 1 nways: 10 it: 4500
+total Acc: 0.52, mode accs: ['train_acc=0.63', 'test_acc=0.42', 'ood_acc=0.41']	Total tbd acc: 0.90  tbd_local: 1.0  delta_loss=-0.07943832874298096	tb: 0 mode: 1 nways: 10 it: 4600
+total Acc: 0.52, mode accs: ['train_acc=0.63', 'test_acc=0.42', 'ood_acc=0.41']	Total tbd acc: 0.90  tbd_local: 1.0  delta_loss=-0.29156190156936646	tb: 0 mode: 0 nways: 10 it: 4700
+total Acc: 0.52, mode accs: ['train_acc=0.63', 'test_acc=0.42', 'ood_acc=0.41']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=1.5776469707489014	tb: 1 mode: 0 nways: 10 it: 4800
+total Acc: 0.52, mode accs: ['train_acc=0.63', 'test_acc=0.43', 'ood_acc=0.41']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=-0.4080825448036194	tb: 0 mode: 0 nways: 10 it: 4900
+total Acc: 0.52, mode accs: ['train_acc=0.63', 'test_acc=0.43', 'ood_acc=0.42']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=0.29110968112945557	tb: 0 mode: 1 nways: 10 it: 5000
+total Acc: 0.52, mode accs: ['train_acc=0.63', 'test_acc=0.43', 'ood_acc=0.43']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=-0.04837298393249512	tb: 0 mode: 1 nways: 10 it: 5100
+total Acc: 0.52, mode accs: ['train_acc=0.63', 'test_acc=0.43', 'ood_acc=0.43']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=-0.6821980476379395	tb: 0 mode: 0 nways: 10 it: 5200
+total Acc: 0.52, mode accs: ['train_acc=0.63', 'test_acc=0.43', 'ood_acc=0.43']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=-0.5170908570289612	tb: 0 mode: 0 nways: 10 it: 5300
+total Acc: 0.52, mode accs: ['train_acc=0.63', 'test_acc=0.42', 'ood_acc=0.43']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=0.10226690769195557	tb: 0 mode: 0 nways: 10 it: 5400
+total Acc: 0.52, mode accs: ['train_acc=0.63', 'test_acc=0.43', 'ood_acc=0.43']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=-0.7604700922966003	tb: 0 mode: 0 nways: 10 it: 5500
+total Acc: 0.52, mode accs: ['train_acc=0.63', 'test_acc=0.42', 'ood_acc=0.43']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=-0.09511411190032959	tb: 0 mode: 0 nways: 10 it: 5600
+total Acc: 0.52, mode accs: ['train_acc=0.64', 'test_acc=0.42', 'ood_acc=0.43']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=0.7451598644256592	tb: 0 mode: 2 nways: 10 it: 5700
+total Acc: 0.52, mode accs: ['train_acc=0.64', 'test_acc=0.42', 'ood_acc=0.44']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=-0.24370527267456055	tb: 0 mode: 1 nways: 10 it: 5800
+total Acc: 0.52, mode accs: ['train_acc=0.63', 'test_acc=0.42', 'ood_acc=0.43']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=0.2612955570220947	tb: 0 mode: 2 nways: 10 it: 5900
+total Acc: 0.52, mode accs: ['train_acc=0.63', 'test_acc=0.42', 'ood_acc=0.44']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=0.2576868534088135	tb: 0 mode: 0 nways: 10 it: 6000
+total Acc: 0.52, mode accs: ['train_acc=0.63', 'test_acc=0.42', 'ood_acc=0.44']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=-0.6801508665084839	tb: 0 mode: 0 nways: 10 it: 6100
+total Acc: 0.53, mode accs: ['train_acc=0.64', 'test_acc=0.42', 'ood_acc=0.44']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=-1.2158421985805035	tb: 0 mode: 0 nways: 10 it: 6200
+total Acc: 0.53, mode accs: ['train_acc=0.64', 'test_acc=0.42', 'ood_acc=0.44']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=-0.9682301878929138	tb: 0 mode: 0 nways: 10 it: 6300
+total Acc: 0.53, mode accs: ['train_acc=0.64', 'test_acc=0.42', 'ood_acc=0.44']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=0.15717566013336182	tb: 0 mode: 2 nways: 10 it: 6400
+total Acc: 0.53, mode accs: ['train_acc=0.64', 'test_acc=0.42', 'ood_acc=0.44']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=0.37862348556518555	tb: 0 mode: 2 nways: 10 it: 6500
+total Acc: 0.53, mode accs: ['train_acc=0.64', 'test_acc=0.42', 'ood_acc=0.44']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=2.028899610042572	tb: 1 mode: 0 nways: 10 it: 6600
+total Acc: 0.53, mode accs: ['train_acc=0.64', 'test_acc=0.42', 'ood_acc=0.44']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=1.1448938846588135	tb: 1 mode: 2 nways: 10 it: 6700
+total Acc: 0.53, mode accs: ['train_acc=0.64', 'test_acc=0.42', 'ood_acc=0.44']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.6254552602767944	tb: 0 mode: 1 nways: 10 it: 6800
+total Acc: 0.53, mode accs: ['train_acc=0.64', 'test_acc=0.42', 'ood_acc=0.44']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.7726582661271095	tb: 0 mode: 0 nways: 10 it: 6900
+total Acc: 0.53, mode accs: ['train_acc=0.64', 'test_acc=0.42', 'ood_acc=0.44']	Total tbd acc: 0.93  tbd_local: 0.0  delta_loss=0.5894073247909546	tb: 1 mode: 1 nways: 10 it: 7000
+total Acc: 0.53, mode accs: ['train_acc=0.64', 'test_acc=0.42', 'ood_acc=0.44']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=0.01479494571685791	tb: 0 mode: 0 nways: 10 it: 7100
+total Acc: 0.53, mode accs: ['train_acc=0.64', 'test_acc=0.42', 'ood_acc=0.44']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.8334953784942627	tb: 0 mode: 0 nways: 10 it: 7200
+total Acc: 0.53, mode accs: ['train_acc=0.64', 'test_acc=0.42', 'ood_acc=0.44']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.2015777826309204	tb: 0 mode: 0 nways: 10 it: 7300
+total Acc: 0.53, mode accs: ['train_acc=0.64', 'test_acc=0.42', 'ood_acc=0.44']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=0.2084895372390747	tb: 0 mode: 0 nways: 10 it: 7400
+total Acc: 0.53, mode accs: ['train_acc=0.64', 'test_acc=0.42', 'ood_acc=0.44']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=0.14407503604888916	tb: 0 mode: 0 nways: 10 it: 7500
+total Acc: 0.53, mode accs: ['train_acc=0.64', 'test_acc=0.42', 'ood_acc=0.44']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=0.024336814880371094	tb: 0 mode: 2 nways: 10 it: 7600
+total Acc: 0.53, mode accs: ['train_acc=0.64', 'test_acc=0.42', 'ood_acc=0.44']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=0.20403945446014404	tb: 0 mode: 1 nways: 10 it: 7700
+total Acc: 0.53, mode accs: ['train_acc=0.64', 'test_acc=0.42', 'ood_acc=0.44']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=0.46434319019317627	tb: 0 mode: 1 nways: 10 it: 7800
+total Acc: 0.53, mode accs: ['train_acc=0.64', 'test_acc=0.41', 'ood_acc=0.44']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.16385602951049805	tb: 0 mode: 0 nways: 10 it: 7900
+total Acc: 0.53, mode accs: ['train_acc=0.64', 'test_acc=0.41', 'ood_acc=0.44']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.10635125637054443	tb: 0 mode: 2 nways: 10 it: 8000
+total Acc: 0.53, mode accs: ['train_acc=0.64', 'test_acc=0.41', 'ood_acc=0.45']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.1654297113418579	tb: 0 mode: 0 nways: 10 it: 8100
+total Acc: 0.53, mode accs: ['train_acc=0.64', 'test_acc=0.41', 'ood_acc=0.45']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.016593337059020996	tb: 0 mode: 1 nways: 10 it: 8200
+total Acc: 0.53, mode accs: ['train_acc=0.64', 'test_acc=0.41', 'ood_acc=0.45']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.2640035152435303	tb: 0 mode: 0 nways: 10 it: 8300
+total Acc: 0.53, mode accs: ['train_acc=0.64', 'test_acc=0.41', 'ood_acc=0.45']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.20860135555267334	tb: 0 mode: 2 nways: 10 it: 8400
+total Acc: 0.53, mode accs: ['train_acc=0.64', 'test_acc=0.41', 'ood_acc=0.45']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.007210373878479004	tb: 0 mode: 0 nways: 10 it: 8500
+total Acc: 0.53, mode accs: ['train_acc=0.64', 'test_acc=0.41', 'ood_acc=0.45']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.19974112510681152	tb: 0 mode: 0 nways: 10 it: 8600
+total Acc: 0.53, mode accs: ['train_acc=0.64', 'test_acc=0.41', 'ood_acc=0.45']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.4637690782546997	tb: 0 mode: 1 nways: 10 it: 8700
+total Acc: 0.53, mode accs: ['train_acc=0.64', 'test_acc=0.41', 'ood_acc=0.45']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.5609456896781921	tb: 0 mode: 0 nways: 10 it: 8800
+total Acc: 0.53, mode accs: ['train_acc=0.64', 'test_acc=0.41', 'ood_acc=0.45']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.2865387201309204	tb: 0 mode: 2 nways: 10 it: 8900
+total Acc: 0.53, mode accs: ['train_acc=0.64', 'test_acc=0.41', 'ood_acc=0.45']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.3141169548034668	tb: 0 mode: 2 nways: 10 it: 9000
+total Acc: 0.53, mode accs: ['train_acc=0.64', 'test_acc=0.40', 'ood_acc=0.45']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.16412711143493652	tb: 0 mode: 2 nways: 10 it: 9100
+total Acc: 0.53, mode accs: ['train_acc=0.64', 'test_acc=0.40', 'ood_acc=0.45']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.4370088577270508	tb: 0 mode: 2 nways: 10 it: 9200
+total Acc: 0.53, mode accs: ['train_acc=0.64', 'test_acc=0.40', 'ood_acc=0.45']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.19485723972320557	tb: 0 mode: 0 nways: 10 it: 9300
+total Acc: 0.53, mode accs: ['train_acc=0.65', 'test_acc=0.40', 'ood_acc=0.45']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=1.2182713747024536	tb: 1 mode: 0 nways: 10 it: 9400
+total Acc: 0.53, mode accs: ['train_acc=0.65', 'test_acc=0.40', 'ood_acc=0.45']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.29601192474365234	tb: 0 mode: 1 nways: 10 it: 9500
+total Acc: 0.53, mode accs: ['train_acc=0.64', 'test_acc=0.40', 'ood_acc=0.45']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.010824084281921387	tb: 0 mode: 0 nways: 10 it: 9600
+total Acc: 0.53, mode accs: ['train_acc=0.64', 'test_acc=0.40', 'ood_acc=0.45']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=1.3135117292404175	tb: 1 mode: 2 nways: 10 it: 9700
+total Acc: 0.53, mode accs: ['train_acc=0.64', 'test_acc=0.40', 'ood_acc=0.45']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.020556211471557617	tb: 0 mode: 0 nways: 10 it: 9800
+total Acc: 0.53, mode accs: ['train_acc=0.64', 'test_acc=0.40', 'ood_acc=0.45']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.03992104530334473	tb: 0 mode: 2 nways: 10 it: 9900
+total Acc: 0.53, mode accs: ['train_acc=0.64', 'test_acc=0.41', 'ood_acc=0.45']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.9789587259292603	tb: 1 mode: 2 nways: 10 it: 9999
+================= STARTING RUN 5 ===============
+total Acc: nan, mode accs: ['train_acc=nan', 'test_acc=nan', 'ood_acc=0.00']	Total tbd acc: nan  tbd_local: 0.0  delta_loss=na	tb: 0 mode: 2 nways: 10 it: 0
+total Acc: 0.47, mode accs: ['train_acc=0.61', 'test_acc=0.37', 'ood_acc=0.17']	Total tbd acc: 0.36  tbd_local: 1.0  delta_loss=0.6394422277808189	tb: 0 mode: 0 nways: 10 it: 100
+total Acc: 0.52, mode accs: ['train_acc=0.68', 'test_acc=0.41', 'ood_acc=0.21']	Total tbd acc: 0.42  tbd_local: 0.0  delta_loss=1.1921982169151306	tb: 0 mode: 1 nways: 10 it: 200
+total Acc: 0.57, mode accs: ['train_acc=0.73', 'test_acc=0.43', 'ood_acc=0.23']	Total tbd acc: 0.51  tbd_local: 1.0  delta_loss=4.47073894739151	tb: 1 mode: 0 nways: 10 it: 300
+total Acc: 0.57, mode accs: ['train_acc=0.73', 'test_acc=0.46', 'ood_acc=0.28']	Total tbd acc: 0.57  tbd_local: 1.0  delta_loss=0.7148592472076416	tb: 0 mode: 0 nways: 10 it: 400
+total Acc: 0.58, mode accs: ['train_acc=0.72', 'test_acc=0.47', 'ood_acc=0.30']	Total tbd acc: 0.62  tbd_local: 0.0  delta_loss=2.9383716583251953	tb: 0 mode: 2 nways: 10 it: 500
+total Acc: 0.57, mode accs: ['train_acc=0.71', 'test_acc=0.47', 'ood_acc=0.37']	Total tbd acc: 0.60  tbd_local: 1.0  delta_loss=0.5704195499420166	tb: 0 mode: 2 nways: 10 it: 600
+total Acc: 0.59, mode accs: ['train_acc=0.72', 'test_acc=0.49', 'ood_acc=0.37']	Total tbd acc: 0.65  tbd_local: 1.0  delta_loss=-0.04870122671127319	tb: 0 mode: 1 nways: 10 it: 700
+total Acc: 0.60, mode accs: ['train_acc=0.73', 'test_acc=0.49', 'ood_acc=0.37']	Total tbd acc: 0.69  tbd_local: 1.0  delta_loss=-0.26035766303539276	tb: 0 mode: 0 nways: 10 it: 800
+total Acc: 0.61, mode accs: ['train_acc=0.73', 'test_acc=0.49', 'ood_acc=0.39']	Total tbd acc: 0.71  tbd_local: 0.0  delta_loss=0.874932199716568	tb: 0 mode: 2 nways: 10 it: 900
+total Acc: 0.62, mode accs: ['train_acc=0.73', 'test_acc=0.54', 'ood_acc=0.39']	Total tbd acc: 0.73  tbd_local: 1.0  delta_loss=0.5221519470214844	tb: 0 mode: 0 nways: 10 it: 1000
+total Acc: 0.62, mode accs: ['train_acc=0.73', 'test_acc=0.54', 'ood_acc=0.42']	Total tbd acc: 0.73  tbd_local: 1.0  delta_loss=0.7040834724903107	tb: 0 mode: 0 nways: 10 it: 1100
+total Acc: 0.62, mode accs: ['train_acc=0.74', 'test_acc=0.54', 'ood_acc=0.44']	Total tbd acc: 0.73  tbd_local: 1.0  delta_loss=0.06636863946914673	tb: 0 mode: 0 nways: 10 it: 1200
+total Acc: 0.63, mode accs: ['train_acc=0.74', 'test_acc=0.55', 'ood_acc=0.44']	Total tbd acc: 0.74  tbd_local: 1.0  delta_loss=2.823560416698456	tb: 1 mode: 2 nways: 10 it: 1300
+total Acc: 0.64, mode accs: ['train_acc=0.75', 'test_acc=0.55', 'ood_acc=0.46']	Total tbd acc: 0.76  tbd_local: 1.0  delta_loss=-0.10018390417098999	tb: 0 mode: 1 nways: 10 it: 1400
+total Acc: 0.65, mode accs: ['train_acc=0.76', 'test_acc=0.56', 'ood_acc=0.46']	Total tbd acc: 0.78  tbd_local: 1.0  delta_loss=-0.4134468287229538	tb: 0 mode: 0 nways: 10 it: 1500
+total Acc: 0.66, mode accs: ['train_acc=0.76', 'test_acc=0.58', 'ood_acc=0.46']	Total tbd acc: 0.79  tbd_local: 1.0  delta_loss=-0.24022388458251953	tb: 0 mode: 1 nways: 10 it: 1600
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.59', 'ood_acc=0.46']	Total tbd acc: 0.80  tbd_local: 1.0  delta_loss=-0.036029815673828125	tb: 0 mode: 0 nways: 10 it: 1700
+total Acc: 0.66, mode accs: ['train_acc=0.76', 'test_acc=0.59', 'ood_acc=0.48']	Total tbd acc: 0.81  tbd_local: 1.0  delta_loss=-0.19998446106910706	tb: 0 mode: 0 nways: 10 it: 1800
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.58', 'ood_acc=0.48']	Total tbd acc: 0.81  tbd_local: 1.0  delta_loss=-0.032610297203063965	tb: 0 mode: 1 nways: 10 it: 1900
+total Acc: 0.66, mode accs: ['train_acc=0.76', 'test_acc=0.59', 'ood_acc=0.48']	Total tbd acc: 0.82  tbd_local: 1.0  delta_loss=2.1545292139053345	tb: 1 mode: 1 nways: 10 it: 2000
+total Acc: 0.66, mode accs: ['train_acc=0.76', 'test_acc=0.59', 'ood_acc=0.48']	Total tbd acc: 0.83  tbd_local: 1.0  delta_loss=0.4214174151420593	tb: 0 mode: 0 nways: 10 it: 2100
+total Acc: 0.66, mode accs: ['train_acc=0.76', 'test_acc=0.59', 'ood_acc=0.48']	Total tbd acc: 0.84  tbd_local: 1.0  delta_loss=-0.1489918828010559	tb: 0 mode: 0 nways: 10 it: 2200
+total Acc: 0.67, mode accs: ['train_acc=0.77', 'test_acc=0.59', 'ood_acc=0.48']	Total tbd acc: 0.84  tbd_local: 1.0  delta_loss=-0.5536394789814949	tb: 0 mode: 0 nways: 10 it: 2300
+total Acc: 0.67, mode accs: ['train_acc=0.77', 'test_acc=0.59', 'ood_acc=0.49']	Total tbd acc: 0.85  tbd_local: 1.0  delta_loss=-0.7766557335853577	tb: 0 mode: 0 nways: 10 it: 2400
+total Acc: 0.68, mode accs: ['train_acc=0.77', 'test_acc=0.59', 'ood_acc=0.49']	Total tbd acc: 0.85  tbd_local: 1.0  delta_loss=-0.8078276440501213	tb: 0 mode: 0 nways: 10 it: 2500
+total Acc: 0.68, mode accs: ['train_acc=0.77', 'test_acc=0.59', 'ood_acc=0.49']	Total tbd acc: 0.86  tbd_local: 1.0  delta_loss=-0.555450551211834	tb: 0 mode: 0 nways: 10 it: 2600
+total Acc: 0.68, mode accs: ['train_acc=0.77', 'test_acc=0.59', 'ood_acc=0.50']	Total tbd acc: 0.86  tbd_local: 1.0  delta_loss=-0.2411501407623291	tb: 0 mode: 0 nways: 10 it: 2700
+total Acc: 0.68, mode accs: ['train_acc=0.78', 'test_acc=0.59', 'ood_acc=0.50']	Total tbd acc: 0.87  tbd_local: 1.0  delta_loss=-0.5436412841081619	tb: 0 mode: 0 nways: 10 it: 2800
+total Acc: 0.68, mode accs: ['train_acc=0.78', 'test_acc=0.59', 'ood_acc=0.50']	Total tbd acc: 0.87  tbd_local: 1.0  delta_loss=-0.8351252153515816	tb: 0 mode: 0 nways: 10 it: 2900
+total Acc: 0.68, mode accs: ['train_acc=0.78', 'test_acc=0.58', 'ood_acc=0.50']	Total tbd acc: 0.88  tbd_local: 1.0  delta_loss=0.726581335067749	tb: 0 mode: 2 nways: 10 it: 3000
+total Acc: 0.68, mode accs: ['train_acc=0.78', 'test_acc=0.58', 'ood_acc=0.51']	Total tbd acc: 0.88  tbd_local: 1.0  delta_loss=0.15547919273376465	tb: 0 mode: 0 nways: 10 it: 3100
+total Acc: 0.68, mode accs: ['train_acc=0.78', 'test_acc=0.58', 'ood_acc=0.51']	Total tbd acc: 0.88  tbd_local: 1.0  delta_loss=0.35801827907562256	tb: 0 mode: 0 nways: 10 it: 3200
+total Acc: 0.68, mode accs: ['train_acc=0.78', 'test_acc=0.58', 'ood_acc=0.52']	Total tbd acc: 0.89  tbd_local: 1.0  delta_loss=0.29709112644195557	tb: 0 mode: 1 nways: 10 it: 3300
+total Acc: 0.68, mode accs: ['train_acc=0.78', 'test_acc=0.59', 'ood_acc=0.52']	Total tbd acc: 0.89  tbd_local: 1.0  delta_loss=0.19558632373809814	tb: 0 mode: 1 nways: 10 it: 3400
+total Acc: 0.68, mode accs: ['train_acc=0.78', 'test_acc=0.58', 'ood_acc=0.52']	Total tbd acc: 0.89  tbd_local: 1.0  delta_loss=0.5930595993995667	tb: 0 mode: 0 nways: 10 it: 3500
+total Acc: 0.68, mode accs: ['train_acc=0.78', 'test_acc=0.58', 'ood_acc=0.52']	Total tbd acc: 0.90  tbd_local: 1.0  delta_loss=0.35663121938705444	tb: 0 mode: 2 nways: 10 it: 3600
+total Acc: 0.68, mode accs: ['train_acc=0.77', 'test_acc=0.58', 'ood_acc=0.52']	Total tbd acc: 0.90  tbd_local: 1.0  delta_loss=0.6149019002914429	tb: 0 mode: 2 nways: 10 it: 3700
+total Acc: 0.68, mode accs: ['train_acc=0.77', 'test_acc=0.58', 'ood_acc=0.53']	Total tbd acc: 0.90  tbd_local: 1.0  delta_loss=-0.2708676755428314	tb: 0 mode: 0 nways: 10 it: 3800
+total Acc: 0.68, mode accs: ['train_acc=0.78', 'test_acc=0.58', 'ood_acc=0.53']	Total tbd acc: 0.90  tbd_local: 1.0  delta_loss=0.22732234001159668	tb: 0 mode: 0 nways: 10 it: 3900
+total Acc: 0.68, mode accs: ['train_acc=0.78', 'test_acc=0.58', 'ood_acc=0.53']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=-0.35935086011886597	tb: 0 mode: 0 nways: 10 it: 4000
+total Acc: 0.68, mode accs: ['train_acc=0.78', 'test_acc=0.58', 'ood_acc=0.53']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=0.20317745208740234	tb: 0 mode: 1 nways: 10 it: 4100
+total Acc: 0.68, mode accs: ['train_acc=0.78', 'test_acc=0.60', 'ood_acc=0.53']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=-0.098685622215271	tb: 0 mode: 1 nways: 10 it: 4200
+total Acc: 0.68, mode accs: ['train_acc=0.78', 'test_acc=0.61', 'ood_acc=0.53']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=-0.05839437246322632	tb: 0 mode: 0 nways: 10 it: 4300
+total Acc: 0.69, mode accs: ['train_acc=0.78', 'test_acc=0.61', 'ood_acc=0.53']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=-0.020398437976837158	tb: 0 mode: 0 nways: 10 it: 4400
+total Acc: 0.69, mode accs: ['train_acc=0.78', 'test_acc=0.61', 'ood_acc=0.53']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=-0.49254849553108215	tb: 0 mode: 0 nways: 10 it: 4500
+total Acc: 0.69, mode accs: ['train_acc=0.78', 'test_acc=0.61', 'ood_acc=0.53']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=0.07607245445251465	tb: 0 mode: 2 nways: 10 it: 4600
+total Acc: 0.69, mode accs: ['train_acc=0.78', 'test_acc=0.61', 'ood_acc=0.53']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=2.183206856250763	tb: 1 mode: 2 nways: 10 it: 4700
+total Acc: 0.69, mode accs: ['train_acc=0.78', 'test_acc=0.61', 'ood_acc=0.53']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=0.3243672847747803	tb: 0 mode: 1 nways: 10 it: 4800
+total Acc: 0.69, mode accs: ['train_acc=0.78', 'test_acc=0.61', 'ood_acc=0.53']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=0.17767053842544556	tb: 0 mode: 2 nways: 10 it: 4900
+total Acc: 0.69, mode accs: ['train_acc=0.78', 'test_acc=0.61', 'ood_acc=0.53']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=-0.6156011521816254	tb: 0 mode: 0 nways: 10 it: 5000
+total Acc: 0.69, mode accs: ['train_acc=0.78', 'test_acc=0.61', 'ood_acc=0.53']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.005849182605743408	tb: 0 mode: 2 nways: 10 it: 5100
+total Acc: 0.69, mode accs: ['train_acc=0.78', 'test_acc=0.61', 'ood_acc=0.53']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=1.1389236450195312	tb: 1 mode: 1 nways: 10 it: 5200
+total Acc: 0.69, mode accs: ['train_acc=0.78', 'test_acc=0.61', 'ood_acc=0.53']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.5079895853996277	tb: 0 mode: 1 nways: 10 it: 5300
+total Acc: 0.69, mode accs: ['train_acc=0.78', 'test_acc=0.61', 'ood_acc=0.53']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.19098186492919922	tb: 0 mode: 1 nways: 10 it: 5400
+total Acc: 0.69, mode accs: ['train_acc=0.78', 'test_acc=0.61', 'ood_acc=0.54']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=0.40297555923461914	tb: 0 mode: 1 nways: 10 it: 5500
+total Acc: 0.69, mode accs: ['train_acc=0.78', 'test_acc=0.61', 'ood_acc=0.54']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.6823670864105225	tb: 0 mode: 0 nways: 10 it: 5600
+total Acc: 0.69, mode accs: ['train_acc=0.78', 'test_acc=0.61', 'ood_acc=0.54']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.4974914789199829	tb: 0 mode: 0 nways: 10 it: 5700
+total Acc: 0.69, mode accs: ['train_acc=0.78', 'test_acc=0.61', 'ood_acc=0.54']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=0.798167884349823	tb: 0 mode: 2 nways: 10 it: 5800
+total Acc: 0.69, mode accs: ['train_acc=0.78', 'test_acc=0.61', 'ood_acc=0.54']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.24402236938476562	tb: 0 mode: 0 nways: 10 it: 5900
+total Acc: 0.69, mode accs: ['train_acc=0.78', 'test_acc=0.61', 'ood_acc=0.54']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=1.9644988775253296	tb: 1 mode: 2 nways: 10 it: 6000
+total Acc: 0.69, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.54']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-1.0599215514957905	tb: 0 mode: 0 nways: 10 it: 6100
+total Acc: 0.69, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.54']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.34685492515563965	tb: 0 mode: 2 nways: 10 it: 6200
+total Acc: 0.69, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.54']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.36462610960006714	tb: 0 mode: 0 nways: 10 it: 6300
+total Acc: 0.69, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.54']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.21498870849609375	tb: 0 mode: 1 nways: 10 it: 6400
+total Acc: 0.69, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.54']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.10048037767410278	tb: 0 mode: 0 nways: 10 it: 6500
+total Acc: 0.69, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.54']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=3.3238749504089355	tb: 1 mode: 0 nways: 10 it: 6600
+total Acc: 0.69, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.54']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.3007906675338745	tb: 0 mode: 1 nways: 10 it: 6700
+total Acc: 0.69, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.54']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.17737269401550293	tb: 0 mode: 1 nways: 10 it: 6800
+total Acc: 0.70, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.54']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.22074615955352783	tb: 0 mode: 0 nways: 10 it: 6900
+total Acc: 0.69, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.55']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.35356009006500244	tb: 0 mode: 0 nways: 10 it: 7000
+total Acc: 0.70, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.08003842830657959	tb: 0 mode: 2 nways: 10 it: 7100
+total Acc: 0.69, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.6725084781646729	tb: 0 mode: 1 nways: 10 it: 7200
+total Acc: 0.69, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.7211087495088577	tb: 0 mode: 0 nways: 10 it: 7300
+total Acc: 0.69, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.31884002685546875	tb: 0 mode: 0 nways: 10 it: 7400
+total Acc: 0.70, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.2857595682144165	tb: 0 mode: 1 nways: 10 it: 7500
+total Acc: 0.70, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.16145789623260498	tb: 0 mode: 1 nways: 10 it: 7600
+total Acc: 0.70, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=1.910589337348938	tb: 1 mode: 2 nways: 10 it: 7700
+total Acc: 0.70, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.3452181816101074	tb: 0 mode: 2 nways: 10 it: 7800
+total Acc: 0.70, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.33721601963043213	tb: 0 mode: 0 nways: 10 it: 7900
+total Acc: 0.70, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-1.0871248841285706	tb: 0 mode: 1 nways: 10 it: 8000
+total Acc: 0.70, mode accs: ['train_acc=0.79', 'test_acc=0.62', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.014574527740478516	tb: 0 mode: 1 nways: 10 it: 8100
+total Acc: 0.70, mode accs: ['train_acc=0.79', 'test_acc=0.62', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.0662391185760498	tb: 0 mode: 0 nways: 10 it: 8200
+total Acc: 0.70, mode accs: ['train_acc=0.80', 'test_acc=0.62', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.9223395884037018	tb: 0 mode: 0 nways: 10 it: 8300
+total Acc: 0.70, mode accs: ['train_acc=0.79', 'test_acc=0.62', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=1.3923605680465698	tb: 1 mode: 0 nways: 10 it: 8400
+total Acc: 0.70, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.11220526695251465	tb: 0 mode: 1 nways: 10 it: 8500
+total Acc: 0.70, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.04851710796356201	tb: 0 mode: 2 nways: 10 it: 8600
+total Acc: 0.70, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.31315410137176514	tb: 0 mode: 1 nways: 10 it: 8700
+total Acc: 0.70, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.09881460666656494	tb: 0 mode: 0 nways: 10 it: 8800
+total Acc: 0.70, mode accs: ['train_acc=0.79', 'test_acc=0.62', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.9577117264270782	tb: 0 mode: 0 nways: 10 it: 8900
+total Acc: 0.70, mode accs: ['train_acc=0.79', 'test_acc=0.62', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.1972038745880127	tb: 0 mode: 1 nways: 10 it: 9000
+total Acc: 0.70, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.44710224866867065	tb: 0 mode: 2 nways: 10 it: 9100
+total Acc: 0.70, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.28584492206573486	tb: 0 mode: 0 nways: 10 it: 9200
+total Acc: 0.70, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.10328066349029541	tb: 0 mode: 1 nways: 10 it: 9300
+total Acc: 0.70, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.1145850419998169	tb: 0 mode: 1 nways: 10 it: 9400
+total Acc: 0.70, mode accs: ['train_acc=0.79', 'test_acc=0.60', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.3006765842437744	tb: 0 mode: 2 nways: 10 it: 9500
+total Acc: 0.70, mode accs: ['train_acc=0.79', 'test_acc=0.60', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.3027275800704956	tb: 0 mode: 1 nways: 10 it: 9600
+total Acc: 0.70, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-1.1079340279102325	tb: 0 mode: 0 nways: 10 it: 9700
+total Acc: 0.70, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.9404764175415039	tb: 1 mode: 0 nways: 10 it: 9800
+total Acc: 0.70, mode accs: ['train_acc=0.79', 'test_acc=0.61', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.20131170749664307	tb: 0 mode: 0 nways: 10 it: 9900
+total Acc: 0.70, mode accs: ['train_acc=0.79', 'test_acc=0.60', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.45250600576400757	tb: 0 mode: 0 nways: 10 it: 9999
+================= STARTING RUN 6 ===============
+total Acc: nan, mode accs: ['train_acc=0.00', 'test_acc=nan', 'ood_acc=nan']	Total tbd acc: nan  tbd_local: 0.0  delta_loss=na	tb: 0 mode: 0 nways: 10 it: 0
+total Acc: 0.58, mode accs: ['train_acc=0.72', 'test_acc=0.26', 'ood_acc=0.40']	Total tbd acc: 0.80  tbd_local: 0.0  delta_loss=1.1295804381370544	tb: 0 mode: 1 nways: 10 it: 100
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.52', 'ood_acc=0.40']	Total tbd acc: 0.69  tbd_local: 1.0  delta_loss=-0.21186319552361965	tb: 0 mode: 0 nways: 10 it: 200
+total Acc: 0.56, mode accs: ['train_acc=0.74', 'test_acc=0.47', 'ood_acc=0.35']	Total tbd acc: 0.59  tbd_local: 1.0  delta_loss=0.5865611433982849	tb: 0 mode: 0 nways: 10 it: 300
+total Acc: 0.53, mode accs: ['train_acc=0.67', 'test_acc=0.43', 'ood_acc=0.36']	Total tbd acc: 0.58  tbd_local: 1.0  delta_loss=0.4113016724586487	tb: 0 mode: 0 nways: 10 it: 400
+total Acc: 0.59, mode accs: ['train_acc=0.72', 'test_acc=0.43', 'ood_acc=0.36']	Total tbd acc: 0.65  tbd_local: 1.0  delta_loss=-0.3635200448334217	tb: 0 mode: 0 nways: 10 it: 500
+total Acc: 0.56, mode accs: ['train_acc=0.72', 'test_acc=0.43', 'ood_acc=0.38']	Total tbd acc: 0.66  tbd_local: 0.0  delta_loss=1.0325924754142761	tb: 0 mode: 2 nways: 10 it: 600
+total Acc: 0.57, mode accs: ['train_acc=0.72', 'test_acc=0.45', 'ood_acc=0.40']	Total tbd acc: 0.69  tbd_local: 1.0  delta_loss=0.2989799380302429	tb: 0 mode: 0 nways: 10 it: 700
+total Acc: 0.57, mode accs: ['train_acc=0.72', 'test_acc=0.46', 'ood_acc=0.45']	Total tbd acc: 0.68  tbd_local: 1.0  delta_loss=-0.23356753587722778	tb: 0 mode: 1 nways: 10 it: 800
+total Acc: 0.58, mode accs: ['train_acc=0.73', 'test_acc=0.48', 'ood_acc=0.45']	Total tbd acc: 0.70  tbd_local: 0.0  delta_loss=1.2843625247478485	tb: 0 mode: 2 nways: 10 it: 900
+total Acc: 0.58, mode accs: ['train_acc=0.73', 'test_acc=0.48', 'ood_acc=0.47']	Total tbd acc: 0.71  tbd_local: 1.0  delta_loss=0.5167815983295441	tb: 0 mode: 0 nways: 10 it: 1000
+total Acc: 0.59, mode accs: ['train_acc=0.73', 'test_acc=0.48', 'ood_acc=0.48']	Total tbd acc: 0.73  tbd_local: 1.0  delta_loss=0.4634753167629242	tb: 0 mode: 0 nways: 10 it: 1100
+total Acc: 0.61, mode accs: ['train_acc=0.74', 'test_acc=0.50', 'ood_acc=0.48']	Total tbd acc: 0.75  tbd_local: 1.0  delta_loss=0.1471562385559082	tb: 0 mode: 1 nways: 10 it: 1200
+total Acc: 0.61, mode accs: ['train_acc=0.74', 'test_acc=0.50', 'ood_acc=0.48']	Total tbd acc: 0.76  tbd_local: 1.0  delta_loss=0.5508964359760284	tb: 0 mode: 0 nways: 10 it: 1300
+total Acc: 0.61, mode accs: ['train_acc=0.73', 'test_acc=0.50', 'ood_acc=0.49']	Total tbd acc: 0.78  tbd_local: 0.0  delta_loss=0.9465329647064209	tb: 0 mode: 0 nways: 10 it: 1400
+total Acc: 0.61, mode accs: ['train_acc=0.74', 'test_acc=0.49', 'ood_acc=0.49']	Total tbd acc: 0.78  tbd_local: 1.0  delta_loss=1.9783833622932434	tb: 1 mode: 1 nways: 10 it: 1500
+total Acc: 0.61, mode accs: ['train_acc=0.73', 'test_acc=0.49', 'ood_acc=0.49']	Total tbd acc: 0.79  tbd_local: 1.0  delta_loss=0.12726134061813354	tb: 0 mode: 2 nways: 10 it: 1600
+total Acc: 0.61, mode accs: ['train_acc=0.74', 'test_acc=0.49', 'ood_acc=0.50']	Total tbd acc: 0.80  tbd_local: 1.0  delta_loss=0.18249565362930298	tb: 0 mode: 0 nways: 10 it: 1700
+total Acc: 0.62, mode accs: ['train_acc=0.74', 'test_acc=0.50', 'ood_acc=0.51']	Total tbd acc: 0.81  tbd_local: 1.0  delta_loss=0.3336679935455322	tb: 0 mode: 2 nways: 10 it: 1800
+total Acc: 0.62, mode accs: ['train_acc=0.74', 'test_acc=0.50', 'ood_acc=0.52']	Total tbd acc: 0.82  tbd_local: 1.0  delta_loss=2.992818057537079	tb: 1 mode: 0 nways: 10 it: 1900
+total Acc: 0.62, mode accs: ['train_acc=0.74', 'test_acc=0.49', 'ood_acc=0.52']	Total tbd acc: 0.83  tbd_local: 1.0  delta_loss=0.025262176990509033	tb: 0 mode: 0 nways: 10 it: 2000
+total Acc: 0.63, mode accs: ['train_acc=0.75', 'test_acc=0.49', 'ood_acc=0.52']	Total tbd acc: 0.84  tbd_local: 1.0  delta_loss=2.2963759899139404	tb: 1 mode: 2 nways: 10 it: 2100
+total Acc: 0.62, mode accs: ['train_acc=0.74', 'test_acc=0.49', 'ood_acc=0.52']	Total tbd acc: 0.85  tbd_local: 1.0  delta_loss=-0.39258143305778503	tb: 0 mode: 0 nways: 10 it: 2200
+total Acc: 0.62, mode accs: ['train_acc=0.74', 'test_acc=0.49', 'ood_acc=0.53']	Total tbd acc: 0.85  tbd_local: 1.0  delta_loss=0.7589602470397949	tb: 0 mode: 2 nways: 10 it: 2300
+total Acc: 0.63, mode accs: ['train_acc=0.75', 'test_acc=0.49', 'ood_acc=0.53']	Total tbd acc: 0.86  tbd_local: 1.0  delta_loss=0.33853965997695923	tb: 0 mode: 0 nways: 10 it: 2400
+total Acc: 0.63, mode accs: ['train_acc=0.75', 'test_acc=0.49', 'ood_acc=0.53']	Total tbd acc: 0.87  tbd_local: 1.0  delta_loss=0.06844532489776611	tb: 0 mode: 1 nways: 10 it: 2500
+total Acc: 0.63, mode accs: ['train_acc=0.75', 'test_acc=0.51', 'ood_acc=0.53']	Total tbd acc: 0.87  tbd_local: 1.0  delta_loss=-0.36601758003234863	tb: 0 mode: 1 nways: 10 it: 2600
+total Acc: 0.63, mode accs: ['train_acc=0.75', 'test_acc=0.52', 'ood_acc=0.53']	Total tbd acc: 0.88  tbd_local: 1.0  delta_loss=0.012055039405822754	tb: 0 mode: 1 nways: 10 it: 2700
+total Acc: 0.64, mode accs: ['train_acc=0.75', 'test_acc=0.53', 'ood_acc=0.53']	Total tbd acc: 0.88  tbd_local: 1.0  delta_loss=-0.6270958185195923	tb: 0 mode: 1 nways: 10 it: 2800
+total Acc: 0.64, mode accs: ['train_acc=0.75', 'test_acc=0.54', 'ood_acc=0.53']	Total tbd acc: 0.88  tbd_local: 1.0  delta_loss=0.3564435839653015	tb: 0 mode: 0 nways: 10 it: 2900
+total Acc: 0.64, mode accs: ['train_acc=0.75', 'test_acc=0.55', 'ood_acc=0.53']	Total tbd acc: 0.89  tbd_local: 1.0  delta_loss=-0.00968325138092041	tb: 0 mode: 0 nways: 10 it: 3000
+total Acc: 0.64, mode accs: ['train_acc=0.75', 'test_acc=0.55', 'ood_acc=0.54']	Total tbd acc: 0.89  tbd_local: 1.0  delta_loss=0.0016624927520751953	tb: 0 mode: 2 nways: 10 it: 3100
+total Acc: 0.64, mode accs: ['train_acc=0.75', 'test_acc=0.55', 'ood_acc=0.54']	Total tbd acc: 0.90  tbd_local: 1.0  delta_loss=-0.06478732824325562	tb: 0 mode: 2 nways: 10 it: 3200
+total Acc: 0.64, mode accs: ['train_acc=0.75', 'test_acc=0.55', 'ood_acc=0.54']	Total tbd acc: 0.90  tbd_local: 1.0  delta_loss=1.3962106704711914	tb: 1 mode: 0 nways: 10 it: 3300
+total Acc: 0.65, mode accs: ['train_acc=0.75', 'test_acc=0.55', 'ood_acc=0.54']	Total tbd acc: 0.90  tbd_local: 1.0  delta_loss=-0.23562926054000854	tb: 0 mode: 0 nways: 10 it: 3400
+total Acc: 0.64, mode accs: ['train_acc=0.75', 'test_acc=0.55', 'ood_acc=0.54']	Total tbd acc: 0.90  tbd_local: 1.0  delta_loss=-0.35027289390563965	tb: 0 mode: 1 nways: 10 it: 3500
+total Acc: 0.65, mode accs: ['train_acc=0.75', 'test_acc=0.55', 'ood_acc=0.54']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=-0.3856394290924072	tb: 0 mode: 0 nways: 10 it: 3600
+total Acc: 0.65, mode accs: ['train_acc=0.75', 'test_acc=0.56', 'ood_acc=0.54']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=-1.1614133715629578	tb: 0 mode: 1 nways: 10 it: 3700
+total Acc: 0.65, mode accs: ['train_acc=0.75', 'test_acc=0.57', 'ood_acc=0.54']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=-0.09075111150741577	tb: 0 mode: 0 nways: 10 it: 3800
+total Acc: 0.65, mode accs: ['train_acc=0.76', 'test_acc=0.57', 'ood_acc=0.54']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=0.3666282892227173	tb: 0 mode: 1 nways: 10 it: 3900
+total Acc: 0.66, mode accs: ['train_acc=0.76', 'test_acc=0.57', 'ood_acc=0.54']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=-0.2915756106376648	tb: 0 mode: 0 nways: 10 it: 4000
+total Acc: 0.66, mode accs: ['train_acc=0.76', 'test_acc=0.58', 'ood_acc=0.54']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=0.1291208267211914	tb: 0 mode: 2 nways: 10 it: 4100
+total Acc: 0.66, mode accs: ['train_acc=0.76', 'test_acc=0.58', 'ood_acc=0.54']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=-0.24882912635803223	tb: 0 mode: 0 nways: 10 it: 4200
+total Acc: 0.66, mode accs: ['train_acc=0.76', 'test_acc=0.58', 'ood_acc=0.55']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=2.66184538602829	tb: 1 mode: 0 nways: 10 it: 4300
+total Acc: 0.66, mode accs: ['train_acc=0.76', 'test_acc=0.58', 'ood_acc=0.55']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=-0.19299161434173584	tb: 0 mode: 1 nways: 10 it: 4400
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.58', 'ood_acc=0.55']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=0.9009199142456055	tb: 1 mode: 1 nways: 10 it: 4500
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.58', 'ood_acc=0.55']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=0.17212295532226562	tb: 0 mode: 2 nways: 10 it: 4600
+total Acc: 0.66, mode accs: ['train_acc=0.76', 'test_acc=0.58', 'ood_acc=0.55']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.6108828783035278	tb: 0 mode: 1 nways: 10 it: 4700
+total Acc: 0.66, mode accs: ['train_acc=0.76', 'test_acc=0.58', 'ood_acc=0.55']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.3804422616958618	tb: 0 mode: 1 nways: 10 it: 4800
+total Acc: 0.66, mode accs: ['train_acc=0.76', 'test_acc=0.58', 'ood_acc=0.55']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=0.34391653537750244	tb: 0 mode: 0 nways: 10 it: 4900
+total Acc: 0.65, mode accs: ['train_acc=0.76', 'test_acc=0.58', 'ood_acc=0.55']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.5428767204284668	tb: 0 mode: 0 nways: 10 it: 5000
+total Acc: 0.66, mode accs: ['train_acc=0.76', 'test_acc=0.58', 'ood_acc=0.55']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.5775085687637329	tb: 0 mode: 1 nways: 10 it: 5100
+total Acc: 0.66, mode accs: ['train_acc=0.76', 'test_acc=0.58', 'ood_acc=0.55']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.12992709875106812	tb: 0 mode: 0 nways: 10 it: 5200
+total Acc: 0.65, mode accs: ['train_acc=0.76', 'test_acc=0.57', 'ood_acc=0.55']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=1.0868512392044067	tb: 1 mode: 1 nways: 10 it: 5300
+total Acc: 0.65, mode accs: ['train_acc=0.76', 'test_acc=0.57', 'ood_acc=0.55']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.4979838728904724	tb: 0 mode: 0 nways: 10 it: 5400
+total Acc: 0.65, mode accs: ['train_acc=0.76', 'test_acc=0.57', 'ood_acc=0.55']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.8328577280044556	tb: 0 mode: 0 nways: 10 it: 5500
+total Acc: 0.66, mode accs: ['train_acc=0.76', 'test_acc=0.58', 'ood_acc=0.55']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.07106888294219971	tb: 0 mode: 0 nways: 10 it: 5600
+total Acc: 0.65, mode accs: ['train_acc=0.76', 'test_acc=0.57', 'ood_acc=0.55']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.4138270616531372	tb: 0 mode: 1 nways: 10 it: 5700
+total Acc: 0.65, mode accs: ['train_acc=0.76', 'test_acc=0.57', 'ood_acc=0.55']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.8384909927845001	tb: 0 mode: 0 nways: 10 it: 5800
+total Acc: 0.66, mode accs: ['train_acc=0.76', 'test_acc=0.57', 'ood_acc=0.55']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.34173840284347534	tb: 0 mode: 0 nways: 10 it: 5900
+total Acc: 0.66, mode accs: ['train_acc=0.76', 'test_acc=0.57', 'ood_acc=0.55']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.26332855224609375	tb: 0 mode: 0 nways: 10 it: 6000
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.55']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.22787702083587646	tb: 0 mode: 0 nways: 10 it: 6100
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.55']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.24612176418304443	tb: 0 mode: 2 nways: 10 it: 6200
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.55']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.2519490718841553	tb: 0 mode: 2 nways: 10 it: 6300
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.1991574764251709	tb: 0 mode: 2 nways: 10 it: 6400
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.2855372428894043	tb: 0 mode: 0 nways: 10 it: 6500
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.799318939447403	tb: 0 mode: 0 nways: 10 it: 6600
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.1327674388885498	tb: 0 mode: 2 nways: 10 it: 6700
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.31095170974731445	tb: 0 mode: 0 nways: 10 it: 6800
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.10857391357421875	tb: 0 mode: 2 nways: 10 it: 6900
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.41744184494018555	tb: 0 mode: 0 nways: 10 it: 7000
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.24721825122833252	tb: 0 mode: 0 nways: 10 it: 7100
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.8759859800338745	tb: 1 mode: 1 nways: 10 it: 7200
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.9418289214372635	tb: 0 mode: 0 nways: 10 it: 7300
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.56']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.530015230178833	tb: 0 mode: 1 nways: 10 it: 7400
+total Acc: 0.67, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.585792601108551	tb: 0 mode: 0 nways: 10 it: 7500
+total Acc: 0.67, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.263228178024292	tb: 0 mode: 1 nways: 10 it: 7600
+total Acc: 0.67, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.9134331345558167	tb: 0 mode: 1 nways: 10 it: 7700
+total Acc: 0.67, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.1681201457977295	tb: 0 mode: 2 nways: 10 it: 7800
+total Acc: 0.67, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.039471983909606934	tb: 0 mode: 0 nways: 10 it: 7900
+total Acc: 0.67, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.1064373254776001	tb: 0 mode: 2 nways: 10 it: 8000
+total Acc: 0.67, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.56']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=1.4689218997955322	tb: 1 mode: 1 nways: 10 it: 8100
+total Acc: 0.67, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.52451092004776	tb: 0 mode: 0 nways: 10 it: 8200
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.10403263568878174	tb: 0 mode: 2 nways: 10 it: 8300
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.360704243183136	tb: 0 mode: 0 nways: 10 it: 8400
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-1.395582139492035	tb: 0 mode: 1 nways: 10 it: 8500
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.55']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.44452619552612305	tb: 0 mode: 2 nways: 10 it: 8600
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.56']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.6163808107376099	tb: 0 mode: 2 nways: 10 it: 8700
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.56']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.11230719089508057	tb: 0 mode: 2 nways: 10 it: 8800
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.56']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=1.369616985321045	tb: 1 mode: 0 nways: 10 it: 8900
+total Acc: 0.67, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.56']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-1.2128709554672241	tb: 0 mode: 1 nways: 10 it: 9000
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.56', 'ood_acc=0.56']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-1.1170660853385925	tb: 0 mode: 1 nways: 10 it: 9100
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.56', 'ood_acc=0.56']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.14883649349212646	tb: 0 mode: 0 nways: 10 it: 9200
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.56', 'ood_acc=0.56']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.1801292896270752	tb: 0 mode: 0 nways: 10 it: 9300
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.56', 'ood_acc=0.56']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.045369625091552734	tb: 0 mode: 2 nways: 10 it: 9400
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.56', 'ood_acc=0.56']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=1.0127061605453491	tb: 1 mode: 1 nways: 10 it: 9500
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.56', 'ood_acc=0.56']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.00031054019927978516	tb: 0 mode: 0 nways: 10 it: 9600
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.56', 'ood_acc=0.56']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.27748239040374756	tb: 0 mode: 0 nways: 10 it: 9700
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.56', 'ood_acc=0.56']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.8551610112190247	tb: 0 mode: 0 nways: 10 it: 9800
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.56', 'ood_acc=0.56']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.8236264586448669	tb: 0 mode: 0 nways: 10 it: 9900
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.56', 'ood_acc=0.56']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.18852484226226807	tb: 0 mode: 0 nways: 10 it: 9999
+================= STARTING RUN 7 ===============
+total Acc: nan, mode accs: ['train_acc=0.00', 'test_acc=nan', 'ood_acc=nan']	Total tbd acc: nan  tbd_local: 0.0  delta_loss=na	tb: 0 mode: 0 nways: 10 it: 0
+total Acc: 0.49, mode accs: ['train_acc=0.66', 'test_acc=0.42', 'ood_acc=0.36']	Total tbd acc: 0.56  tbd_local: 1.0  delta_loss=-1.0467385053634644	tb: 0 mode: 2 nways: 10 it: 100
+total Acc: 0.55, mode accs: ['train_acc=0.71', 'test_acc=0.42', 'ood_acc=0.32']	Total tbd acc: 0.62  tbd_local: 1.0  delta_loss=0.7324114739894867	tb: 0 mode: 0 nways: 10 it: 200
+total Acc: 0.52, mode accs: ['train_acc=0.68', 'test_acc=0.43', 'ood_acc=0.32']	Total tbd acc: 0.60  tbd_local: 0.0  delta_loss=1.340531349182129	tb: 0 mode: 2 nways: 10 it: 300
+total Acc: 0.53, mode accs: ['train_acc=0.68', 'test_acc=0.42', 'ood_acc=0.40']	Total tbd acc: 0.62  tbd_local: 1.0  delta_loss=4.558144986629486	tb: 1 mode: 2 nways: 10 it: 400
+total Acc: 0.54, mode accs: ['train_acc=0.71', 'test_acc=0.42', 'ood_acc=0.41']	Total tbd acc: 0.67  tbd_local: 1.0  delta_loss=0.6288249492645264	tb: 0 mode: 1 nways: 10 it: 500
+total Acc: 0.54, mode accs: ['train_acc=0.71', 'test_acc=0.45', 'ood_acc=0.43']	Total tbd acc: 0.70  tbd_local: 1.0  delta_loss=0.40472114086151123	tb: 0 mode: 1 nways: 10 it: 600
+total Acc: 0.54, mode accs: ['train_acc=0.70', 'test_acc=0.45', 'ood_acc=0.42']	Total tbd acc: 0.73  tbd_local: 1.0  delta_loss=0.18739068508148193	tb: 0 mode: 1 nways: 10 it: 700
+total Acc: 0.56, mode accs: ['train_acc=0.70', 'test_acc=0.51', 'ood_acc=0.43']	Total tbd acc: 0.76  tbd_local: 1.0  delta_loss=-0.21819813549518585	tb: 0 mode: 0 nways: 10 it: 800
+total Acc: 0.56, mode accs: ['train_acc=0.71', 'test_acc=0.51', 'ood_acc=0.43']	Total tbd acc: 0.78  tbd_local: 1.0  delta_loss=-0.33204442262649536	tb: 0 mode: 1 nways: 10 it: 900
+total Acc: 0.57, mode accs: ['train_acc=0.72', 'test_acc=0.53', 'ood_acc=0.43']	Total tbd acc: 0.80  tbd_local: 1.0  delta_loss=0.13906610012054443	tb: 0 mode: 0 nways: 10 it: 1000
+total Acc: 0.58, mode accs: ['train_acc=0.72', 'test_acc=0.53', 'ood_acc=0.44']	Total tbd acc: 0.82  tbd_local: 1.0  delta_loss=0.1013076901435852	tb: 0 mode: 0 nways: 10 it: 1100
+total Acc: 0.58, mode accs: ['train_acc=0.72', 'test_acc=0.53', 'ood_acc=0.44']	Total tbd acc: 0.83  tbd_local: 1.0  delta_loss=0.2715509533882141	tb: 0 mode: 0 nways: 10 it: 1200
+total Acc: 0.59, mode accs: ['train_acc=0.74', 'test_acc=0.53', 'ood_acc=0.44']	Total tbd acc: 0.84  tbd_local: 1.0  delta_loss=-0.4612777829170227	tb: 0 mode: 1 nways: 10 it: 1300
+total Acc: 0.59, mode accs: ['train_acc=0.73', 'test_acc=0.54', 'ood_acc=0.44']	Total tbd acc: 0.85  tbd_local: 1.0  delta_loss=-0.2681742310523987	tb: 0 mode: 0 nways: 10 it: 1400
+total Acc: 0.60, mode accs: ['train_acc=0.73', 'test_acc=0.54', 'ood_acc=0.45']	Total tbd acc: 0.86  tbd_local: 1.0  delta_loss=0.28264468908309937	tb: 0 mode: 2 nways: 10 it: 1500
+total Acc: 0.60, mode accs: ['train_acc=0.73', 'test_acc=0.56', 'ood_acc=0.45']	Total tbd acc: 0.87  tbd_local: 1.0  delta_loss=0.32300877571105957	tb: 0 mode: 2 nways: 10 it: 1600
+total Acc: 0.60, mode accs: ['train_acc=0.73', 'test_acc=0.56', 'ood_acc=0.46']	Total tbd acc: 0.88  tbd_local: 1.0  delta_loss=0.27341336011886597	tb: 0 mode: 0 nways: 10 it: 1700
+total Acc: 0.61, mode accs: ['train_acc=0.74', 'test_acc=0.57', 'ood_acc=0.46']	Total tbd acc: 0.89  tbd_local: 1.0  delta_loss=-0.7966479063034058	tb: 0 mode: 1 nways: 10 it: 1800
+total Acc: 0.61, mode accs: ['train_acc=0.74', 'test_acc=0.56', 'ood_acc=0.47']	Total tbd acc: 0.89  tbd_local: 1.0  delta_loss=0.9829671382904053	tb: 1 mode: 1 nways: 10 it: 1900
+total Acc: 0.62, mode accs: ['train_acc=0.75', 'test_acc=0.57', 'ood_acc=0.47']	Total tbd acc: 0.90  tbd_local: 1.0  delta_loss=-0.9487371444702148	tb: 0 mode: 1 nways: 10 it: 2000
+total Acc: 0.61, mode accs: ['train_acc=0.74', 'test_acc=0.57', 'ood_acc=0.47']	Total tbd acc: 0.90  tbd_local: 1.0  delta_loss=0.6156814694404602	tb: 0 mode: 2 nways: 10 it: 2100
+total Acc: 0.62, mode accs: ['train_acc=0.75', 'test_acc=0.57', 'ood_acc=0.48']	Total tbd acc: 0.90  tbd_local: 1.0  delta_loss=0.03606975078582764	tb: 0 mode: 2 nways: 10 it: 2200
+total Acc: 0.62, mode accs: ['train_acc=0.75', 'test_acc=0.57', 'ood_acc=0.49']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=-0.0635232925415039	tb: 0 mode: 1 nways: 10 it: 2300
+total Acc: 0.62, mode accs: ['train_acc=0.75', 'test_acc=0.57', 'ood_acc=0.49']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=-0.6040792018175125	tb: 0 mode: 0 nways: 10 it: 2400
+total Acc: 0.62, mode accs: ['train_acc=0.75', 'test_acc=0.57', 'ood_acc=0.48']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=1.9631326794624329	tb: 1 mode: 2 nways: 10 it: 2500
+total Acc: 0.62, mode accs: ['train_acc=0.75', 'test_acc=0.57', 'ood_acc=0.49']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=-0.6560455411672592	tb: 0 mode: 0 nways: 10 it: 2600
+total Acc: 0.63, mode accs: ['train_acc=0.75', 'test_acc=0.57', 'ood_acc=0.49']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=-0.26277314126491547	tb: 0 mode: 0 nways: 10 it: 2700
+total Acc: 0.63, mode accs: ['train_acc=0.75', 'test_acc=0.57', 'ood_acc=0.49']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=-0.23634567856788635	tb: 0 mode: 0 nways: 10 it: 2800
+total Acc: 0.63, mode accs: ['train_acc=0.75', 'test_acc=0.57', 'ood_acc=0.49']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=0.07083892822265625	tb: 0 mode: 0 nways: 10 it: 2900
+total Acc: 0.63, mode accs: ['train_acc=0.76', 'test_acc=0.57', 'ood_acc=0.49']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=0.41330790519714355	tb: 0 mode: 2 nways: 10 it: 3000
+total Acc: 0.63, mode accs: ['train_acc=0.76', 'test_acc=0.57', 'ood_acc=0.49']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=0.327301025390625	tb: 0 mode: 0 nways: 10 it: 3100
+total Acc: 0.64, mode accs: ['train_acc=0.76', 'test_acc=0.57', 'ood_acc=0.50']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.5224477052688599	tb: 0 mode: 0 nways: 10 it: 3200
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.56', 'ood_acc=0.50']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=0.06543326377868652	tb: 0 mode: 2 nways: 10 it: 3300
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.56', 'ood_acc=0.50']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=1.529569387435913	tb: 1 mode: 1 nways: 10 it: 3400
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.56', 'ood_acc=0.49']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.3895263671875	tb: 0 mode: 1 nways: 10 it: 3500
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.49']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-1.248604267835617	tb: 0 mode: 1 nways: 10 it: 3600
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.49']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=2.331037402153015	tb: 1 mode: 0 nways: 10 it: 3700
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.50']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.2123473882675171	tb: 0 mode: 1 nways: 10 it: 3800
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.50']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.03662109375	tb: 0 mode: 0 nways: 10 it: 3900
+total Acc: 0.64, mode accs: ['train_acc=0.77', 'test_acc=0.57', 'ood_acc=0.50']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.0556035041809082	tb: 0 mode: 1 nways: 10 it: 4000
+total Acc: 0.65, mode accs: ['train_acc=0.77', 'test_acc=0.58', 'ood_acc=0.50']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.9504117071628571	tb: 0 mode: 0 nways: 10 it: 4100
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.58', 'ood_acc=0.50']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.6987029314041138	tb: 0 mode: 1 nways: 10 it: 4200
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.58', 'ood_acc=0.50']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.22644472122192383	tb: 0 mode: 2 nways: 10 it: 4300
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.58', 'ood_acc=0.51']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.5915550589561462	tb: 0 mode: 1 nways: 10 it: 4400
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.58', 'ood_acc=0.51']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=1.7787384390830994	tb: 1 mode: 0 nways: 10 it: 4500
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.59', 'ood_acc=0.51']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.5074783265590668	tb: 0 mode: 0 nways: 10 it: 4600
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.58', 'ood_acc=0.51']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.8540316820144653	tb: 0 mode: 1 nways: 10 it: 4700
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.58', 'ood_acc=0.51']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.31211400032043457	tb: 0 mode: 2 nways: 10 it: 4800
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.58', 'ood_acc=0.51']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=1.381535291671753	tb: 1 mode: 2 nways: 10 it: 4900
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.59', 'ood_acc=0.51']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.1471649408340454	tb: 0 mode: 1 nways: 10 it: 5000
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.59', 'ood_acc=0.51']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.006804347038269043	tb: 0 mode: 1 nways: 10 it: 5100
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.59', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.052899956703186035	tb: 0 mode: 2 nways: 10 it: 5200
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.58', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.18290293216705322	tb: 0 mode: 0 nways: 10 it: 5300
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.58', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.4897628426551819	tb: 0 mode: 0 nways: 10 it: 5400
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.58', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.19054508209228516	tb: 0 mode: 2 nways: 10 it: 5500
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.58', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.11691546440124512	tb: 0 mode: 0 nways: 10 it: 5600
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.58', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=1.1940760612487793	tb: 1 mode: 0 nways: 10 it: 5700
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.58', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.010185480117797852	tb: 0 mode: 0 nways: 10 it: 5800
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.58', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.7695012092590332	tb: 0 mode: 0 nways: 10 it: 5900
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.58', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.9212359488010406	tb: 0 mode: 0 nways: 10 it: 6000
+total Acc: 0.66, mode accs: ['train_acc=0.79', 'test_acc=0.58', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.1133158802986145	tb: 0 mode: 0 nways: 10 it: 6100
+total Acc: 0.66, mode accs: ['train_acc=0.79', 'test_acc=0.58', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.0937037467956543	tb: 0 mode: 2 nways: 10 it: 6200
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.58', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.2101086974143982	tb: 0 mode: 2 nways: 10 it: 6300
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.58', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.03925025463104248	tb: 0 mode: 1 nways: 10 it: 6400
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.58', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=4.6340649127960205	tb: 1 mode: 2 nways: 10 it: 6500
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.57', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.5549191832542419	tb: 0 mode: 0 nways: 10 it: 6600
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.57', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.26508235931396484	tb: 0 mode: 0 nways: 10 it: 6700
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.57', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.00595855712890625	tb: 0 mode: 0 nways: 10 it: 6800
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.57', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.2845693826675415	tb: 0 mode: 1 nways: 10 it: 6900
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.57', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.5942255854606628	tb: 0 mode: 0 nways: 10 it: 7000
+total Acc: 0.66, mode accs: ['train_acc=0.79', 'test_acc=0.57', 'ood_acc=0.52']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-0.04664206504821777	tb: 0 mode: 1 nways: 10 it: 7100
+total Acc: 0.66, mode accs: ['train_acc=0.79', 'test_acc=0.57', 'ood_acc=0.52']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-0.1303883194923401	tb: 0 mode: 2 nways: 10 it: 7200
+total Acc: 0.65, mode accs: ['train_acc=0.79', 'test_acc=0.56', 'ood_acc=0.52']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=0.645078182220459	tb: 0 mode: 1 nways: 10 it: 7300
+total Acc: 0.65, mode accs: ['train_acc=0.79', 'test_acc=0.56', 'ood_acc=0.52']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=0.029416203498840332	tb: 0 mode: 2 nways: 10 it: 7400
+total Acc: 0.65, mode accs: ['train_acc=0.79', 'test_acc=0.56', 'ood_acc=0.52']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-0.18912923336029053	tb: 0 mode: 2 nways: 10 it: 7500
+total Acc: 0.65, mode accs: ['train_acc=0.79', 'test_acc=0.56', 'ood_acc=0.52']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-1.0418467670679092	tb: 0 mode: 0 nways: 10 it: 7600
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.55', 'ood_acc=0.52']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=1.0582977533340454	tb: 1 mode: 0 nways: 10 it: 7700
+total Acc: 0.65, mode accs: ['train_acc=0.79', 'test_acc=0.56', 'ood_acc=0.52']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=0.24299418926239014	tb: 0 mode: 1 nways: 10 it: 7800
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.55', 'ood_acc=0.52']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=0.36343204975128174	tb: 0 mode: 2 nways: 10 it: 7900
+total Acc: 0.65, mode accs: ['train_acc=0.79', 'test_acc=0.55', 'ood_acc=0.52']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-0.7087160646915436	tb: 0 mode: 0 nways: 10 it: 8000
+total Acc: 0.65, mode accs: ['train_acc=0.79', 'test_acc=0.55', 'ood_acc=0.52']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-1.4537658393383026	tb: 0 mode: 0 nways: 10 it: 8100
+total Acc: 0.65, mode accs: ['train_acc=0.79', 'test_acc=0.55', 'ood_acc=0.52']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=0.27461397647857666	tb: 0 mode: 0 nways: 10 it: 8200
+total Acc: 0.65, mode accs: ['train_acc=0.79', 'test_acc=0.55', 'ood_acc=0.52']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-0.7373494207859039	tb: 0 mode: 0 nways: 10 it: 8300
+total Acc: 0.65, mode accs: ['train_acc=0.79', 'test_acc=0.55', 'ood_acc=0.52']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-0.13528800010681152	tb: 0 mode: 0 nways: 10 it: 8400
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.55', 'ood_acc=0.52']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=0.47850334644317627	tb: 0 mode: 1 nways: 10 it: 8500
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.55', 'ood_acc=0.52']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-0.16906535625457764	tb: 0 mode: 0 nways: 10 it: 8600
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.55', 'ood_acc=0.52']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=0.5644174814224243	tb: 0 mode: 0 nways: 10 it: 8700
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.54', 'ood_acc=0.52']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-0.7382883429527283	tb: 0 mode: 0 nways: 10 it: 8800
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.54', 'ood_acc=0.52']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-0.7892699837684631	tb: 0 mode: 0 nways: 10 it: 8900
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.55', 'ood_acc=0.52']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=0.5772385597229004	tb: 0 mode: 1 nways: 10 it: 9000
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.54', 'ood_acc=0.52']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-0.4595520496368408	tb: 0 mode: 0 nways: 10 it: 9100
+total Acc: 0.65, mode accs: ['train_acc=0.78', 'test_acc=0.55', 'ood_acc=0.52']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-0.25263333320617676	tb: 0 mode: 2 nways: 10 it: 9200
+total Acc: 0.65, mode accs: ['train_acc=0.79', 'test_acc=0.54', 'ood_acc=0.53']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=1.3956974744796753	tb: 1 mode: 0 nways: 10 it: 9300
+total Acc: 0.65, mode accs: ['train_acc=0.79', 'test_acc=0.54', 'ood_acc=0.53']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=0.930992603302002	tb: 1 mode: 0 nways: 10 it: 9400
+total Acc: 0.66, mode accs: ['train_acc=0.79', 'test_acc=0.54', 'ood_acc=0.53']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=0.5478515625	tb: 0 mode: 0 nways: 10 it: 9500
+total Acc: 0.66, mode accs: ['train_acc=0.79', 'test_acc=0.54', 'ood_acc=0.53']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=0.3173248767852783	tb: 0 mode: 0 nways: 10 it: 9600
+total Acc: 0.66, mode accs: ['train_acc=0.79', 'test_acc=0.54', 'ood_acc=0.53']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-1.3114786744117737	tb: 0 mode: 1 nways: 10 it: 9700
+total Acc: 0.66, mode accs: ['train_acc=0.79', 'test_acc=0.54', 'ood_acc=0.53']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-0.6947644352912903	tb: 0 mode: 0 nways: 10 it: 9800
+total Acc: 0.65, mode accs: ['train_acc=0.79', 'test_acc=0.54', 'ood_acc=0.53']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=-0.19080042839050293	tb: 0 mode: 0 nways: 10 it: 9900
+total Acc: 0.65, mode accs: ['train_acc=0.79', 'test_acc=0.54', 'ood_acc=0.53']	Total tbd acc: 0.97  tbd_local: 1.0  delta_loss=1.0257536172866821	tb: 1 mode: 2 nways: 10 it: 9999
+================= STARTING RUN 8 ===============
+total Acc: nan, mode accs: ['train_acc=nan', 'test_acc=nan', 'ood_acc=0.00']	Total tbd acc: nan  tbd_local: 0.0  delta_loss=na	tb: 0 mode: 2 nways: 10 it: 0
+total Acc: 0.67, mode accs: ['train_acc=0.74', 'test_acc=nan', 'ood_acc=0.19']	Total tbd acc: 0.73  tbd_local: 1.0  delta_loss=0.36441523395478725	tb: 0 mode: 0 nways: 10 it: 100
+total Acc: 0.64, mode accs: ['train_acc=0.71', 'test_acc=0.24', 'ood_acc=0.17']	Total tbd acc: 0.67  tbd_local: 0.0  delta_loss=1.1802586913108826	tb: 0 mode: 0 nways: 10 it: 200
+total Acc: 0.62, mode accs: ['train_acc=0.70', 'test_acc=0.34', 'ood_acc=0.22']	Total tbd acc: 0.62  tbd_local: 1.0  delta_loss=0.5972681790590286	tb: 0 mode: 0 nways: 10 it: 300
+total Acc: 0.61, mode accs: ['train_acc=0.68', 'test_acc=0.37', 'ood_acc=0.27']	Total tbd acc: 0.59  tbd_local: 0.0  delta_loss=2.2112080454826355	tb: 0 mode: 2 nways: 10 it: 400
+total Acc: 0.58, mode accs: ['train_acc=0.67', 'test_acc=0.40', 'ood_acc=0.35']	Total tbd acc: 0.61  tbd_local: 1.0  delta_loss=0.11672258377075195	tb: 0 mode: 1 nways: 10 it: 500
+total Acc: 0.61, mode accs: ['train_acc=0.70', 'test_acc=0.50', 'ood_acc=0.36']	Total tbd acc: 0.66  tbd_local: 1.0  delta_loss=0.3368586301803589	tb: 0 mode: 0 nways: 10 it: 600
+total Acc: 0.61, mode accs: ['train_acc=0.70', 'test_acc=0.49', 'ood_acc=0.39']	Total tbd acc: 0.68  tbd_local: 1.0  delta_loss=0.5572560727596283	tb: 0 mode: 2 nways: 10 it: 700
+total Acc: 0.62, mode accs: ['train_acc=0.72', 'test_acc=0.47', 'ood_acc=0.41']	Total tbd acc: 0.70  tbd_local: 1.0  delta_loss=-0.3569887802004814	tb: 0 mode: 0 nways: 10 it: 800
+total Acc: 0.63, mode accs: ['train_acc=0.73', 'test_acc=0.46', 'ood_acc=0.41']	Total tbd acc: 0.72  tbd_local: 1.0  delta_loss=0.5367538928985596	tb: 0 mode: 0 nways: 10 it: 900
+total Acc: 0.63, mode accs: ['train_acc=0.73', 'test_acc=0.47', 'ood_acc=0.44']	Total tbd acc: 0.73  tbd_local: 1.0  delta_loss=0.7281886041164398	tb: 0 mode: 2 nways: 10 it: 1000
+total Acc: 0.65, mode accs: ['train_acc=0.75', 'test_acc=0.46', 'ood_acc=0.44']	Total tbd acc: 0.75  tbd_local: 1.0  delta_loss=0.5629392862319946	tb: 0 mode: 1 nways: 10 it: 1100
+total Acc: 0.64, mode accs: ['train_acc=0.75', 'test_acc=0.46', 'ood_acc=0.45']	Total tbd acc: 0.76  tbd_local: 1.0  delta_loss=0.20196202397346497	tb: 0 mode: 0 nways: 10 it: 1200
+total Acc: 0.66, mode accs: ['train_acc=0.76', 'test_acc=0.46', 'ood_acc=0.45']	Total tbd acc: 0.78  tbd_local: 1.0  delta_loss=2.1913262009620667	tb: 1 mode: 0 nways: 10 it: 1300
+total Acc: 0.66, mode accs: ['train_acc=0.76', 'test_acc=0.46', 'ood_acc=0.45']	Total tbd acc: 0.79  tbd_local: 1.0  delta_loss=0.47605258226394653	tb: 0 mode: 2 nways: 10 it: 1400
+total Acc: 0.65, mode accs: ['train_acc=0.76', 'test_acc=0.45', 'ood_acc=0.48']	Total tbd acc: 0.80  tbd_local: 1.0  delta_loss=0.6594182848930359	tb: 0 mode: 2 nways: 10 it: 1500
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.45', 'ood_acc=0.48']	Total tbd acc: 0.81  tbd_local: 1.0  delta_loss=0.14352720975875854	tb: 0 mode: 0 nways: 10 it: 1600
+total Acc: 0.65, mode accs: ['train_acc=0.77', 'test_acc=0.46', 'ood_acc=0.48']	Total tbd acc: 0.82  tbd_local: 1.0  delta_loss=3.4281066060066223	tb: 1 mode: 2 nways: 10 it: 1700
+total Acc: 0.65, mode accs: ['train_acc=0.77', 'test_acc=0.46', 'ood_acc=0.49']	Total tbd acc: 0.82  tbd_local: 1.0  delta_loss=0.6831805109977722	tb: 0 mode: 1 nways: 10 it: 1800
+total Acc: 0.66, mode accs: ['train_acc=0.77', 'test_acc=0.47', 'ood_acc=0.49']	Total tbd acc: 0.83  tbd_local: 1.0  delta_loss=0.4421483874320984	tb: 0 mode: 1 nways: 10 it: 1900
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.47', 'ood_acc=0.49']	Total tbd acc: 0.84  tbd_local: 1.0  delta_loss=-0.4528561979532242	tb: 0 mode: 0 nways: 10 it: 2000
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.47', 'ood_acc=0.50']	Total tbd acc: 0.85  tbd_local: 1.0  delta_loss=-0.6503606364130974	tb: 0 mode: 0 nways: 10 it: 2100
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.48', 'ood_acc=0.50']	Total tbd acc: 0.85  tbd_local: 1.0  delta_loss=0.637092649936676	tb: 0 mode: 2 nways: 10 it: 2200
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.48', 'ood_acc=0.50']	Total tbd acc: 0.86  tbd_local: 1.0  delta_loss=-0.031274378299713135	tb: 0 mode: 0 nways: 10 it: 2300
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.48', 'ood_acc=0.50']	Total tbd acc: 0.87  tbd_local: 1.0  delta_loss=0.12342965602874756	tb: 0 mode: 1 nways: 10 it: 2400
+total Acc: 0.67, mode accs: ['train_acc=0.78', 'test_acc=0.48', 'ood_acc=0.50']	Total tbd acc: 0.87  tbd_local: 1.0  delta_loss=0.43141478300094604	tb: 0 mode: 2 nways: 10 it: 2500
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.48', 'ood_acc=0.50']	Total tbd acc: 0.88  tbd_local: 1.0  delta_loss=0.5484669804573059	tb: 0 mode: 0 nways: 10 it: 2600
+total Acc: 0.67, mode accs: ['train_acc=0.78', 'test_acc=0.48', 'ood_acc=0.50']	Total tbd acc: 0.88  tbd_local: 1.0  delta_loss=1.6125084161758423	tb: 1 mode: 1 nways: 10 it: 2700
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.50', 'ood_acc=0.50']	Total tbd acc: 0.88  tbd_local: 1.0  delta_loss=0.2297886610031128	tb: 0 mode: 1 nways: 10 it: 2800
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.51', 'ood_acc=0.52']	Total tbd acc: 0.89  tbd_local: 1.0  delta_loss=1.614943027496338	tb: 1 mode: 0 nways: 10 it: 2900
+total Acc: 0.67, mode accs: ['train_acc=0.78', 'test_acc=0.51', 'ood_acc=0.52']	Total tbd acc: 0.89  tbd_local: 1.0  delta_loss=0.17607754468917847	tb: 0 mode: 0 nways: 10 it: 3000
+total Acc: 0.67, mode accs: ['train_acc=0.79', 'test_acc=0.51', 'ood_acc=0.53']	Total tbd acc: 0.90  tbd_local: 1.0  delta_loss=-0.14637470245361328	tb: 0 mode: 1 nways: 10 it: 3100
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.51', 'ood_acc=0.53']	Total tbd acc: 0.90  tbd_local: 1.0  delta_loss=0.2702237367630005	tb: 0 mode: 2 nways: 10 it: 3200
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.51', 'ood_acc=0.54']	Total tbd acc: 0.90  tbd_local: 1.0  delta_loss=-0.1523180603981018	tb: 0 mode: 0 nways: 10 it: 3300
+total Acc: 0.67, mode accs: ['train_acc=0.79', 'test_acc=0.51', 'ood_acc=0.54']	Total tbd acc: 0.90  tbd_local: 1.0  delta_loss=-0.4638872444629669	tb: 0 mode: 0 nways: 10 it: 3400
+total Acc: 0.67, mode accs: ['train_acc=0.79', 'test_acc=0.52', 'ood_acc=0.54']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=0.36132103204727173	tb: 0 mode: 2 nways: 10 it: 3500
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.52', 'ood_acc=0.54']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=-0.11472880840301514	tb: 0 mode: 1 nways: 10 it: 3600
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.53', 'ood_acc=0.54']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=0.39282047748565674	tb: 0 mode: 1 nways: 10 it: 3700
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.53', 'ood_acc=0.54']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=-0.26503729820251465	tb: 0 mode: 0 nways: 10 it: 3800
+total Acc: 0.67, mode accs: ['train_acc=0.78', 'test_acc=0.53', 'ood_acc=0.54']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=0.04779309034347534	tb: 0 mode: 2 nways: 10 it: 3900
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.53', 'ood_acc=0.54']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=0.20946502685546875	tb: 0 mode: 1 nways: 10 it: 4000
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.53', 'ood_acc=0.54']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=-0.5165860652923584	tb: 0 mode: 0 nways: 10 it: 4100
+total Acc: 0.66, mode accs: ['train_acc=0.78', 'test_acc=0.53', 'ood_acc=0.55']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=0.08601123094558716	tb: 0 mode: 2 nways: 10 it: 4200
+total Acc: 0.67, mode accs: ['train_acc=0.78', 'test_acc=0.53', 'ood_acc=0.55']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=0.09020131826400757	tb: 0 mode: 0 nways: 10 it: 4300
+total Acc: 0.67, mode accs: ['train_acc=0.78', 'test_acc=0.53', 'ood_acc=0.55']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.7983050048351288	tb: 0 mode: 0 nways: 10 it: 4400
+total Acc: 0.67, mode accs: ['train_acc=0.78', 'test_acc=0.53', 'ood_acc=0.55']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.9455106034874916	tb: 0 mode: 0 nways: 10 it: 4500
+total Acc: 0.67, mode accs: ['train_acc=0.78', 'test_acc=0.53', 'ood_acc=0.55']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=1.8193336725234985	tb: 1 mode: 1 nways: 10 it: 4600
+total Acc: 0.67, mode accs: ['train_acc=0.78', 'test_acc=0.54', 'ood_acc=0.55']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.0987246036529541	tb: 0 mode: 1 nways: 10 it: 4700
+total Acc: 0.67, mode accs: ['train_acc=0.78', 'test_acc=0.54', 'ood_acc=0.55']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=0.32233577966690063	tb: 0 mode: 0 nways: 10 it: 4800
+total Acc: 0.67, mode accs: ['train_acc=0.78', 'test_acc=0.54', 'ood_acc=0.55']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.16232728958129883	tb: 0 mode: 1 nways: 10 it: 4900
+total Acc: 0.67, mode accs: ['train_acc=0.78', 'test_acc=0.54', 'ood_acc=0.55']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.4992055147886276	tb: 0 mode: 0 nways: 10 it: 5000
+total Acc: 0.67, mode accs: ['train_acc=0.78', 'test_acc=0.54', 'ood_acc=0.55']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=1.6940985918045044	tb: 1 mode: 0 nways: 10 it: 5100
+total Acc: 0.67, mode accs: ['train_acc=0.78', 'test_acc=0.54', 'ood_acc=0.55']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=1.97593355178833	tb: 1 mode: 0 nways: 10 it: 5200
+total Acc: 0.67, mode accs: ['train_acc=0.78', 'test_acc=0.54', 'ood_acc=0.55']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=1.62778240442276	tb: 1 mode: 2 nways: 10 it: 5300
+total Acc: 0.67, mode accs: ['train_acc=0.79', 'test_acc=0.54', 'ood_acc=0.55']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.4396999180316925	tb: 0 mode: 0 nways: 10 it: 5400
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.55', 'ood_acc=0.55']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.21788239479064941	tb: 0 mode: 1 nways: 10 it: 5500
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.55', 'ood_acc=0.55']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.21276527643203735	tb: 0 mode: 2 nways: 10 it: 5600
+total Acc: 0.67, mode accs: ['train_acc=0.79', 'test_acc=0.54', 'ood_acc=0.55']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.8108928799629211	tb: 0 mode: 0 nways: 10 it: 5700
+total Acc: 0.67, mode accs: ['train_acc=0.79', 'test_acc=0.55', 'ood_acc=0.55']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.07964646816253662	tb: 0 mode: 1 nways: 10 it: 5800
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.55', 'ood_acc=0.55']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.5086176991462708	tb: 0 mode: 1 nways: 10 it: 5900
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.55', 'ood_acc=0.55']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.2456146478652954	tb: 0 mode: 1 nways: 10 it: 6000
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.56', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.3534179925918579	tb: 0 mode: 2 nways: 10 it: 6100
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.56', 'ood_acc=0.56']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.39986318349838257	tb: 0 mode: 0 nways: 10 it: 6200
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.56', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.07742184400558472	tb: 0 mode: 0 nways: 10 it: 6300
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.55', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.2767242193222046	tb: 0 mode: 0 nways: 10 it: 6400
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.55', 'ood_acc=0.55']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.05325978994369507	tb: 0 mode: 2 nways: 10 it: 6500
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.55', 'ood_acc=0.56']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.09159159660339355	tb: 0 mode: 1 nways: 10 it: 6600
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.56', 'ood_acc=0.56']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.002838730812072754	tb: 0 mode: 1 nways: 10 it: 6700
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.56', 'ood_acc=0.56']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.5518513321876526	tb: 0 mode: 0 nways: 10 it: 6800
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.56', 'ood_acc=0.56']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.31717193126678467	tb: 0 mode: 2 nways: 10 it: 6900
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.56', 'ood_acc=0.56']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.13188529014587402	tb: 0 mode: 1 nways: 10 it: 7000
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.56', 'ood_acc=0.56']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.08829760551452637	tb: 0 mode: 1 nways: 10 it: 7100
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.56', 'ood_acc=0.56']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.44899576902389526	tb: 0 mode: 0 nways: 10 it: 7200
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.56', 'ood_acc=0.56']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.23023223876953125	tb: 0 mode: 1 nways: 10 it: 7300
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.57', 'ood_acc=0.56']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=1.1508954763412476	tb: 1 mode: 0 nways: 10 it: 7400
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.57', 'ood_acc=0.56']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.16500067710876465	tb: 0 mode: 2 nways: 10 it: 7500
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.57', 'ood_acc=0.56']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.13835865259170532	tb: 0 mode: 2 nways: 10 it: 7600
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.57', 'ood_acc=0.56']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.33205050230026245	tb: 0 mode: 0 nways: 10 it: 7700
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.57', 'ood_acc=0.56']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.014021337032318115	tb: 0 mode: 0 nways: 10 it: 7800
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.57', 'ood_acc=0.56']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-1.1050283312797546	tb: 0 mode: 0 nways: 10 it: 7900
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.57', 'ood_acc=0.57']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.3405102491378784	tb: 0 mode: 2 nways: 10 it: 8000
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.57', 'ood_acc=0.57']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-1.371065840125084	tb: 0 mode: 0 nways: 10 it: 8100
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.57', 'ood_acc=0.57']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.10786640644073486	tb: 0 mode: 1 nways: 10 it: 8200
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.57', 'ood_acc=0.56']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.19279921054840088	tb: 0 mode: 0 nways: 10 it: 8300
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.57', 'ood_acc=0.56']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-1.110914558172226	tb: 0 mode: 0 nways: 10 it: 8400
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.57', 'ood_acc=0.57']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.9400011301040649	tb: 0 mode: 0 nways: 10 it: 8500
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.57', 'ood_acc=0.57']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.4543670415878296	tb: 0 mode: 1 nways: 10 it: 8600
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.57', 'ood_acc=0.57']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.10176980495452881	tb: 0 mode: 1 nways: 10 it: 8700
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.57', 'ood_acc=0.57']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.11287844181060791	tb: 0 mode: 0 nways: 10 it: 8800
+total Acc: 0.68, mode accs: ['train_acc=0.80', 'test_acc=0.57', 'ood_acc=0.57']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.08761775493621826	tb: 0 mode: 1 nways: 10 it: 8900
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.57', 'ood_acc=0.57']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.7235572636127472	tb: 0 mode: 0 nways: 10 it: 9000
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.57', 'ood_acc=0.57']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.01933896541595459	tb: 0 mode: 2 nways: 10 it: 9100
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.57', 'ood_acc=0.57']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.045061707496643066	tb: 0 mode: 2 nways: 10 it: 9200
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.57', 'ood_acc=0.57']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.03312802314758301	tb: 0 mode: 2 nways: 10 it: 9300
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.57', 'ood_acc=0.57']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.19362640380859375	tb: 0 mode: 1 nways: 10 it: 9400
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.57', 'ood_acc=0.57']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.057365477085113525	tb: 0 mode: 2 nways: 10 it: 9500
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.57', 'ood_acc=0.57']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.3260546326637268	tb: 0 mode: 2 nways: 10 it: 9600
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.57', 'ood_acc=0.57']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=3.2419785261154175	tb: 1 mode: 2 nways: 10 it: 9700
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.57', 'ood_acc=0.57']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.3340309262275696	tb: 0 mode: 0 nways: 10 it: 9800
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.57', 'ood_acc=0.57']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.10201442241668701	tb: 0 mode: 2 nways: 10 it: 9900
+total Acc: 0.68, mode accs: ['train_acc=0.79', 'test_acc=0.57', 'ood_acc=0.57']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.7702680230140686	tb: 0 mode: 1 nways: 10 it: 9999
+================= STARTING RUN 9 ===============
+total Acc: nan, mode accs: ['train_acc=nan', 'test_acc=0.00', 'ood_acc=nan']	Total tbd acc: nan  tbd_local: 0.0  delta_loss=na	tb: 0 mode: 1 nways: 10 it: 0
+total Acc: 0.39, mode accs: ['train_acc=0.62', 'test_acc=0.36', 'ood_acc=0.31']	Total tbd acc: 0.48  tbd_local: 1.0  delta_loss=0.6344649791717529	tb: 0 mode: 0 nways: 10 it: 100
+total Acc: 0.46, mode accs: ['train_acc=0.62', 'test_acc=0.34', 'ood_acc=0.38']	Total tbd acc: 0.54  tbd_local: 1.0  delta_loss=0.7451837658882141	tb: 0 mode: 0 nways: 10 it: 200
+total Acc: 0.55, mode accs: ['train_acc=0.72', 'test_acc=0.37', 'ood_acc=0.39']	Total tbd acc: 0.65  tbd_local: 1.0  delta_loss=-0.24401956051588058	tb: 0 mode: 0 nways: 10 it: 300
+total Acc: 0.56, mode accs: ['train_acc=0.69', 'test_acc=0.37', 'ood_acc=0.39']	Total tbd acc: 0.64  tbd_local: 1.0  delta_loss=0.654785692691803	tb: 0 mode: 0 nways: 10 it: 400
+total Acc: 0.59, mode accs: ['train_acc=0.71', 'test_acc=0.37', 'ood_acc=0.41']	Total tbd acc: 0.68  tbd_local: 1.0  delta_loss=-0.5059534627944231	tb: 0 mode: 0 nways: 10 it: 500
+total Acc: 0.58, mode accs: ['train_acc=0.70', 'test_acc=0.39', 'ood_acc=0.42']	Total tbd acc: 0.70  tbd_local: 1.0  delta_loss=0.799795001745224	tb: 0 mode: 2 nways: 10 it: 600
+total Acc: 0.58, mode accs: ['train_acc=0.68', 'test_acc=0.39', 'ood_acc=0.42']	Total tbd acc: 0.71  tbd_local: 0.0  delta_loss=1.3493215441703796	tb: 0 mode: 2 nways: 10 it: 700
+total Acc: 0.59, mode accs: ['train_acc=0.70', 'test_acc=0.39', 'ood_acc=0.44']	Total tbd acc: 0.73  tbd_local: 1.0  delta_loss=0.49647974967956543	tb: 0 mode: 2 nways: 10 it: 800
+total Acc: 0.59, mode accs: ['train_acc=0.69', 'test_acc=0.40', 'ood_acc=0.44']	Total tbd acc: 0.76  tbd_local: 1.0  delta_loss=0.21087339520454407	tb: 0 mode: 0 nways: 10 it: 900
+total Acc: 0.58, mode accs: ['train_acc=0.69', 'test_acc=0.43', 'ood_acc=0.44']	Total tbd acc: 0.77  tbd_local: 1.0  delta_loss=0.45677995681762695	tb: 0 mode: 0 nways: 10 it: 1000
+total Acc: 0.58, mode accs: ['train_acc=0.69', 'test_acc=0.43', 'ood_acc=0.45']	Total tbd acc: 0.78  tbd_local: 1.0  delta_loss=3.456083118915558	tb: 1 mode: 0 nways: 10 it: 1100
+total Acc: 0.58, mode accs: ['train_acc=0.69', 'test_acc=0.42', 'ood_acc=0.45']	Total tbd acc: 0.79  tbd_local: 1.0  delta_loss=-0.3393417000770569	tb: 0 mode: 0 nways: 10 it: 1200
+total Acc: 0.58, mode accs: ['train_acc=0.69', 'test_acc=0.44', 'ood_acc=0.45']	Total tbd acc: 0.80  tbd_local: 1.0  delta_loss=-0.13564765453338623	tb: 0 mode: 1 nways: 10 it: 1300
+total Acc: 0.57, mode accs: ['train_acc=0.68', 'test_acc=0.44', 'ood_acc=0.46']	Total tbd acc: 0.81  tbd_local: 1.0  delta_loss=0.3171941041946411	tb: 0 mode: 2 nways: 10 it: 1400
+total Acc: 0.58, mode accs: ['train_acc=0.69', 'test_acc=0.43', 'ood_acc=0.46']	Total tbd acc: 0.82  tbd_local: 1.0  delta_loss=0.2652694582939148	tb: 0 mode: 0 nways: 10 it: 1500
+total Acc: 0.58, mode accs: ['train_acc=0.69', 'test_acc=0.44', 'ood_acc=0.46']	Total tbd acc: 0.83  tbd_local: 1.0  delta_loss=0.42351233959198	tb: 0 mode: 2 nways: 10 it: 1600
+total Acc: 0.58, mode accs: ['train_acc=0.69', 'test_acc=0.44', 'ood_acc=0.46']	Total tbd acc: 0.84  tbd_local: 1.0  delta_loss=0.4045248031616211	tb: 0 mode: 1 nways: 10 it: 1700
+total Acc: 0.58, mode accs: ['train_acc=0.69', 'test_acc=0.45', 'ood_acc=0.46']	Total tbd acc: 0.84  tbd_local: 1.0  delta_loss=-0.5459660738706589	tb: 0 mode: 0 nways: 10 it: 1800
+total Acc: 0.58, mode accs: ['train_acc=0.69', 'test_acc=0.45', 'ood_acc=0.46']	Total tbd acc: 0.85  tbd_local: 1.0  delta_loss=0.6993352174758911	tb: 0 mode: 0 nways: 10 it: 1900
+total Acc: 0.58, mode accs: ['train_acc=0.69', 'test_acc=0.44', 'ood_acc=0.46']	Total tbd acc: 0.86  tbd_local: 1.0  delta_loss=0.3271138668060303	tb: 0 mode: 0 nways: 10 it: 2000
+total Acc: 0.58, mode accs: ['train_acc=0.69', 'test_acc=0.44', 'ood_acc=0.48']	Total tbd acc: 0.86  tbd_local: 1.0  delta_loss=0.28395897150039673	tb: 0 mode: 0 nways: 10 it: 2100
+total Acc: 0.58, mode accs: ['train_acc=0.69', 'test_acc=0.44', 'ood_acc=0.48']	Total tbd acc: 0.87  tbd_local: 1.0  delta_loss=0.1852961778640747	tb: 0 mode: 0 nways: 10 it: 2200
+total Acc: 0.58, mode accs: ['train_acc=0.69', 'test_acc=0.44', 'ood_acc=0.48']	Total tbd acc: 0.87  tbd_local: 0.0  delta_loss=0.9744537472724915	tb: 0 mode: 0 nways: 10 it: 2300
+total Acc: 0.59, mode accs: ['train_acc=0.69', 'test_acc=0.45', 'ood_acc=0.48']	Total tbd acc: 0.88  tbd_local: 1.0  delta_loss=-0.6584015488624573	tb: 0 mode: 1 nways: 10 it: 2400
+total Acc: 0.58, mode accs: ['train_acc=0.69', 'test_acc=0.45', 'ood_acc=0.49']	Total tbd acc: 0.88  tbd_local: 1.0  delta_loss=0.06315666437149048	tb: 0 mode: 2 nways: 10 it: 2500
+total Acc: 0.59, mode accs: ['train_acc=0.70', 'test_acc=0.45', 'ood_acc=0.49']	Total tbd acc: 0.88  tbd_local: 1.0  delta_loss=-0.01455378532409668	tb: 0 mode: 0 nways: 10 it: 2600
+total Acc: 0.59, mode accs: ['train_acc=0.69', 'test_acc=0.45', 'ood_acc=0.49']	Total tbd acc: 0.88  tbd_local: 1.0  delta_loss=0.5612055659294128	tb: 0 mode: 0 nways: 10 it: 2700
+total Acc: 0.59, mode accs: ['train_acc=0.70', 'test_acc=0.47', 'ood_acc=0.49']	Total tbd acc: 0.89  tbd_local: 1.0  delta_loss=-0.4700182378292084	tb: 0 mode: 0 nways: 10 it: 2800
+total Acc: 0.60, mode accs: ['train_acc=0.70', 'test_acc=0.47', 'ood_acc=0.49']	Total tbd acc: 0.89  tbd_local: 1.0  delta_loss=-0.34047847986221313	tb: 0 mode: 0 nways: 10 it: 2900
+total Acc: 0.60, mode accs: ['train_acc=0.71', 'test_acc=0.50', 'ood_acc=0.49']	Total tbd acc: 0.90  tbd_local: 1.0  delta_loss=0.4546757936477661	tb: 0 mode: 1 nways: 10 it: 3000
+total Acc: 0.60, mode accs: ['train_acc=0.70', 'test_acc=0.49', 'ood_acc=0.49']	Total tbd acc: 0.90  tbd_local: 1.0  delta_loss=-0.5057500302791595	tb: 0 mode: 0 nways: 10 it: 3100
+total Acc: 0.60, mode accs: ['train_acc=0.71', 'test_acc=0.50', 'ood_acc=0.49']	Total tbd acc: 0.90  tbd_local: 1.0  delta_loss=-0.36275383830070496	tb: 0 mode: 0 nways: 10 it: 3200
+total Acc: 0.61, mode accs: ['train_acc=0.71', 'test_acc=0.50', 'ood_acc=0.49']	Total tbd acc: 0.90  tbd_local: 1.0  delta_loss=-0.6110621318221092	tb: 0 mode: 0 nways: 10 it: 3300
+total Acc: 0.61, mode accs: ['train_acc=0.72', 'test_acc=0.50', 'ood_acc=0.49']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=-0.0007227659225463867	tb: 0 mode: 2 nways: 10 it: 3400
+total Acc: 0.61, mode accs: ['train_acc=0.72', 'test_acc=0.49', 'ood_acc=0.49']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=-0.21978455781936646	tb: 0 mode: 0 nways: 10 it: 3500
+total Acc: 0.61, mode accs: ['train_acc=0.72', 'test_acc=0.49', 'ood_acc=0.49']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=0.5261001586914062	tb: 0 mode: 2 nways: 10 it: 3600
+total Acc: 0.61, mode accs: ['train_acc=0.72', 'test_acc=0.49', 'ood_acc=0.49']	Total tbd acc: 0.91  tbd_local: 1.0  delta_loss=-0.7462043762207031	tb: 0 mode: 0 nways: 10 it: 3700
+total Acc: 0.61, mode accs: ['train_acc=0.72', 'test_acc=0.49', 'ood_acc=0.49']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=0.3567367196083069	tb: 0 mode: 0 nways: 10 it: 3800
+total Acc: 0.61, mode accs: ['train_acc=0.72', 'test_acc=0.49', 'ood_acc=0.49']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=-0.5078661441802979	tb: 0 mode: 0 nways: 10 it: 3900
+total Acc: 0.62, mode accs: ['train_acc=0.72', 'test_acc=0.49', 'ood_acc=0.49']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=-0.14781928062438965	tb: 0 mode: 0 nways: 10 it: 4000
+total Acc: 0.62, mode accs: ['train_acc=0.72', 'test_acc=0.49', 'ood_acc=0.49']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=-0.0636129379272461	tb: 0 mode: 0 nways: 10 it: 4100
+total Acc: 0.62, mode accs: ['train_acc=0.72', 'test_acc=0.49', 'ood_acc=0.49']	Total tbd acc: 0.92  tbd_local: 1.0  delta_loss=1.3997899293899536	tb: 1 mode: 0 nways: 10 it: 4200
+total Acc: 0.62, mode accs: ['train_acc=0.72', 'test_acc=0.49', 'ood_acc=0.49']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.8723363280296326	tb: 0 mode: 1 nways: 10 it: 4300
+total Acc: 0.62, mode accs: ['train_acc=0.72', 'test_acc=0.49', 'ood_acc=0.49']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=0.3057500123977661	tb: 0 mode: 0 nways: 10 it: 4400
+total Acc: 0.62, mode accs: ['train_acc=0.72', 'test_acc=0.49', 'ood_acc=0.49']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=0.33831679821014404	tb: 0 mode: 0 nways: 10 it: 4500
+total Acc: 0.62, mode accs: ['train_acc=0.72', 'test_acc=0.49', 'ood_acc=0.50']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=0.4269949197769165	tb: 0 mode: 0 nways: 10 it: 4600
+total Acc: 0.62, mode accs: ['train_acc=0.72', 'test_acc=0.49', 'ood_acc=0.50']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=0.32331132888793945	tb: 0 mode: 1 nways: 10 it: 4700
+total Acc: 0.62, mode accs: ['train_acc=0.72', 'test_acc=0.49', 'ood_acc=0.50']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.41507524251937866	tb: 0 mode: 0 nways: 10 it: 4800
+total Acc: 0.62, mode accs: ['train_acc=0.72', 'test_acc=0.50', 'ood_acc=0.50']	Total tbd acc: 0.93  tbd_local: 1.0  delta_loss=-0.1268768310546875	tb: 0 mode: 2 nways: 10 it: 4900
+total Acc: 0.62, mode accs: ['train_acc=0.71', 'test_acc=0.50', 'ood_acc=0.50']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-1.2082262933254242	tb: 0 mode: 1 nways: 10 it: 5000
+total Acc: 0.62, mode accs: ['train_acc=0.71', 'test_acc=0.50', 'ood_acc=0.50']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.03054654598236084	tb: 0 mode: 0 nways: 10 it: 5100
+total Acc: 0.62, mode accs: ['train_acc=0.71', 'test_acc=0.50', 'ood_acc=0.50']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.12611138820648193	tb: 0 mode: 2 nways: 10 it: 5200
+total Acc: 0.62, mode accs: ['train_acc=0.71', 'test_acc=0.51', 'ood_acc=0.50']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.9456400871276855	tb: 0 mode: 0 nways: 10 it: 5300
+total Acc: 0.62, mode accs: ['train_acc=0.71', 'test_acc=0.51', 'ood_acc=0.50']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.10170698165893555	tb: 0 mode: 0 nways: 10 it: 5400
+total Acc: 0.62, mode accs: ['train_acc=0.71', 'test_acc=0.51', 'ood_acc=0.51']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-1.0706489980220795	tb: 0 mode: 1 nways: 10 it: 5500
+total Acc: 0.62, mode accs: ['train_acc=0.71', 'test_acc=0.52', 'ood_acc=0.51']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=-0.1520441770553589	tb: 0 mode: 2 nways: 10 it: 5600
+total Acc: 0.62, mode accs: ['train_acc=0.71', 'test_acc=0.52', 'ood_acc=0.51']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=0.16950523853302002	tb: 0 mode: 1 nways: 10 it: 5700
+total Acc: 0.62, mode accs: ['train_acc=0.71', 'test_acc=0.52', 'ood_acc=0.51']	Total tbd acc: 0.94  tbd_local: 1.0  delta_loss=1.6233845353126526	tb: 1 mode: 2 nways: 10 it: 5800
+total Acc: 0.62, mode accs: ['train_acc=0.71', 'test_acc=0.52', 'ood_acc=0.51']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.1115407943725586	tb: 0 mode: 1 nways: 10 it: 5900
+total Acc: 0.62, mode accs: ['train_acc=0.71', 'test_acc=0.52', 'ood_acc=0.51']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=2.3979185819625854	tb: 1 mode: 0 nways: 10 it: 6000
+total Acc: 0.62, mode accs: ['train_acc=0.71', 'test_acc=0.52', 'ood_acc=0.51']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.1540384292602539	tb: 0 mode: 0 nways: 10 it: 6100
+total Acc: 0.62, mode accs: ['train_acc=0.71', 'test_acc=0.52', 'ood_acc=0.51']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.027256250381469727	tb: 0 mode: 2 nways: 10 it: 6200
+total Acc: 0.62, mode accs: ['train_acc=0.71', 'test_acc=0.53', 'ood_acc=0.51']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.35585129261016846	tb: 0 mode: 2 nways: 10 it: 6300
+total Acc: 0.62, mode accs: ['train_acc=0.71', 'test_acc=0.53', 'ood_acc=0.51']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.8616028130054474	tb: 0 mode: 0 nways: 10 it: 6400
+total Acc: 0.62, mode accs: ['train_acc=0.71', 'test_acc=0.53', 'ood_acc=0.51']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.5350621938705444	tb: 0 mode: 0 nways: 10 it: 6500
+total Acc: 0.63, mode accs: ['train_acc=0.71', 'test_acc=0.53', 'ood_acc=0.51']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.1240534782409668	tb: 0 mode: 0 nways: 10 it: 6600
+total Acc: 0.63, mode accs: ['train_acc=0.72', 'test_acc=0.53', 'ood_acc=0.51']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.03275609016418457	tb: 0 mode: 0 nways: 10 it: 6700
+total Acc: 0.63, mode accs: ['train_acc=0.71', 'test_acc=0.53', 'ood_acc=0.51']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.03918147087097168	tb: 0 mode: 0 nways: 10 it: 6800
+total Acc: 0.63, mode accs: ['train_acc=0.71', 'test_acc=0.53', 'ood_acc=0.51']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.16396832466125488	tb: 0 mode: 2 nways: 10 it: 6900
+total Acc: 0.63, mode accs: ['train_acc=0.71', 'test_acc=0.53', 'ood_acc=0.52']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=1.3418761491775513	tb: 1 mode: 0 nways: 10 it: 7000
+total Acc: 0.63, mode accs: ['train_acc=0.71', 'test_acc=0.53', 'ood_acc=0.52']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=0.9430999755859375	tb: 1 mode: 1 nways: 10 it: 7100
+total Acc: 0.63, mode accs: ['train_acc=0.71', 'test_acc=0.53', 'ood_acc=0.52']	Total tbd acc: 0.95  tbd_local: 1.0  delta_loss=-0.23267054557800293	tb: 0 mode: 1 nways: 10 it: 7200
+total Acc: 0.62, mode accs: ['train_acc=0.71', 'test_acc=0.53', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.35667359828948975	tb: 0 mode: 1 nways: 10 it: 7300
+total Acc: 0.62, mode accs: ['train_acc=0.71', 'test_acc=0.53', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-1.309312641620636	tb: 0 mode: 1 nways: 10 it: 7400
+total Acc: 0.63, mode accs: ['train_acc=0.71', 'test_acc=0.53', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.03126823902130127	tb: 0 mode: 0 nways: 10 it: 7500
+total Acc: 0.63, mode accs: ['train_acc=0.71', 'test_acc=0.53', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.30703121423721313	tb: 0 mode: 2 nways: 10 it: 7600
+total Acc: 0.63, mode accs: ['train_acc=0.71', 'test_acc=0.53', 'ood_acc=0.53']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.3520817756652832	tb: 0 mode: 1 nways: 10 it: 7700
+total Acc: 0.62, mode accs: ['train_acc=0.71', 'test_acc=0.53', 'ood_acc=0.53']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.10393881797790527	tb: 0 mode: 0 nways: 10 it: 7800
+total Acc: 0.62, mode accs: ['train_acc=0.71', 'test_acc=0.53', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=1.1269783973693848	tb: 1 mode: 0 nways: 10 it: 7900
+total Acc: 0.62, mode accs: ['train_acc=0.71', 'test_acc=0.53', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.08293604850769043	tb: 0 mode: 0 nways: 10 it: 8000
+total Acc: 0.63, mode accs: ['train_acc=0.71', 'test_acc=0.53', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-1.313406728208065	tb: 0 mode: 0 nways: 10 it: 8100
+total Acc: 0.62, mode accs: ['train_acc=0.71', 'test_acc=0.53', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.18512165546417236	tb: 0 mode: 2 nways: 10 it: 8200
+total Acc: 0.63, mode accs: ['train_acc=0.71', 'test_acc=0.53', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.10007119178771973	tb: 0 mode: 1 nways: 10 it: 8300
+total Acc: 0.63, mode accs: ['train_acc=0.71', 'test_acc=0.53', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.9253835380077362	tb: 0 mode: 0 nways: 10 it: 8400
+total Acc: 0.63, mode accs: ['train_acc=0.71', 'test_acc=0.52', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.6863532066345215	tb: 0 mode: 1 nways: 10 it: 8500
+total Acc: 0.63, mode accs: ['train_acc=0.71', 'test_acc=0.52', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.2611074447631836	tb: 0 mode: 0 nways: 10 it: 8600
+total Acc: 0.63, mode accs: ['train_acc=0.71', 'test_acc=0.52', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.8721450865268707	tb: 0 mode: 0 nways: 10 it: 8700
+total Acc: 0.63, mode accs: ['train_acc=0.71', 'test_acc=0.52', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=1.1719869375228882	tb: 1 mode: 0 nways: 10 it: 8800
+total Acc: 0.63, mode accs: ['train_acc=0.71', 'test_acc=0.52', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.8100464344024658	tb: 0 mode: 1 nways: 10 it: 8900
+total Acc: 0.63, mode accs: ['train_acc=0.71', 'test_acc=0.52', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.5878208875656128	tb: 0 mode: 1 nways: 10 it: 9000
+total Acc: 0.63, mode accs: ['train_acc=0.71', 'test_acc=0.52', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.5496683120727539	tb: 0 mode: 1 nways: 10 it: 9100
+total Acc: 0.62, mode accs: ['train_acc=0.71', 'test_acc=0.52', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.5911837816238403	tb: 0 mode: 0 nways: 10 it: 9200
+total Acc: 0.63, mode accs: ['train_acc=0.71', 'test_acc=0.52', 'ood_acc=0.52']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.02561652660369873	tb: 0 mode: 2 nways: 10 it: 9300
+total Acc: 0.62, mode accs: ['train_acc=0.71', 'test_acc=0.52', 'ood_acc=0.53']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.11599123477935791	tb: 0 mode: 0 nways: 10 it: 9400
+total Acc: 0.63, mode accs: ['train_acc=0.71', 'test_acc=0.52', 'ood_acc=0.53']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=1.39421546459198	tb: 1 mode: 2 nways: 10 it: 9500
+total Acc: 0.62, mode accs: ['train_acc=0.71', 'test_acc=0.52', 'ood_acc=0.53']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.8080390095710754	tb: 0 mode: 0 nways: 10 it: 9600
+total Acc: 0.62, mode accs: ['train_acc=0.71', 'test_acc=0.52', 'ood_acc=0.53']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-0.10961651802062988	tb: 0 mode: 0 nways: 10 it: 9700
+total Acc: 0.62, mode accs: ['train_acc=0.71', 'test_acc=0.51', 'ood_acc=0.53']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.11491286754608154	tb: 0 mode: 2 nways: 10 it: 9800
+total Acc: 0.63, mode accs: ['train_acc=0.71', 'test_acc=0.52', 'ood_acc=0.53']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=-1.2997701466083527	tb: 0 mode: 0 nways: 10 it: 9900
+total Acc: 0.62, mode accs: ['train_acc=0.71', 'test_acc=0.52', 'ood_acc=0.53']	Total tbd acc: 0.96  tbd_local: 1.0  delta_loss=0.06570124626159668	tb: 0 mode: 2 nways: 10 it: 9999
+
+wandb: Waiting for W&B process to finish, PID 2056
+wandb: Program ended successfully.
+wandb:                                                                                
+wandb: Find user logs for this run at: /root/osaka/wandb/run-20201117_163617-2bsos5b0/logs/debug.log
+wandb: Find internal logs for this run at: /root/osaka/wandb/run-20201117_163617-2bsos5b0/logs/debug-internal.log
+wandb: Run summary:
+wandb:     pretrain/best_acc 0.76841
+wandb:   pretrain/best_epoch 0
+wandb:                 _step 10422
+wandb:              _runtime 1319
+wandb:            _timestamp 1605632296
+wandb:        accuracy_after 0.73333
+wandb:            timestep_i 9900
+wandb:                  mode 2
+wandb:           tbd_correct 1.0
+wandb:      tbd_ground_truth 0.0
+wandb:                 nways 10.0
+wandb:             acc_train 0.71162
+wandb:              acc_test 0.51603
+wandb:               acc_ood 0.52551
+wandb:           console acc 0.62494
+wandb:              g_lambda 0.84254
+wandb:            delta_loss 0.0657
+wandb:                    l0 1.53053
+wandb:                    l1 1.46482
+wandb:        cl_acc_by_runs 0.62494
+wandb:    run_agg/cl_acc_avg 0.74
+wandb:    run_agg/cl_acc_std 0.17938
+wandb:    run_agg/timestep_i 9900
+wandb:             final/acc 0.65091
+wandb:         final/acc_std 0.04485
+wandb:       final/begin_acc 0.65091
+wandb:   final/begin_acc_std 0.04485
+wandb:             final/tbd 0.9607
+wandb:         final/tbd_std 0.00789
+wandb:           final/train 0.76158
+wandb:       final/train_std 0.04593
+wandb:            final/test 0.53991
+wandb:        final/test_std 0.05206
+wandb:             final/ood 0.54016
+wandb:         final/ood_std 0.03395
+wandb: Run history:
+wandb:     pretrain/best_acc ▁
+wandb:   pretrain/best_epoch ▁
+wandb:                 _step ▁▁▁▂▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇███
+wandb:              _runtime ▁▁▁▁▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇███
+wandb:            _timestamp ▁▁▁▁▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇███
+wandb:        accuracy_after ▁▅▅█▇▇▇██▂▆▆▆█▇▇█▅█▆█▇▆▇▆▅▆▇▄▂▄▇▆▇▅▇▃▅▆▆
+wandb:            timestep_i ▁▁▁▁▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇███
+wandb:                  mode ▁███▁▁█▅█▁▁▁▅█▁▁█▁█▁▅▁████▁▁▁▅▁███▁█▁▁▁█
+wandb:           tbd_correct ████████▁███▁███████████▁███████████████
+wandb:      tbd_ground_truth ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█▁▁▁▁▁▁▁▁▁█▁▁
+wandb:                 nways ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:             acc_train ▄▇▇▇▇███▃▇▇▇▄▇▇▇▁▂▂▂▆▇▇█▅▇▇▇▅▇▇▇▇▇▇█▄▅▅▅
+wandb:              acc_test ▄▆▆▅▅██▇▄▇▇▆▃██▇▁▄▃▃▆▇██▅▇▇▇▆▇▇▆▄▆▆▇▄▅▆▅
+wandb:               acc_ood ▂▆▇█▁▇▇█▅▇▇▇▄▆▇█▄▄▅▅▆▇▇█▅▇██▅▆▇▇▆▇██▆▆▇▇
+wandb:           console acc ▃▆▆▆▇███▂▇▇▇▃▇▇▇▁▂▂▃▆▇██▄▇▇▇▄▆▇▆▇▇▇▇▄▅▆▆
+wandb:              g_lambda ▁▆██▇████▇▃██▆▅█▄▄▆▇██▇▆▃█▅▆▆▆▇▅▆▇▇█▃▃█▆
+wandb:            delta_loss ▅▄▄▄▃▄▃▂▇▃▄▂▃▂▄▄▅▃▄▂▃▄█▄▄▃▄▃▁▂▃▃▄▄▄▄▄▄▃▂
+wandb:                    l0 ▄▃▆▆▁▃▄▂▇▂▄▃▂▁▃▆▅▄▅▃▂▃█▅▃▃▅▄▂▃▄▃▂▅▄▄▃▅▄▃
+wandb:                    l1 ▂▃██▁▃▆▅▂▄▄▆▃▄▂█▄▆▆▆▁▂▂▆▂▅▆▆▇▇▆▅▁▆▃▄▂▅▆▆
+wandb:        cl_acc_by_runs ▆█▆▇▁█▇▆▇▅
+wandb:    run_agg/cl_acc_avg ▁▆▆▆▇▇▆▆█▇▅▆▆█▇█▇▇▆▆█▇▇▆▆▆▆▇▆▆▅▆▆█▇▆▆▆▇▇
+wandb:    run_agg/cl_acc_std ▁▆▅▅▄▄▆▆▆▆▆▆▆▆▄▃▅▅▇▅▅▇▄▆▆▅▇▄▆▇▆▆█▅▄▆▅▅▄▄
+wandb:    run_agg/timestep_i ▁▁▁▁▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇███
+wandb:             final/acc ▁
+wandb:         final/acc_std ▁
+wandb:       final/begin_acc ▁
+wandb:   final/begin_acc_std ▁
+wandb:             final/tbd ▁
+wandb:         final/tbd_std ▁
+wandb:           final/train ▁
+wandb:       final/train_std ▁
+wandb:            final/test ▁
+wandb:        final/test_std ▁
+wandb:             final/ood ▁
+wandb:         final/ood_std ▁
+wandb: 
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: 
+wandb: Synced xp_protomaml_alg3_yes_um_algo3_E1_SThr3.0_NW10: https://wandb.ai/bmckinz/cs330_finalproject_finalreport/runs/2bsos5b0
+
