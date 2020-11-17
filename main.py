@@ -172,7 +172,7 @@ def continual_learning(args, wandb, cl_model_init, meta_optimizer_cl, cl_dataloa
     mode_to_int = dict(zip(modes, [0, 1, 2]))
     avg_accuracies_mode = dict(zip(modes, [[], [], []]))
     avg_mses_mode = dict(zip(modes, [[], [], []]))
-    log_interval = 1
+    log_interval = 100
     print(f'\n Continual learning for {args.n_runs} iterations...')
     for run in range(args.n_runs):
         print('=================', f'STARTING RUN {run}', '===============')

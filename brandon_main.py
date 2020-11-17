@@ -23,6 +23,16 @@ NAME_TO_ARGS = {
         'num_shots': 5,
         'verbose': True},
 
+    'xp_protomaml_alg4_always_update_slow_weight': {
+        'model_name': 'protomaml',
+        'num_ways': 10,
+        'num_shots': 3,
+        'cl_strategy': None,
+        'num_epochs': 1,
+        'n_runs': 10,
+        'gamma': -1,
+        'um_power': 0.0},
+
     'xp_protomaml_diffN_alg4_always_update_slow_weight': {
         'model_name': 'protomaml',
         'num_ways': 5,
@@ -30,7 +40,7 @@ NAME_TO_ARGS = {
         'use_different_nways': True,
         'cl_strategy': None,
         'num_epochs': 1,
-        'n_runs': 1,
+        'n_runs': 10,
         'gamma': -1,
         'um_power': 0.0},
 
@@ -70,8 +80,8 @@ NAME_TO_ARGS = {
         'num_ways': 10,
         'num_shots': 3,
         'cl_strategy': 'loss',
-        'num_epochs': 1,
-        'n_runs': 1,
+        'num_epochs': 10,
+        'n_runs': 10,
         'gamma': 0.8,
         'cl_strategy_thres':0.9, 
         'um_power': 1.0},
@@ -81,7 +91,7 @@ NAME_TO_ARGS = {
         'num_ways': 10,
         'num_shots': 3,
         'cl_strategy': 'loss',
-        'num_epochs': 2,
+        'num_epochs': 10,
         'n_runs': 1,
         'gamma': 3.0, 
         'cl_strategy_thres': 5.0, 
