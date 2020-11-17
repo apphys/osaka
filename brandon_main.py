@@ -44,16 +44,6 @@ NAME_TO_ARGS = {
         'gamma': -1,
         'um_power': 0.0},
 
-    'xp_maml_diffN_alg4_always_update_slow_weight': {
-        'num_ways': 5,
-        'num_shots': 3,
-        'use_different_nways': True,
-        'cl_strategy': None,
-        'num_epochs': 1,
-        'n_runs': 1,
-        'gamma': -1,
-        'um_power': 0.0},
-
     'xp_maml_alg4_no_um': {
         'num_ways': 10,
         'num_shots': 3,
@@ -86,17 +76,6 @@ NAME_TO_ARGS = {
         'cl_strategy_thres':0.9, 
         'um_power': 1.0},
 
-    'xp_maml_alg3_yes_um': {
-        'algo3': True,
-        'num_ways': 10,
-        'num_shots': 3,
-        'cl_strategy': 'loss',
-        'num_epochs': 10,
-        'n_runs': 1,
-        'gamma': 3.0, 
-        'cl_strategy_thres': 5.0, 
-        'um_power': 1.0},
-
     'xp_protomaml_alg3_yes_um': {
         'model_name': 'protomaml',
         'algo3': True,
@@ -104,10 +83,62 @@ NAME_TO_ARGS = {
         'num_shots': 3,
         'cl_strategy': 'loss',
         'num_epochs': 1,
-        'n_runs': 1,
+        'n_runs': 10,
         'gamma': 0.8,
         'cl_strategy_thres': 3.0, 
         'um_power': 1.0},
+
+    'maml_alg4_yes_um': {
+        'model_name': 'ours',  
+        'num_ways': 10,
+        'num_shots': 3,
+        'num_epochs': 10,
+        'n_runs': 10,
+        'gamma': 1.0,  # tbd
+        'cl_strategy_thres': 3.0, 
+        'um_power': 1.0},
+
+    'maml_alg4_no_um': {
+        'model_name': 'ours',  
+        'num_ways': 10,
+        'num_shots': 3,
+        'num_epochs': 10,
+        'n_runs': 10,
+        'gamma': 1.0,  # tbd
+        'cl_strategy_thres': 3.0, 
+        'um_power': 0.0},
+
+    'xp_maml_alg3_yes_um': {
+        'algo3': True,
+        'num_ways': 10,
+        'num_shots': 3,
+        'cl_strategy': 'loss',
+        'num_epochs': 10,
+        'n_runs': 10,
+        'gamma': 3.0, 
+        'cl_strategy_thres': 5.0, 
+        'um_power': 1.0},
+
+    'xp_maml_always_update_slow_weight': {
+        'num_ways': 10,
+        'num_shots': 3,
+        'cl_strategy': None,
+        'num_epochs': 10,
+        'n_runs': 10,
+        'gamma': -1,
+        'um_power': 0.0},
+
+
+    'xp_maml_diffN_alg4_always_update_slow_weight': {
+        'num_ways': 5,
+        'num_shots': 3,
+        'use_different_nways': True,
+        'cl_strategy': None,
+        'num_epochs': 1,
+        'n_runs': 1,
+        'gamma': -1,
+        'um_power': 0.0},
+
 
 #    'maml_alg4_no_um': {
 #        **maml_base,
