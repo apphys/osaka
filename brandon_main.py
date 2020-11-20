@@ -56,16 +56,6 @@ NAME_TO_ARGS = {
         'cl_strategy_thres':0.9, 
         'um_power': 1.0},
 
-    'xp_maml_alg4_no_um': {
-        'num_ways': 10,
-        'num_shots': 3,
-        'cl_strategy': 'loss',
-        'num_epochs': 1,
-        'n_runs': 1,
-        'gamma': 0.8,
-        'cl_strategy_thres': 0.9,
-        'um_power': 0.0},
-
     'xp_protomaml_alg4_no_um': {
         'model_name': 'protomaml',
         'num_ways': 10,
@@ -96,8 +86,18 @@ NAME_TO_ARGS = {
         'cl_strategy': 'loss',
         'num_epochs': 1,
         'n_runs': 10,
-        'gamma': 0.8,
+        'gamma': 0.3,
         'cl_strategy_thres': 3.0, 
+        'um_power': 1.0},
+
+    'xp_maml_alg4_yes_um': {
+        'model_name': 'ours',  
+        'num_ways': 10,
+        'num_shots': 3,
+        'num_epochs': 10,
+        'n_runs': 10,
+        'gamma': 0.8,  # tbd
+        'cl_strategy_thres': 0.9, 
         'um_power': 1.0},
 
     'maml_alg4_yes_um': {
@@ -110,11 +110,21 @@ NAME_TO_ARGS = {
         'cl_strategy_thres': 3.0, 
         'um_power': 1.0},
 
+    'xp_maml_alg4_no_um': {
+        'num_ways': 10,
+        'num_shots': 3,
+        'cl_strategy': 'loss',
+        'num_epochs': 10,
+        'n_runs': 10,
+        'gamma': 0.8,
+        'cl_strategy_thres': 0.9,
+        'um_power': 0.0},
+
     'maml_alg4_no_um': {
         'model_name': 'ours',  
         'num_ways': 10,
         'num_shots': 3,
-        'num_epochs': 10,
+        'num_epochs': 1,
         'n_runs': 10,
         'gamma': 1.0,  # tbd
         'cl_strategy_thres': 3.0, 
@@ -125,10 +135,21 @@ NAME_TO_ARGS = {
         'num_ways': 10,
         'num_shots': 3,
         'cl_strategy': 'loss',
+        'num_epochs': 2,
+        'n_runs': 1,
+        'gamma': 0.8, 
+        'cl_strategy_thres': 3.0, 
+        'um_power': 1.0},
+
+    'xp_maml_yes_um_pap_gamma0.3': {
+        'algo3': True,
+        'num_ways': 10,
+        'num_shots': 3,
+        'cl_strategy': 'loss',
         'num_epochs': 10,
         'n_runs': 10,
-        'gamma': 3.0, 
-        'cl_strategy_thres': 5.0, 
+        'gamma': 0.3, 
+        'cl_strategy_thres': 3.0, 
         'um_power': 1.0},
 
     'xp_maml_always_update_slow_weight': {
