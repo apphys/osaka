@@ -418,8 +418,97 @@ class ModelAgnosticMetaLearning(object):
         results['tbd'] = task_switch.item() == int(boundary_detected)
         return results
 
+    def observe_with_pap(self, batch):
+        if self.cl_strategy == 'never_retrain':
+            self.model.eval()
+        else:
+            self.model.train()
+
+        # inputs.shape:         (1, N*K, 1, 28, 28)
+        # targets.shape:        (1, N*K)
+        # task_switch.shape:    (1)
+        #   - ground truth of whether this represents a task switch
+        # mode: tuple of str (single elem?)
+        # ways: single-elem tensor specifying N for this batch.
+        # shots: single-elem tensor specifying K for this batch.
+        # FIXME: targets don't appear to be shuffled. Problem?
+        inputs, targets, task_switch, mode, ways, shots = batch
+        assert_has_shape(ways, [1])
+        assert_has_shape(shots, [1])
+        N = ways[0]
+        K = shots[0]
+        assert_has_shape(inputs, (1, N*K, 1, 28, 28))
+        assert_has_shape(targets, (1, N*K))
+        assert_equal(len(mode), 1)
+        assert self.optimizer_cl is not None, 'Set optimizer_cl'
+
+        # mc sampling for bgd optimizer
+        self.batch_size = inputs.shape[1]
+        num_of_mc_iters = 1
+        if hasattr(self.optimizer_cl, "get_mc_iters"):
+            num_of_mc_iters = self.optimizer_cl.get_mc_iters()
+        inputs, targets = inputs[0], targets[0]
+
+        results = {
+            'inner_losses': np.zeros((self.num_adaptation_steps,), dtype=np.float32),
+            'outer_loss': 0.,
+            'tbd': 0.,
+            f'{self.metric_name}_before': 0.,
+            f'{self.metric_name}_after': 0.}
+
+        # There's no \theta_{t-1}
+        if self.current_model is None:
+            self.current_model, _ = self.adapt(inputs, targets, N, K)
+            self.last_mode = mode[0]
+            return results
+
+        # NOTE: I've realigned comments below to match the algs in our report.
+        same_nways = self.num_ways == N
+        if same_nways:
+            # Loss of the previous fast weight.
+            with torch.set_grad_enabled(self.model.training):
+                if isinstance(self.optimizer_cl, BGD):
+                    acc, mse, l0 = self.get_outer_loss_bgd(inputs, targets, num_of_mc_iters)
+                    if self.is_classification_task:
+                        results['accuracy_after'] = acc / num_of_mc_iters
+                    else:
+                        results["mse_after"] = mse / num_of_mc_iters
+                    results['outer_loss'] = torch.mean(torch.tensor(l0)).item()
+                else:
+                    logits = self.model(inputs, params=self.current_model)
+                    l0 = self.loss_function(logits, targets)
+                    results['outer_loss'] = l0.item()
+                    results[f'{self.metric_name}_after'] = self._compute_metric(
+                        logits, targets)
+
+        # Get virtual fast weight from slow weight.
+        virtual_model, _ = self.adapt(inputs, targets, N, K)
+        # Loss of virtual fast weight.
+        l1 = self._cl_metric_from_inp(inputs, targets, params=virtual_model)
+        results['l1'] = l1
+        results['delta_loss'] = l0 - l1
+        assert self._should_detect_task_boundaries()
+        # If task has not shifted...
+        if l0 - l1 < self.gamma:
+            boundary_detected = False
+            # Get current fast weight from previous one (PAP!)
+            self.current_model, _ = self.adapt(
+                inputs, targets, N, K, params=self.current_model)
+        else:
+            boundary_detected = True
+            update_modulation_factor = self.g_lambda(results)
+            assert self.cl_strategy != 'never_retrain'  # temp assumption i'm making during code sketch...
+            # Update the slow weight.
+            self.outer_update(l0 * update_modulation_factor)
+            # Get current fast weight from updated slow.
+            self.current_model, _ = self.adapt(inputs, targets, N, K)
+            results['g_lambda'] = update_modulation_factor
+
+        results['tbd'] = task_switch.item() == int(boundary_detected)
+        return results
+
     # Algo 3
-    def observe2(self, batch):
+    def observe2_orig_copy(self, batch):
         raise RuntimeError(f'don\'t call me :)')
         if self.cl_strategy == 'never_retrain':
             self.model.eval()
