@@ -409,6 +409,9 @@ class ModelAgnosticMetaLearning(object):
 
         # NOTE: I've realigned comments below to match the algs in our report.
         same_nways = self.num_ways == N
+        if not same_nways:
+            raise RuntimeError(f'currently don\'t support changing ways:)')
+
         if same_nways:
             # Loss of the previous fast weight.
             l0 = self._compute_l0(inputs, targets, results)
@@ -421,7 +424,7 @@ class ModelAgnosticMetaLearning(object):
         results['delta_loss'] = l0 - l1
         assert self._should_detect_task_boundaries()
         # If task has not shifted...
-        if l0 - l1 < self.gamma:
+        if l1 <= l0 and l0 - l1 < self.gamma:
             boundary_detected = False
             # Get current fast weight from previous one (PAP!)
             self.current_model, _ = self.adapt(

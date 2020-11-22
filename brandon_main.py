@@ -2,7 +2,7 @@
 
 import os
 import main
-from args import parse_args
+from args import parse_args, update_from_config
 
 maml_base = {
     'model_name': 'ours',  # seems equiv to MAML?
@@ -140,6 +140,9 @@ if __name__ == '__main__':
     NAME = args.name
     overrides = {**NAME_TO_ARGS['default'], **NAME_TO_ARGS[NAME]}
 
+    # Reminder: "ABS" means I ensured l1 <= in tbd:
+    # >>> if l1 <= l0 and l0 - l1 < self.gamma:
+    NAME = f'ABS_{NAME}'
     if args.use_different_nways:
         NAME += '_diffN'
 
