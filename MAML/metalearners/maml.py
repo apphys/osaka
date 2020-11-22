@@ -424,7 +424,7 @@ class ModelAgnosticMetaLearning(object):
         results['delta_loss'] = l0 - l1
         assert self._should_detect_task_boundaries()
         # If task has not shifted...
-        if l1 <= l0 and l0 - l1 < self.gamma:
+        if abs(l0 - l1) < self.gamma:
             boundary_detected = False
             # Get current fast weight from previous one (PAP!)
             self.current_model, _ = self.adapt(

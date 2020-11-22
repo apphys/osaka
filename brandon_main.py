@@ -142,7 +142,9 @@ if __name__ == '__main__':
 
     # Reminder: "ABS" means I ensured l1 <= in tbd:
     # >>> if l1 <= l0 and l0 - l1 < self.gamma:
-    NAME = f'ABS_{NAME}'
+    # Reminder: "ACTUALABS" means
+    # >>> if abs(l0 - l1) < self.gamma:
+    NAME = f'ACTUALABS_{NAME}'
     if args.use_different_nways:
         NAME += '_diffN'
 
