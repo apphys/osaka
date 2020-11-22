@@ -6,6 +6,8 @@ from args import parse_args
 
 maml_base = {
     'model_name': 'ours',  # seems equiv to MAML?
+    'method': 'MAML',  # seems equiv to MAML?
+    'model_config': 'Config/ours.yaml',
     'num_ways': 5,
     'num_shots': 3,
 }
@@ -119,7 +121,10 @@ NAME_TO_ARGS = {
     'maml': maml_base,
     'protomaml': {
         **maml_base,
-        'model_name': 'protomaml'}
+        'model_name': 'protomaml',
+        'method': 'ProtoMAML',
+        'model_config': 'Config/protomaml.yaml',
+    }
 }
 
 # NAME = os.getenv('RUN_NAME', 'no_pretrain')
