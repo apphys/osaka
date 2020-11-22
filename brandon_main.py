@@ -119,6 +119,9 @@ NAME_TO_ARGS = {
         'num_shots': 5,
         'verbose': True},
     'maml': maml_base,
+    'protomaml': {
+        **maml_base,
+        'model_name': 'protomaml'}
 }
 
 # NAME = os.getenv('RUN_NAME', 'no_pretrain')
@@ -133,6 +136,9 @@ if __name__ == '__main__':
 
     NAME = args.name
     overrides = {**NAME_TO_ARGS['default'], **NAME_TO_ARGS[NAME]}
+
+    if args.use_different_nways:
+        NAME += '_diffN'
 
     NAME += f'_E{args.num_epochs}'
     if args.deeper > 0:
