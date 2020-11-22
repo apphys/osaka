@@ -2,7 +2,7 @@
 
 import os
 import main
-from args import parse_args, update_from_config
+from args import parse_args
 
 maml_base = {
     'model_name': 'ours',  # seems equiv to MAML?
