@@ -122,6 +122,7 @@ class ModelAgnosticMetaLearning(object):
                     for group in self.optimizer.param_groups])
         self.num_ways = args.num_ways
         self.um_power = args.um_power
+        self._num_pap = None # number of iterations where we've just updated fast weights
 
     @property
     def metric_name(self):
@@ -391,6 +392,7 @@ class ModelAgnosticMetaLearning(object):
         if self.current_model is None:
             self.current_model, _ = self.adapt(inputs, targets, N, K)
             self.last_mode = mode[0]
+            self._num_pap = 1
             return results
 
         # NOTE: I've realigned comments below to match the algs in our report.
@@ -412,7 +414,7 @@ class ModelAgnosticMetaLearning(object):
             # Get current fast weight from previous one (PAP!)
             self.current_model, _ = self.adapt(
                 inputs, targets, N, K, params=self.current_model)
-
+            self._num_pap += 1
             results['g_lambda'] = 0.0  # "default"
         else:
             boundary_detected = True
@@ -422,8 +424,10 @@ class ModelAgnosticMetaLearning(object):
             self.outer_update(l0 * update_modulation_factor)
             # Get current fast weight from updated slow.
             self.current_model, _ = self.adapt(inputs, targets, N, K)
+            self._num_pap = 1
             results['g_lambda'] = update_modulation_factor
 
+        results['num_pap'] = self._num_pap
         results['tbd'] = task_switch.item() == int(boundary_detected)
         return results
 

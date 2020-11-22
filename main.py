@@ -226,6 +226,8 @@ def continual_learning(args, wandb, cl_model_init, meta_optimizer_cl, cl_dataloa
                     wandb.log({
                         'l0': results['outer_loss'],
                         'l1': results['l1']})
+                if 'num_pap' in results:
+                    wandb.log({'num_pap': results['num_pap']})
                 if is_classification_task:
                     acc = np.mean(accuracies[run, :i])
                     acc_mode = []
