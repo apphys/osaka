@@ -11,7 +11,7 @@ maml_base = {
     'gamma': 0.8,  # tbd
 }
 
-NAME_TO_ARGS = {
+NAME_TO_ARGS_orig = {
     'default': {
         'wandb': 'cs330_finalproject_finalreport',
         'prob_statio': 0.9,
@@ -107,6 +107,20 @@ NAME_TO_ARGS = {
         'algo3': True},
 }
 
+NAME_TO_ARGS = {
+    'default': {
+        'wandb': 'cs330_finalproject_finalreport2',
+        'prob_statio': 0.9,
+        'cl_strategy': 'loss',
+        # 'cl_strategy_thres': 4.0,  # used within g_lambda (but neq lamabda itself)
+        'gamma': -1,
+        'n_runs': 4,
+        'num_ways': 5,
+        'num_shots': 5,
+        'verbose': True},
+    'maml': maml_base,
+}
+
 # NAME = os.getenv('RUN_NAME', 'no_pretrain')
 # print(f'NAME={NAME}')
 
@@ -120,14 +134,20 @@ if __name__ == '__main__':
     NAME = args.name
     overrides = {**NAME_TO_ARGS['default'], **NAME_TO_ARGS[NAME]}
 
-    # NAME += f'_G{args.gamma}'
     NAME += f'_E{args.num_epochs}'
     if args.deeper > 0:
         NAME += f'_L{args.deeper}'
     if args.hidden_size != 64:
         NAME += f'_H{args.hidden_size}'
-    if args.cl_strategy_thres != 0.9:
-        NAME += f'_SThr{args.cl_strategy_thres}'
+
+    if args.observe_fn == 'observe_with_pap':
+        NAME += f'_PAP'
+    NAME += f'_G{args.gamma}'
+
+    if args.um_power != 0.0:
+        NAME += f'_UM'
+    NAME += f'_LMBD{args.cl_strategy_thres}'
+
     NAME += f'_NW{args.num_ways}'
 
     print(f'NAME={NAME}')

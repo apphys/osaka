@@ -187,10 +187,7 @@ def continual_learning(args, wandb, cl_model_init, meta_optimizer_cl, cl_dataloa
             # step = i + run * args.timesteps
 
             data, labels, task_switch, mode, _, _ = batch
-            if args.algo3:
-                results = cl_model.observe2(batch)
-            else:
-                results = cl_model.observe(batch)
+            results = getattr(cl_model, args.observe_fn)(batch)
 
             # Reporting:
             if is_classification_task:
