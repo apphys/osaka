@@ -412,6 +412,8 @@ class ModelAgnosticMetaLearning(object):
             # Get current fast weight from previous one (PAP!)
             self.current_model, _ = self.adapt(
                 inputs, targets, N, K, params=self.current_model)
+
+            results['g_lambda'] = 0.0  # "default"
         else:
             boundary_detected = True
             update_modulation_factor = self.g_lambda(results)
