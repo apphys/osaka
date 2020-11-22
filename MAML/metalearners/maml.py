@@ -26,7 +26,8 @@ def assert_has_shape(t: torch.Tensor, shape):
         raise AssertionError(f'[ShapeError] {t_shape} != {shape}')
 
 
-__all__ = ['ModelAgnosticMetaLearning', 'MAML', 'ProtoMAML', 'FOMAML', 'ModularMAML']
+__all__ = ['ModelAgnosticMetaLearning', 'MAML', 'ProtoMAML', 'FOMAML',
+           'ModularMAML']
 
 
 class ModelAgnosticMetaLearning(object):
@@ -105,24 +106,28 @@ class ModelAgnosticMetaLearning(object):
 
         if args.per_param_step_size:
             self.step_size = OrderedDict((name, torch.tensor(args.step_size,
-                dtype=param.dtype, device=self.device,
-                requires_grad=args.learn_step_size)) for (name, param)
-                in model.meta_named_parameters())
+                                                             dtype=param.dtype,
+                                                             device=self.device,
+                                                             requires_grad=args.learn_step_size))
+                                         for (name, param)
+                                         in model.meta_named_parameters())
         else:
             self.step_size = torch.tensor(args.step_size, dtype=torch.float32,
-                device=self.device, requires_grad=args.learn_step_size)
+                                          device=self.device,
+                                          requires_grad=args.learn_step_size)
 
         if (self.optimizer is not None) and args.learn_step_size:
             self.optimizer.add_param_group({'params': self.step_size.values()
-                if args.per_param_step_size else [self.step_size]})
+            if args.per_param_step_size else [self.step_size]})
             if self.scheduler is not None:
                 for group in self.optimizer.param_groups:
                     group.setdefault('initial_lr', group['lr'])
                 self.scheduler.base_lrs([group['initial_lr']
-                    for group in self.optimizer.param_groups])
+                                         for group in
+                                         self.optimizer.param_groups])
         self.num_ways = args.num_ways
         self.um_power = args.um_power
-        self._num_pap = None # number of iterations where we've just updated fast weights
+        self._num_pap = None  # number of iterations where we've just updated fast weights
 
     @property
     def metric_name(self):
@@ -136,7 +141,8 @@ class ModelAgnosticMetaLearning(object):
         with tqdm(total=max_batches, disable=not verbose, **kwargs) as pbar:
             for results in self.train_iter(dataloader, max_batches=max_batches):
                 pbar.update(1)
-                postfix = {'outer_loss': '{0:.4f}'.format(results['mean_outer_loss'])}
+                postfix = {
+                    'outer_loss': '{0:.4f}'.format(results['mean_outer_loss'])}
                 if 'accuracies_after' in results:
                     postfix['accuracy'] = '{0:.4f}'.format(
                         np.mean(results['accuracies_after']))
@@ -149,10 +155,11 @@ class ModelAgnosticMetaLearning(object):
         """one meta-update"""
         if self.optimizer is None:
             raise RuntimeError('Trying to call `train_iter`, while the '
-                'optimizer is `None`. In order to train `{0}`, you must '
-                'specify a Pytorch optimizer as the argument of `{0}` '
-                '(eg. `{0}(model, optimizer=torch.optim.SGD(model.'
-                'parameters(), lr=0.01), ...).'.format(__class__.__name__))
+                               'optimizer is `None`. In order to train `{0}`, you must '
+                               'specify a Pytorch optimizer as the argument of `{0}` '
+                               '(eg. `{0}(model, optimizer=torch.optim.SGD(model.'
+                               'parameters(), lr=0.01), ...).'.format(
+                __class__.__name__))
         num_batches = 0
         self.model.train()
         while num_batches < max_batches:
@@ -211,12 +218,14 @@ class ModelAgnosticMetaLearning(object):
                 train_inputs,
                 train_targets,
                 batch['ways'][0],  # TODO: why index zero?
-                batch['shots_tr'][0], # TODO: why index zero?
+                batch['shots_tr'][0],  # TODO: why index zero?
             )
 
-            results['inner_losses'][:, task_id] = adaptation_results['inner_losses']
+            results['inner_losses'][:, task_id] = adaptation_results[
+                'inner_losses']
             if is_classification_task:
-                results['accuracies_before'][task_id] = adaptation_results['accuracy_before']
+                results['accuracies_before'][task_id] = adaptation_results[
+                    'accuracy_before']
 
             with torch.set_grad_enabled(self.model.training):
                 test_logits = self.model(test_inputs, params=params)
@@ -226,7 +235,7 @@ class ModelAgnosticMetaLearning(object):
 
             if is_classification_task:
                 results['accuracies_after'][task_id] = compute_accuracy(
-                   test_logits, test_targets)
+                    test_logits, test_targets)
 
         mean_outer_loss.div_(num_tasks)
         results['mean_outer_loss'] = mean_outer_loss.item()
@@ -244,15 +253,17 @@ class ModelAgnosticMetaLearning(object):
 
         if self.num_ways is None or ways != self.num_ways:
             self.model.update_classifier(ways.to(self.device).tolist())
-            self.model.classifier.weight = torch.nn.Parameter(self.model.classifier.weight.to('cuda'))
-            self.model.classifier.bias = torch.nn.Parameter(self.model.classifier.bias.to('cuda'))
+            self.model.classifier.weight = torch.nn.Parameter(
+                self.model.classifier.weight.to('cuda'))
+            self.model.classifier.bias = torch.nn.Parameter(
+                self.model.classifier.bias.to('cuda'))
             torch.nn.init.xavier_uniform_(self.model.classifier.weight)
             torch.nn.init.zeros_(self.model.classifier.bias)
         self.num_ways = ways
 
         params_local = None
         if params is not None:
-            #TODO: need this, otherwise backprop too many steps, OOM!!
+            # TODO: need this, otherwise backprop too many steps, OOM!!
             params_local = OrderedDict({
                 k: v.clone().detach().requires_grad_(True)
                 for k, v in params.items()})
@@ -300,8 +311,8 @@ class ModelAgnosticMetaLearning(object):
         assert_has_shape(shots, [1])
         N = ways[0]
         K = shots[0]
-        assert_has_shape(inputs, (1, N*K, 1, 28, 28))
-        assert_has_shape(targets, (1, N*K))
+        assert_has_shape(inputs, (1, N * K, 1, 28, 28))
+        assert_has_shape(targets, (1, N * K))
         assert_equal(len(mode), 1)
         assert self.optimizer_cl is not None, 'Set optimizer_cl'
 
@@ -309,7 +320,8 @@ class ModelAgnosticMetaLearning(object):
         inputs, targets = inputs[0], targets[0]
 
         results = {
-            'inner_losses': np.zeros((self.num_adaptation_steps,), dtype=np.float32),
+            'inner_losses': np.zeros((self.num_adaptation_steps,),
+                                     dtype=np.float32),
             'outer_loss': 0.,
             'tbd': 0.,
             f'{self.metric_name}_before': 0.,
@@ -452,8 +464,8 @@ class ModelAgnosticMetaLearning(object):
         assert_has_shape(shots, [1])
         N = ways[0]
         K = shots[0]
-        assert_has_shape(inputs, (1, N*K, 1, 28, 28))
-        assert_has_shape(targets, (1, N*K))
+        assert_has_shape(inputs, (1, N * K, 1, 28, 28))
+        assert_has_shape(targets, (1, N * K))
         assert_equal(len(mode), 1)
         assert self.optimizer_cl is not None, 'Set optimizer_cl'
 
@@ -465,7 +477,8 @@ class ModelAgnosticMetaLearning(object):
         inputs, targets = inputs[0], targets[0]
 
         results = {
-            'inner_losses': np.zeros((self.num_adaptation_steps,), dtype=np.float32),
+            'inner_losses': np.zeros((self.num_adaptation_steps,),
+                                     dtype=np.float32),
             'outer_loss': 0.,
             'tbd': 0.,
             f'{self.metric_name}_before': 0.,
@@ -483,7 +496,8 @@ class ModelAgnosticMetaLearning(object):
             # Loss of the previous fast weight.
             with torch.set_grad_enabled(self.model.training):
                 if isinstance(self.optimizer_cl, BGD):
-                    acc, mse, l0 = self.get_outer_loss_bgd(inputs, targets, num_of_mc_iters)
+                    acc, mse, l0 = self.get_outer_loss_bgd(inputs, targets,
+                                                           num_of_mc_iters)
                     if self.is_classification_task:
                         results['accuracy_after'] = acc / num_of_mc_iters
                     else:
@@ -498,38 +512,42 @@ class ModelAgnosticMetaLearning(object):
 
         # virtual fast_weight, generated from slow weights \phi, but \phi not changed
         current_virtual_model, _ = self.adapt(inputs, targets, N, K)
-        #with torch.no_grad():
+        # with torch.no_grad():
         # line 19, current_outer_loss is second term, loss of line 18
         logits = self.model(inputs, params=current_virtual_model)
         current_outer_loss = self.loss_function(logits, targets)
         current_outer_loss_value = current_outer_loss.item()
         current_acc = compute_accuracy(logits, targets)
 
-        #----------------- CL strategies ------------------#
+        # ----------------- CL strategies ------------------#
         tbd = 0 if same_nways else 1
-        if tbd == 0 and self.gamma != -1: # must be same nways, still need to check task shift
-            if self.cl_strategy=='acc':
+        if tbd == 0 and self.gamma != -1:  # must be same nways, still need to check task shift
+            if self.cl_strategy == 'acc':
                 if current_acc >= results['accuracy_after'] + self.gamma:
                     tbd = 1
-            elif self.cl_strategy=='loss':
-                if current_outer_loss_value + self.gamma <= results['outer_loss']:
+            elif self.cl_strategy == 'loss':
+                if current_outer_loss_value + self.gamma <= results[
+                    'outer_loss']:
                     tbd = 1  # task shifted
-        if tbd == 0: # no task shift
+        if tbd == 0:  # no task shift
             # update fast weight \theta_t from previous fast weight
-            self.current_model, _ = self.adapt(inputs, targets, ways[0], shots[0], params=self.current_model)
+            self.current_model, _ = self.adapt(inputs, targets, ways[0],
+                                               shots[0],
+                                               params=self.current_model)
         else:  # task shifted, tbd == 1
             if self.um_power == 0.0:
                 # Without Update Modulation (UM)
                 ood = 1
                 if self.cl_strategy in ['loss', 'acc']:
-                    if self.cl_strategy=='acc':
+                    if self.cl_strategy == 'acc':
                         if same_nways:
-                            if results['accuracy_after'] >= self.cl_strategy_thres:
+                            if results[
+                                'accuracy_after'] >= self.cl_strategy_thres:
                                 ood = 0
                         else:
                             if current_acc >= self.cl_strategy_thres:
                                 ood = 0
-                    elif self.cl_strategy=='loss':
+                    elif self.cl_strategy == 'loss':
                         if same_nways:
                             if results['outer_loss'] <= self.cl_strategy_thres:
                                 ood = 0
@@ -539,7 +557,7 @@ class ModelAgnosticMetaLearning(object):
 
                 # update the slow weights \phi
                 if self.cl_strategy != 'never_retrain' and ood:
-                    #print('!!! ood')
+                    # print('!!! ood')
                     if same_nways:
                         self.outer_update(outer_loss)
                     else:
@@ -548,29 +566,34 @@ class ModelAgnosticMetaLearning(object):
                 # With Update Modulation (UM)
                 ood = 1.0
                 if self.cl_strategy in ['loss', 'acc']:
-                    if self.cl_strategy=='acc':
+                    if self.cl_strategy == 'acc':
                         if same_nways:
-                            ood = min(1.0, (results['accuracy_after']/self.cl_strategy_thres)**self.um_power)
+                            ood = min(1.0, (results[
+                                                'accuracy_after'] / self.cl_strategy_thres) ** self.um_power)
                         else:
-                            ood = min(1.0, (current_acc/self.cl_strategy_thres)**self.um_power)
-                    elif self.cl_strategy=='loss':
+                            ood = min(1.0, (
+                                        current_acc / self.cl_strategy_thres) ** self.um_power)
+                    elif self.cl_strategy == 'loss':
                         if same_nways:
-                            ood = min(1.0, (results['outer_loss']/self.cl_strategy_thres)**self.um_power)
+                            ood = min(1.0, (results[
+                                                'outer_loss'] / self.cl_strategy_thres) ** self.um_power)
                         else:
-                            ood = min(1.0, (current_outer_loss_value/self.cl_strategy_thres)**self.um_power)
+                            ood = min(1.0, (
+                                        current_outer_loss_value / self.cl_strategy_thres) ** self.um_power)
 
                 if self.cl_strategy != 'never_retrain':
                     # TODO: apply to lr, not less
                     # lr is self.meta_lr in args
                     if same_nways:
-                        self.outer_update(outer_loss*ood)
+                        self.outer_update(outer_loss * ood)
                     else:
                         self.outer_update(current_outer_loss * ood)
 
             # update fast weight \theta_t from slow weight
-            self.current_model, _ = self.adapt(inputs, targets, ways[0], shots[0])
+            self.current_model, _ = self.adapt(inputs, targets, ways[0],
+                                               shots[0])
 
-        results['tbd'] = task_switch.item()==tbd
+        results['tbd'] = task_switch.item() == tbd
         return results
 
     def outer_update(self, outer_loss):
@@ -585,22 +608,24 @@ class ModelAgnosticMetaLearning(object):
             outer_loss.backward()
             self.optimizer.step()
 
-    def evaluate(self, dataloader, max_batches=500, verbose=True, epoch=0, **kwargs):
+    def evaluate(self, dataloader, max_batches=500, verbose=True, epoch=0,
+                 **kwargs):
         mean_outer_loss, mean_inner_loss, mean_accuracy, count = 0., 0., 0, 0
         with tqdm(total=max_batches, disable=not verbose, **kwargs) as pbar:
-            for results in self.evaluate_iter(dataloader, max_batches=max_batches):
+            for results in self.evaluate_iter(dataloader,
+                                              max_batches=max_batches):
                 pbar.update(1)
                 count += 1
                 mean_outer_loss += (results['mean_outer_loss']
-                    - mean_outer_loss) / count
+                                    - mean_outer_loss) / count
                 postfix = {'loss': '{0:.4f}'.format(mean_outer_loss)}
                 if 'accuracies_after' in results:
                     mean_accuracy += (np.mean(results['accuracies_after'])
-                        - mean_accuracy) / count
+                                      - mean_accuracy) / count
                     postfix['accuracy'] = '{0:.4f}'.format(mean_accuracy)
                 if 'inner_losses' in results:
                     mean_inner_loss += (np.mean(results['inner_losses'])
-                        - mean_inner_loss) / count
+                                        - mean_inner_loss) / count
                     postfix['inner_loss'] = '{0:.4f}'.format(mean_inner_loss)
                 pbar.set_postfix(**postfix)
 
@@ -625,7 +650,7 @@ class ModelAgnosticMetaLearning(object):
 
                 num_batches += 1
 
-    def get_outer_loss_bgd(self,inputs,targets,num_of_mc_iters):
+    def get_outer_loss_bgd(self, inputs, targets, num_of_mc_iters):
         self.model.zero_grad()
         self.optimizer_cl.zero_grad()
         self.optimizer_cl._init_accumulators()
@@ -716,9 +741,11 @@ class ModelAgnosticMetaLearning(object):
             return 1
         else:
             if self.cl_strategy == 'acc':
-                return min(1.0, (results['accuracy_after'] / self.cl_strategy_thres) ** self.um_power)
+                return min(1.0, (results[
+                                     'accuracy_after'] / self.cl_strategy_thres) ** self.um_power)
             elif self.cl_strategy == 'loss':
-                return min(1.0, (results['outer_loss'] / self.cl_strategy_thres) ** self.um_power)
+                return min(1.0, (results[
+                                     'outer_loss'] / self.cl_strategy_thres) ** self.um_power)
 
 
 class ProtoMAML(ModelAgnosticMetaLearning):
@@ -737,26 +764,30 @@ class ProtoMAML(ModelAgnosticMetaLearning):
         """
 
         if ways is None:
-            raise ValueError('Proto-MAML adapt arg ways & shots cannot be None!')
-
-        params_local = None
+            raise ValueError(
+                'Proto-MAML adapt arg ways & shots cannot be None!')
 
         if self.num_ways is None or ways != self.num_ways:
             self.model.update_classifier(ways.to('cpu').tolist())
         self.num_ways = ways
 
-        prototypes = self.model.forward_conv(inputs) # [ways*shots, 64]
-        prototypes = torch.reshape(prototypes, (ways, shots, prototypes.shape[-1])) #[ways, shots, 64]
-        prototypes = torch.mean(prototypes, axis=1) # [ways, 64]
+        if params is None:
+            prototypes = self.model.forward_conv(inputs)  # [ways*shots, 64]
+            prototypes = torch.reshape(prototypes, (
+                ways, shots, prototypes.shape[-1]))  # [ways, shots, 64]
+            prototypes = torch.mean(prototypes, axis=1)  # [ways, 64]
 
-        # Proto-MAML: init last FC layer with prototype weights
-        self.model.classifier.weight=torch.nn.Parameter(2.0*prototypes) # w_k = 2c_k
-        self.model.classifier.bias=torch.nn.Parameter(
-                -torch.sum(prototypes*prototypes, axis=1)) # b_k = -|c_k|^2
-        #else: # param not None, must be the same task, same nway
-        if params is not None:
-            #TODO: need this, otherwise backprop too many steps, OOM!!
-            params_local = OrderedDict({k:v.clone().detach().requires_grad_(True) for k,v in params.items()})
+            # Proto-MAML: init last FC layer with prototype weights
+            self.model.classifier.weight = torch.nn.Parameter(
+                2.0 * prototypes)  # w_k = 2c_k
+            self.model.classifier.bias = torch.nn.Parameter(
+                -torch.sum(prototypes * prototypes, axis=1))  # b_k = -|c_k|^2
+            params_local = None
+        else:  # param not None, must be the same task, same nway
+            # TODO: need this, otherwise backprop too many steps, OOM!!
+            params_local = OrderedDict(
+                {k: v.clone().detach().requires_grad_(True) for k, v in
+                 params.items()})
 
         results = {'inner_losses': np.zeros(
             (self.num_adaptation_steps,), dtype=np.float32)}
@@ -776,9 +807,12 @@ class ProtoMAML(ModelAgnosticMetaLearning):
 
             self.model.zero_grad()
 
-            params_local = update_parameters(self.model, inner_loss,
-                step_size=self.step_size, params=params_local,
-                first_order=(not self.model.training) or self.first_order,
+            params_local = update_parameters(
+                self.model, inner_loss,
+                step_size=self.step_size,
+                params=params_local,
+                first_order=(
+                not self.model.training) or self.first_order,
                 freeze_visual_features=self.freeze_visual_features,
                 no_meta_learning=self.no_meta_learning)
 
@@ -790,18 +824,21 @@ class FOMAML(ModelAgnosticMetaLearning):
                  learn_step_size=False, per_param_step_size=False,
                  num_adaptation_steps=1, scheduler=None,
                  loss_function=F.cross_entropy, device=None):
-        super(FOMAML, self).__init__(model, optimizer=optimizer, first_order=True,
-            step_size=step_size, learn_step_size=learn_step_size,
-            per_param_step_size=per_param_step_size,
-            num_adaptation_steps=num_adaptation_steps, scheduler=scheduler,
-            loss_function=loss_function, device=device)
+        super(FOMAML, self).__init__(model, optimizer=optimizer,
+                                     first_order=True,
+                                     step_size=step_size,
+                                     learn_step_size=learn_step_size,
+                                     per_param_step_size=per_param_step_size,
+                                     num_adaptation_steps=num_adaptation_steps,
+                                     scheduler=scheduler,
+                                     loss_function=loss_function, device=device)
 
 
 class ModularMAML(ModelAgnosticMetaLearning):
     def __init__(self, model, optimizer, loss_function, args, wandb=None):
         super(ModularMAML, self).__init__(model, optimizer, loss_function, args)
 
-        assert (args.kl_reg<=0) or args.mask_activation=='sigmoid'
+        assert (args.kl_reg <= 0) or args.mask_activation == 'sigmoid'
 
         self.mask_activation = args.mask_activation
         self.modularity = args.modularity
@@ -818,7 +855,8 @@ class ModularMAML(ModelAgnosticMetaLearning):
         self.reset_weight_pruning()
 
         # count total number of params
-        model_parameters = filter(lambda p: p.requires_grad, self.model.parameters())
+        model_parameters = filter(lambda p: p.requires_grad,
+                                  self.model.parameters())
         self.tot_params = sum([np.prod(p.size()) for p in model_parameters])
 
     def reset_weight_pruning(self):
@@ -827,21 +865,23 @@ class ModularMAML(ModelAgnosticMetaLearning):
                 if 'classifier' in name:
                     continue
                 self.weight_pruning[name] = torch.autograd.Variable(
-                    torch.zeros_like(self.weight_pruning[name]), requires_grad=False).type(torch.int)
+                    torch.zeros_like(self.weight_pruning[name]),
+                    requires_grad=False).type(torch.int)
                 self.weight_total[name] = torch.autograd.Variable(
-                     torch.zeros_like(self.weight_total[name]), requires_grad=False).type(torch.int)
+                    torch.zeros_like(self.weight_total[name]),
+                    requires_grad=False).type(torch.int)
 
     def apply_non_linearity(self, masks_logits):
         if self.mask_activation in [None, 'None']:
             if self.hard_masks:
-                return torch.clamp(masks_logits, 1e-8, 1-1e-8)
+                return torch.clamp(masks_logits, 1e-8, 1 - 1e-8)
             else:
                 return masks_logits
         elif self.mask_activation == 'sigmoid':
             return Sigmoid()(masks_logits)
         elif self.mask_activation == 'ReLU':
             if self.hard_masks:
-                return torch.clamp(masks_logits, 1e-8, 1-1e-8)
+                return torch.clamp(masks_logits, 1e-8, 1 - 1e-8)
             else:
                 return relu(masks_logits)
         elif self.mask_activation == 'hardsrink':
@@ -855,20 +895,23 @@ class ModularMAML(ModelAgnosticMetaLearning):
         masks_logits = OrderedDict(self.model.meta_named_parameters())
         masks = OrderedDict(self.model.meta_named_parameters())
 
-        #TODO(learn the initial value)
-        if self.modularity=='param_wise':
+        # TODO(learn the initial value)
+        if self.modularity == 'param_wise':
             for (name, _) in masks_logits.items():
                 if 'classifier' in name:
                     continue
                 else:
-                    masks_logits[name] = torch.autograd.Variable(torch.ones_like(masks_logits[name])*
-                            self.masks_init, requires_grad=True)
-                    masks[name] = torch.autograd.Variable(torch.zeros_like(masks[name]),
-                            requires_grad=True)
+                    masks_logits[name] = torch.autograd.Variable(
+                        torch.ones_like(masks_logits[name]) *
+                        self.masks_init, requires_grad=True)
+                    masks[name] = torch.autograd.Variable(
+                        torch.zeros_like(masks[name]),
+                        requires_grad=True)
 
         return params, params_masked, masks_logits, masks
 
-    def apply_masks(self, params, params_masked, masks_logits, masks, regularize=False, evaluate=False):
+    def apply_masks(self, params, params_masked, masks_logits, masks,
+                    regularize=False, evaluate=False):
 
         l1_reg, kl_reg = 0, 0
 
@@ -882,31 +925,37 @@ class ModularMAML(ModelAgnosticMetaLearning):
                 masks[name] = self.apply_non_linearity(masks_logits[name])
 
                 # we could to hard mask this way, but less interpretable
-                #applied_masks = masks[name] * (masks[name].detach()>self.masks_thres).float()
+                # applied_masks = masks[name] * (masks[name].detach()>self.masks_thres).float()
                 if self.hard_masks:
                     applied_masks = Bernoulli(probs=masks[name]).sample()
-                    applied_masks = (masks[name] + applied_masks).detach() - masks[name]
+                    applied_masks = (masks[name] + applied_masks).detach() - \
+                                    masks[name]
                 else:
                     applied_masks = masks[name]
 
-                if self.modularity=='param_wise':
+                if self.modularity == 'param_wise':
                     params_masked[name] = params[name] * applied_masks
 
                 if regularize:
-                    if self.l1_reg>0:
-                        l1_reg += self.l1_reg * torch.sum(torch.abs(masks[name]))
+                    if self.l1_reg > 0:
+                        l1_reg += self.l1_reg * torch.sum(
+                            torch.abs(masks[name]))
 
-                    if self.kl_reg>0:
+                    if self.kl_reg > 0:
                         # this will only work if masks = sigmoid(masks_logits)
                         bern_masks = Bernoulli(probs=masks[name])
-                        bern_prior = Bernoulli(probs=torch.ones_like(masks[name])*self.bern_prior)
+                        bern_prior = Bernoulli(probs=torch.ones_like(
+                            masks[name]) * self.bern_prior)
                         kl_reg += self.kl_reg * \
-                                torch.distributions.kl_divergence(bern_masks, bern_prior).sum()
+                                  torch.distributions.kl_divergence(bern_masks,
+                                                                    bern_prior).sum()
 
                 # count the number of pruned neurons
                 if evaluate:
-                    self.weight_pruning[name] += (applied_masks==0).type(torch.int)
-                    self.weight_total[name] += torch.ones_like(applied_masks).type(torch.int)
+                    self.weight_pruning[name] += (applied_masks == 0).type(
+                        torch.int)
+                    self.weight_total[name] += torch.ones_like(
+                        applied_masks).type(torch.int)
 
         if regularize:
             reg = l1_reg + kl_reg
@@ -923,8 +972,11 @@ class ModularMAML(ModelAgnosticMetaLearning):
 
         for step in range(self.num_adaptation_steps):
 
-            params_masked, masks_logits, reg = self.apply_masks(params, params_masked, masks_logits,
-                    masks, regularize=True)
+            params_masked, masks_logits, reg = self.apply_masks(params,
+                                                                params_masked,
+                                                                masks_logits,
+                                                                masks,
+                                                                regularize=True)
 
             logits = self.model(inputs, params=params_masked)
             inner_loss = self.loss_function(logits, targets) + reg
@@ -937,15 +989,19 @@ class ModularMAML(ModelAgnosticMetaLearning):
             self.model.zero_grad()
 
             masks_logits = update_parameters(self.model, inner_loss,
-                step_size=self.step_size, params=masks_logits,
-                first_order=(not self.model.training) or self.first_order,
-                freeze_visual_features = self.freeze_visual_features,
-                no_meta_learning=self.no_meta_learning)
+                                             step_size=self.step_size,
+                                             params=masks_logits,
+                                             first_order=(
+                                                             not self.model.training) or self.first_order,
+                                             freeze_visual_features=self.freeze_visual_features,
+                                             no_meta_learning=self.no_meta_learning)
 
         self.current_mask_stats = masks_logits
         # final masking
-        params_masked, _ = self.apply_masks(params, params_masked, masks_logits, masks,
-                    regularize=False, evaluate=(not self.model.training))
+        params_masked, _ = self.apply_masks(params, params_masked, masks_logits,
+                                            masks,
+                                            regularize=False,
+                                            evaluate=(not self.model.training))
 
         return params_masked, results
 
@@ -955,12 +1011,13 @@ class ModularMAML(ModelAgnosticMetaLearning):
         for (name, _) in self.weight_pruning.items():
             if 'classifier' in name:
                 continue
-            sparsity = self.weight_pruning[name].float() / self.weight_total[name].float()
+            sparsity = self.weight_pruning[name].float() / self.weight_total[
+                name].float()
             spartity = sparsity.cpu().numpy()
             sparsity_mean = sparsity.mean()
             sparsity_std = sparsity.std()
             sparsity = sparsity.flatten().tolist()
-            multiplier=1
+            multiplier = 1
             tot_sparsity += sparsity * multiplier
             dead = self.weight_pruning[name] == self.weight_total[name]
             dead = dead.type(torch.float).cpu().numpy()
@@ -968,46 +1025,52 @@ class ModularMAML(ModelAgnosticMetaLearning):
             dead_std = dead.std()
             dead = dead.flatten().tolist()
             tot_dead += dead * multiplier
-            print(name + ' : sparse={0:.3f} +\- {1:.3f} \t dead={2:.3f} +/- {3:.3f}'.format(
-                sparsity_mean, sparsity_std, dead_mean, dead_std))
+            print(
+                name + ' : sparse={0:.3f} +\- {1:.3f} \t dead={2:.3f} +/- {3:.3f}'.format(
+                    sparsity_mean, sparsity_std, dead_mean, dead_std))
             if self.wandb is not None:
-                self.wandb.log({name+'_sparse_mean':sparsity_mean}, step=epoch)
-                self.wandb.log({name+'_sparse_std':sparsity_std}, step=epoch)
-                self.wandb.log({name+'_dead_mean':dead_mean}, step=epoch)
-                self.wandb.log({name+'_dead_std':dead_std}, step=epoch)
+                self.wandb.log({name + '_sparse_mean': sparsity_mean},
+                               step=epoch)
+                self.wandb.log({name + '_sparse_std': sparsity_std}, step=epoch)
+                self.wandb.log({name + '_dead_mean': dead_mean}, step=epoch)
+                self.wandb.log({name + '_dead_std': dead_std}, step=epoch)
 
         tot_sparsity_mean = np.array(tot_sparsity).mean()
         tot_sparsity_std = np.array(tot_sparsity).std()
         tot_dead_mean = np.array(tot_dead).mean()
         tot_dead_std = np.array(tot_dead).std()
-        print('Total : sparse={0:.3f} +\- {1:.3f} \t dead={2:.3f} +/- {3:.3f}'.format(
-                tot_sparsity_mean, tot_sparsity_std, tot_dead_mean, tot_dead_std))
+        print(
+            'Total : sparse={0:.3f} +\- {1:.3f} \t dead={2:.3f} +/- {3:.3f}'.format(
+                tot_sparsity_mean, tot_sparsity_std, tot_dead_mean,
+                tot_dead_std))
         if self.wandb is not None:
-            self.wandb.log({'tot_sparsity_mean':tot_sparsity_mean}, step=epoch)
-            self.wandb.log({'tot_sparsity_std':tot_sparsity_std}, step=epoch)
-            self.wandb.log({'tot_dead_mean':tot_dead_mean}, step=epoch)
-            self.wandb.log({'tot_dead_std':tot_dead_std}, step=epoch)
+            self.wandb.log({'tot_sparsity_mean': tot_sparsity_mean}, step=epoch)
+            self.wandb.log({'tot_sparsity_std': tot_sparsity_std}, step=epoch)
+            self.wandb.log({'tot_dead_mean': tot_dead_mean}, step=epoch)
+            self.wandb.log({'tot_dead_std': tot_dead_std}, step=epoch)
 
         self.reset_weight_pruning()
 
-    def evaluate(self, dataloader, max_batches=500, verbose=True, epoch=0, **kwargs):
+    def evaluate(self, dataloader, max_batches=500, verbose=True, epoch=0,
+                 **kwargs):
         mean_outer_loss, mean_inner_loss, mean_accuracy, count = 0., 0., 0, 0
         self.reset_weight_pruning()
 
         with tqdm(total=max_batches, disable=not verbose, **kwargs) as pbar:
-            for results in self.evaluate_iter(dataloader, max_batches=max_batches):
+            for results in self.evaluate_iter(dataloader,
+                                              max_batches=max_batches):
                 pbar.update(1)
                 count += 1
                 mean_outer_loss += (results['mean_outer_loss']
-                    - mean_outer_loss) / count
+                                    - mean_outer_loss) / count
                 postfix = {'loss': '{0:.4f}'.format(mean_outer_loss)}
                 if 'accuracies_after' in results:
                     mean_accuracy += (np.mean(results['accuracies_after'])
-                        - mean_accuracy) / count
+                                      - mean_accuracy) / count
                     postfix['accuracy'] = '{0:.4f}'.format(mean_accuracy)
                 if 'inner_losses' in results:
                     mean_inner_loss += (np.mean(results['inner_losses'])
-                        - mean_inner_loss) / count
+                                        - mean_inner_loss) / count
                     postfix['inner_loss'] = '{0:.4f}'.format(mean_inner_loss)
                 pbar.set_postfix(**postfix)
 
@@ -1027,8 +1090,10 @@ class ModularMAML(ModelAgnosticMetaLearning):
         masks = OrderedDict(self.model.meta_named_parameters())
         masks_logits = OrderedDict(self.model.meta_named_parameters())
 
-        params_masked, _ = self.apply_masks(params, params_masked, masks_logits, masks,
-                                           regularize=False, evaluate=(not self.model.training))
+        params_masked, _ = self.apply_masks(params, params_masked, masks_logits,
+                                            masks,
+                                            regularize=False,
+                                            evaluate=(not self.model.training))
         return params_masked
 
 
