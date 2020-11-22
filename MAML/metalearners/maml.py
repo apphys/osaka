@@ -249,27 +249,12 @@ class ModelAgnosticMetaLearning(object):
             torch.nn.init.zeros_(self.model.classifier.bias)
         self.num_ways = ways
 
-        # prototypes = self.model.forward_conv(inputs) # [ways*shots, 64]
-        # prototypes = torch.reshape(prototypes, (ways, shots, prototypes.shape[-1])) #[ways, shots, 64]
-        # prototypes = torch.mean(prototypes, axis=1) # [ways, 64]
-
-        # # Proto-MAML: init last FC layer with prototype weights
-        # self.model.classifier.weight=torch.nn.Parameter(2.0*prototypes) # w_k = 2c_k
-        # self.model.classifier.bias=torch.nn.Parameter(
-                # -torch.sum(prototypes*prototypes, axis=1)) # b_k = -|c_k|^2
-        # print(f'W', self.model.classifier.weight.shape)
-        # print(f'B', self.model.classifier.bias.shape)
-
-        # self.model.classifier.weight = torch.nn.Parameter(torch.zeros(ways * shots, 64)) # w_k = 2c_k
-        # self.model.classifier.bias = torch.nn.Parameter(torch.zeros(ways * shots))
-
-        params_local = params
-        # params_local = None
-        # if params is not None:
-            # #TODO: need this, otherwise backprop too many steps, OOM!!
-            # params_local = OrderedDict({
-                # k: v.clone().detach().requires_grad_(True)
-                # for k, v in params.items()})
+        params_local = None
+        if params is not None:
+            #TODO: need this, otherwise backprop too many steps, OOM!!
+            params_local = OrderedDict({
+                k: v.clone().detach().requires_grad_(True)
+                for k, v in params.items()})
 
         for step in range(self.num_adaptation_steps):
             logits = self.model(inputs.to(self.device), params=params_local)
@@ -371,8 +356,9 @@ class ModelAgnosticMetaLearning(object):
         # if num_ways changed, then must be a task switch, skip the rest
         if not same_nways:
             cl_metric = self._cl_metric_from_inp(inputs, targets)
-            assert self.cl_strategy == 'loss', 'am assuming cl_metric returns l1...'
-            results['l1'] = cl_metric
+            # assert self.cl_strategy == 'loss', 'am assuming cl_metric returns l1...'
+            if cl_metric:
+                results['l1'] = cl_metric
             results['tbd'] = task_switch.item() == 1
             return results
 
