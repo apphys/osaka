@@ -8,7 +8,6 @@ maml_base = {
     'model_name': 'ours',  # seems equiv to MAML?
     'num_ways': 5,
     'num_shots': 3,
-    'gamma': 0.8,  # tbd
 }
 
 NAME_TO_ARGS_orig = {
@@ -113,8 +112,7 @@ NAME_TO_ARGS = {
         'prob_statio': 0.9,
         'cl_strategy': 'loss',
         # 'cl_strategy_thres': 4.0,  # used within g_lambda (but neq lamabda itself)
-        'gamma': -1,
-        'n_runs': 4,
+        'n_runs': 3,
         'num_ways': 5,
         'num_shots': 5,
         'verbose': True},
