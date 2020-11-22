@@ -432,8 +432,9 @@ class ModelAgnosticMetaLearning(object):
             boundary_detected = True
             update_modulation_factor = self.g_lambda(results)
             assert self.cl_strategy != 'never_retrain'  # temp assumption i'm making during code sketch...
-            # Update the slow weight.
-            self.outer_update(l0 * update_modulation_factor)
+            if update_modulation_factor > 0:
+                # Update the slow weight.
+                self.outer_update(l0 * update_modulation_factor)
             # Get current fast weight from updated slow.
             self.current_model, _ = self.adapt(inputs, targets, N, K)
             self._num_pap = 1
