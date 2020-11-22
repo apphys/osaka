@@ -287,6 +287,12 @@ def continual_learning(args, wandb, cl_model_init, meta_optimizer_cl, cl_dataloa
 def main(args):
     args, wandb = boilerplate(args)
 
+    debug_str = f'method={args.method}, model_name={args.model_name}, model_config={args.model_config}'
+    if args.method == 'ProtoMAML':
+        assert args.model_name == 'protomaml', debug_str
+    if args.method == 'MAML':
+        assert args.model_name == 'ours', debug_str
+
     print('Initializing dataloaders...')
     # Notes:
     # - the train/val meta dls yield batches of {'train', 'test', 'ways', 'shots_tr', 'shots_te'}
